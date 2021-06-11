@@ -1,6 +1,6 @@
 <template>
-  <div class="photo-editor">
-    <image-controller>
+  <div class="canvas">
+    <!-- <image-controller>
       <template #imageController>
         <div class="image-controller-wrap">
           <button class="image-control-button">
@@ -16,39 +16,54 @@
           </button>
         </div>
       </template>
-    </image-controller>
-    <!-- <image-loader /> -->
-    <image-canvas />
-    <image-editor>
+    </image-controller> -->
+
+    <img ref="image" :alt="mockimage" :src="pic" />
+
+    <!-- <image-editor>
       <template #imageEditor>
         <div v-show="toggleEdit" class="image-detail-editor">
           <button class="image-detail-editor-button">
-            <i class="mdi mdi-crop"></i>
+            <span class="material-icons">
+              crop
+            </span>
           </button>
 
           <button class="image-detail-editor-button">
-            <i class="mdi mdi-magnify-plus"></i>
+            <span class="material-icons">
+              zoom_in
+            </span>
           </button>
 
           <button class="image-detail-editor-button">
-            <i class="mdi mdi-magnify-minus"></i>
+            <span class="material-icons">
+              zoom_out
+            </span>
           </button>
 
           <button class="image-detail-editor-button">
-            <i class="mdi mdi-rotate-right"></i>
+            <span class="material-icons-round">
+              rotate_right
+            </span>
           </button>
 
           <button class="image-detail-editor-button">
-            <i class="mdi mdi-rotate-left"></i>
+            <span class="material-icons-round">
+              rotate_left
+            </span>
           </button>
 
-          <button class="image-detail-editor-button">
-            <i class="mdi mdi-flip-horizontal"></i>
-          </button>
+          <v-btn class="mx-2" fab dark small color="primary">
+            <v-icon dark>
+              mdi-flip-horizontal
+            </v-icon>
+          </v-btn>
 
-          <button class="image-detail-editor-button">
-            <i class="mdi mdi-flip-vertical"></i>
-          </button>
+          <v-btn class="mx-2" fab dark small color="primary">
+            <v-icon dark>
+              mdi-flip-vertical
+            </v-icon>
+          </v-btn>
         </div>
 
         <div v-show="toggleSticker" class="sticker-editor">
@@ -85,38 +100,39 @@
           </button>
         </div>
       </template>
-    </image-editor>
+    </image-editor> -->
+    <!-- <image-loader /> -->
   </div>
 </template>
-
 <script>
-import ImageController from '@/components/ImageController.vue';
-// import ImageLoader from './components/ImageLoader.vue';
-import ImageCanvas from './components/ImageCanvas.vue';
-import ImageEditor from '@/components/ImageEditor.vue';
+import pic from '../../public/Image/photo-1534274867514-d5b47ef89ed7.jpg';
+// import ImageController from '@/components/ImageController.vue';
+// import ImageEditor from './components/ImageEditor.vue';
+// import ImageEditor from './ImageEditor.vue';
 
 export default {
   components: {
-    'image-controller': ImageController,
-    // 'image-loader': ImageLoader,
-    'image-canvas': ImageCanvas,
-    'image-editor': ImageEditor
+    // 'image-controller': ImageController,
+    //   'image-loader': ImageLoader,
+    // 'image-editor': ImageEditor
   },
   data() {
     return {
-      toggleEdit: false
+      pic: pic
     };
   }
 };
 </script>
 
-<style scoped>
-.photo-editor {
-  background-color: black;
+<style>
+.canvas {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  padding-top: 100px;
-  padding-bottom: 100px;
+  justify-content: space-around;
+  margin: 10px auto;
+}
+.canvas > img {
+  max-height: 100%;
+  max-width: 100%;
 }
 </style>
