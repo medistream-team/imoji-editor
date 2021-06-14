@@ -1,0 +1,8 @@
+.vue-photo-editor-wrapper {
+  width: 640px;
+  height: 480px;
+}
+
+.hide {
+  display: none;
+}

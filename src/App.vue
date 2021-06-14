@@ -1,17 +1,10 @@
 <template>
-  <div id="app">
-    {{ message }}
-  </div>
+  <div id="app"></div>
 </template>
 
 <script>
 export default {
-  name: 'App',
-  data: () => {
-    return {
-      message: 'hi'
-    };
-  }
+  name: 'App'
 };
 </script>
 
