@@ -1,6 +1,15 @@
 .vue-photo-editor-wrapper {
-  width: 640px;
-  height: 480px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100vh;
+}
+
+.cropper-container {
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 
 .hide {

@@ -8,19 +8,13 @@
   </head>
   <body>
     <h1>demo</h1>
-    <div class="vue-photo-editor-wrapper" style="position: relative;">
+    <div class="vue-photo-editor-wrapper">
+      <!-- width, height of sticker-canvas will be set by photo-editor's dimensions -->
       <canvas
         id="sticker-canvas"
-        width="640"
-        height="480"
         style="position: absolute; top: 0; left: 0; z-index: 1;"
       ></canvas>
-      <img
-        id="user-photo"
-        width="640"
-        height="480"
-        style="position: absolute; top: 0; left: 0;"
-      />
+      <img id="user-photo" style="position: absolute; top: 0; left: 0;" />
     </div>
   </body>
 </html>
