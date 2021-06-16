@@ -2,8 +2,8 @@
   <div class="imageLoader" @change="change" @dragover="dragover" @drop="drop">
     <p>
       Paste or drop image here or
-      <label class="browse"
-        >browse...
+      <label class="browse">
+        browse...
         <input id="file" class="sr-only" type="file" accept="image/*" />
       </label>
     </p>
