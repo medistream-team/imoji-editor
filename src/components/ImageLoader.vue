@@ -151,17 +151,20 @@ export default {
   overflow: hidden;
   width: 100%;
 }
+
 .imageLoader > p {
   color: #999;
   display: table-cell;
   text-align: center;
   vertical-align: middle;
 }
+
 .browse {
   color: #0074d9;
   cursor: pointer;
   margin-left: 0.25rem;
 }
+
 .browse:hover {
   color: #08f;
   text-decoration: underline;

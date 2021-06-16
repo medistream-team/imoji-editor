@@ -1,9 +1,9 @@
 import Cropper from 'cropperjs';
-import { fabric } from './fabric.js';
+import { fabric } from 'fabric';
 import 'cropperjs/dist/cropper.css';
-import './editor.css';
+// import './editor.css';
 
-export class photoEditor {
+export class PhotoEditor {
   constructor(selector, options) {
     /*
      * Create a new Cropper for edit Photo
@@ -26,6 +26,11 @@ export class photoEditor {
 
   clear() {
     this.cropper.clear();
+  }
+
+  getContainerDimension() {
+    const { width, height } = this.cropper.getContainerData();
+    return [width, height];
   }
 
   //tools
@@ -71,16 +76,19 @@ export class photoEditor {
   }
 }
 
-export class stickerEditor {
+export class StickerEditor {
   /*
    * Create a new fabric Canvas for add Sticker
    * @param {Element} canvasID - The id of canvas element
    * @param {Object} options - The option of image
    */
-  constructor(canvasID) {
+  constructor(canvasID, width, height) {
     if (!canvasID)
       throw new Error('Please provide a canvas element with id canvas.');
     this.stickerCanvas = new fabric.Canvas(canvasID);
+    if (width && height) {
+      this.stickerCanvas.setDimensions({ width, height });
+    }
     this.stickerCanvas.backgroundColor = null;
     this.stickerCanvas.renderAll.bind(this.stickerCanvas)();
   }
@@ -97,14 +105,6 @@ export class stickerEditor {
       },
       options
     );
-  }
-
-  /*
-   * @param {number} width - The width of photoEditor Canvas
-   * @param {number} height - The height of photoEditor Canvas
-   */
-  setCanvasDimensions(width, height) {
-    this.stickerCanvas.setDimensions({ width, height });
   }
 
   hideCanvas() {

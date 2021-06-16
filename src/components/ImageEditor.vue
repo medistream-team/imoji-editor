@@ -42,6 +42,7 @@ export default {
   height: 50px;
   color: #152447;
 }
+
 .image-detail-editor {
   display: flex;
   justify-content: space-around;
@@ -68,6 +69,7 @@ export default {
   border-style: none;
   cursor: pointer;
 }
+
 .image-editor-button:hover {
   color: grey;
 }
@@ -76,6 +78,7 @@ i {
   color: #eaecef;
   font-size: 25px;
 }
+
 i:hover {
   color: grey;
 }

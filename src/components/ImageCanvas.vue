@@ -1,138 +1,63 @@
 <template>
-  <div class="canvas">
-    <!-- <image-controller>
-      <template #imageController>
-        <div class="image-controller-wrap">
-          <button class="image-control-button">
-            <i class="mdi mdi-undo"></i>
-          </button>
-
-          <button class="image-control-button">
-            Reset
-          </button>
-
-          <button class="image-control-button">
-            <i class="mdi mdi-redo"></i>
-          </button>
-        </div>
-      </template>
-    </image-controller> -->
-
-    <img ref="image" :alt="mockimage" :src="pic" />
-
-    <!-- <image-editor>
-      <template #imageEditor>
-        <div v-show="toggleEdit" class="image-detail-editor">
-          <button class="image-detail-editor-button">
-            <span class="material-icons">
-              crop
-            </span>
-          </button>
-
-          <button class="image-detail-editor-button">
-            <span class="material-icons">
-              zoom_in
-            </span>
-          </button>
-
-          <button class="image-detail-editor-button">
-            <span class="material-icons">
-              zoom_out
-            </span>
-          </button>
-
-          <button class="image-detail-editor-button">
-            <span class="material-icons-round">
-              rotate_right
-            </span>
-          </button>
-
-          <button class="image-detail-editor-button">
-            <span class="material-icons-round">
-              rotate_left
-            </span>
-          </button>
-
-          <v-btn class="mx-2" fab dark small color="primary">
-            <v-icon dark>
-              mdi-flip-horizontal
-            </v-icon>
-          </v-btn>
-
-          <v-btn class="mx-2" fab dark small color="primary">
-            <v-icon dark>
-              mdi-flip-vertical
-            </v-icon>
-          </v-btn>
-        </div>
-
-        <div v-show="toggleSticker" class="sticker-editor">
-          <v-avatar
-            v-for="(sticker, i) in stickers"
-            :key="i"
-            src="sticker.src"
-          />
-        </div>
-
-        <div class="imageEditorWrap">
-          <button class="image-editor-button" title="image upload">
-            <i class="mdi mdi-file-image"></i>
-          </button>
-
-          <button
-            class="image-editor-button"
-            title="edit"
-            @click="toggleEdit = !toggleEdit"
-          >
-            Edit
-          </button>
-
-          <button
-            class="image-editor-button"
-            title="sticker"
-            @click="toggleSticker = !toggleSticker"
-          >
-            Sticker
-          </button>
-
-          <button class="image-editor-button" title="complete">
-            <i class="mdi mdi-check"></i>
-          </button>
-        </div>
-      </template>
-    </image-editor> -->
-    <!-- <image-loader /> -->
+  <div class="vue-photo-editor-wrapper">
+    <canvas
+      id="sticker-canvas"
+      style="position: absolute; top: 0; left: 0; z-index: 1;"
+    ></canvas>
+    <img
+      id="user-photo"
+      :src="pic"
+      style="position: absolute; top: 0; left: 0;"
+    />
   </div>
 </template>
 <script>
-import pic from '../../public/Image/photo-1534274867514-d5b47ef89ed7.jpg';
-// import ImageController from '@/components/ImageController.vue';
-// import ImageEditor from './components/ImageEditor.vue';
-// import ImageEditor from './ImageEditor.vue';
+import { PhotoEditor, StickerEditor } from '../js/editor.js';
+// To Do : 사진 가져올 때 src import해야만 사용 가능?
+import userPhoto from '/public/Image/photo.jpg';
+import stickerImg from '/src/assets/01.png';
 
 export default {
-  components: {
-    // 'image-controller': ImageController,
-    //   'image-loader': ImageLoader,
-    // 'image-editor': ImageEditor
-  },
   data() {
-    return {
-      pic: pic
-    };
+    return { pic: userPhoto };
+  },
+  mounted() {
+    const photoCanvas = new PhotoEditor('user-photo', {
+      zoomOnWheel: false,
+      background: false,
+      ready: () => {
+        // To Do : 뷰포트 너비/높이가 변할 때마다 실행되어야 함
+        const wrapperDimension = photoCanvas.getContainerDimension();
+        console.log(wrapperDimension);
+        // To Do : 스티커 버튼 눌렀을 때 붙일 것 (이벤트 붙이기 전 임시 테스트용)
+        const stickerCanvas = new StickerEditor(
+          'sticker-canvas',
+          wrapperDimension[0],
+          wrapperDimension[1]
+        );
+        stickerCanvas.addSticker(stickerImg);
+      }
+    });
   }
 };
 </script>
 
 <style>
-.canvas {
+.vue-photo-editor-wrapper {
+  position: relative;
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
-  margin: 10px auto;
+  align-items: center;
+  height: 100vh;
 }
-.canvas > img {
-  max-height: 100%;
-  max-width: 100%;
+
+.cropper-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.hide {
+  display: none;
 }
 </style>

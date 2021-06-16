@@ -10,6 +10,7 @@
   "dependencies": {
     "core-js": "^3.6.5",
     "cropperjs": "^1.5.11",
+    "fabric": "^4.5.0",
     "vue": "^2.6.11"
   },
   "devDependencies": {

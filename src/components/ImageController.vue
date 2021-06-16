@@ -16,19 +16,23 @@ export default {};
   padding: 10px;
   border: none;
 }
+
 .image-control-button {
   background-color: black;
   color: aliceblue;
   border-style: none;
   cursor: pointer;
 }
+
 .image-control-button:hover {
   color: grey;
 }
+
 i {
   color: aliceblue;
   font-size: 25px;
 }
+
 i:hover {
   color: grey;
 }
