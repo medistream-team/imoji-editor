@@ -21,9 +21,16 @@
     <image-canvas />
     <image-editor>
       <template #imageEditor>
-        <div v-show="toggleEdit" class="image-detail-editor">
+        <div
+          v-if="layout === 'image-detail-editor'"
+          class="image-detail-editor"
+        >
           <button class="image-detail-editor-button">
             <i class="mdi mdi-crop"></i>
+          </button>
+
+          <button class="image-detail-editor-button">
+            <i class="mdi mdi-aspect-ratio"></i>
           </button>
 
           <button class="image-detail-editor-button">
@@ -51,11 +58,12 @@
           </button>
         </div>
 
-        <div v-show="toggleSticker" class="sticker-editor">
-          <v-avatar
-            v-for="(sticker, i) in stickers"
-            :key="i"
-            src="sticker.src"
+        <div v-if="layout === 'sticker-editor'" class="sticker-editor">
+          <img
+            v-for="sticker in stickers"
+            :key="sticker.id"
+            class="image-sticker"
+            :src="sticker.src"
           />
         </div>
 
@@ -67,7 +75,7 @@
           <button
             class="image-editor-button"
             title="edit"
-            @click="toggleEdit = !toggleEdit"
+            @click="layout = 'image-detail-editor'"
           >
             Edit
           </button>
@@ -75,7 +83,7 @@
           <button
             class="image-editor-button"
             title="sticker"
-            @click="toggleSticker = !toggleSticker"
+            @click="layout = 'sticker-editor'"
           >
             Sticker
           </button>
@@ -92,7 +100,7 @@
 <script>
 import ImageController from '@/components/ImageController.vue';
 // import ImageLoader from './components/ImageLoader.vue';
-import ImageCanvas from './components/ImageCanvas.vue';
+import ImageCanvas from '@/components/ImageCanvas.vue';
 import ImageEditor from '@/components/ImageEditor.vue';
 
 export default {
@@ -102,9 +110,49 @@ export default {
     'image-canvas': ImageCanvas,
     'image-editor': ImageEditor
   },
+
   data() {
     return {
-      toggleEdit: false
+      layout: '',
+      toggleEdit: false,
+      toggleSticker: false,
+      stickers: [
+        {
+          id: 1,
+          src:
+            'https://stickershop.line-scdn.net/stickershop/v1/product/7120772/LINEStorePC/main.png;compress=s'
+        },
+        {
+          id: 2,
+          src:
+            'https://stickershop.line-scdn.net/stickershop/v1/product/7120772/LINEStorePC/main.png;compress=s'
+        },
+        {
+          id: 3,
+          src:
+            'https://stickershop.line-scdn.net/stickershop/v1/product/7120772/LINEStorePC/main.png;compress=s'
+        },
+        {
+          id: 4,
+          src:
+            'https://stickershop.line-scdn.net/stickershop/v1/product/7120772/LINEStorePC/main.png;compress=s'
+        },
+        {
+          id: 5,
+          src:
+            'https://stickershop.line-scdn.net/stickershop/v1/product/7120772/LINEStorePC/main.png;compress=s'
+        },
+        {
+          id: 6,
+          src:
+            'https://stickershop.line-scdn.net/stickershop/v1/product/7120772/LINEStorePC/main.png;compress=s'
+        },
+        {
+          id: 7,
+          src:
+            'https://stickershop.line-scdn.net/stickershop/v1/product/7120772/LINEStorePC/main.png;compress=s'
+        }
+      ]
     };
   }
 };
