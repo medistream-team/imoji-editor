@@ -47,8 +47,9 @@ export default {
   position: relative;
   display: flex;
   flex-direction: column;
+  justify-content: center;
   align-items: center;
-  height: 100vh;
+  height: 80vh;
 }
 
 .cropper-container {

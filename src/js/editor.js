@@ -1,7 +1,6 @@
 import Cropper from 'cropperjs';
 import { fabric } from 'fabric';
 import 'cropperjs/dist/cropper.css';
-// import './editor.css';
 
 export class PhotoEditor {
   constructor(selector, options) {
@@ -15,6 +14,7 @@ export class PhotoEditor {
     this.cropper = new Cropper(this.userImage, {
       viewMode: 2,
       autoCrop: false,
+      dragMode: 'none',
       ...options
     });
   }
@@ -29,7 +29,7 @@ export class PhotoEditor {
   }
 
   getContainerDimension() {
-    const { width, height } = this.cropper.getContainerData();
+    const { width, height } = this.cropper.getImageData();
     return [width, height];
   }
 
@@ -47,10 +47,14 @@ export class PhotoEditor {
    */
   setCropRatio(x, y) {
     if (!x && !y) throw new Error('Please provide a ratio of crop box.');
+    this.cropper.setDragMode('crop');
+    this.cropper.crop();
     this.cropper.setAspectRatio(x / y);
   }
 
   setFreeCrop() {
+    this.cropper.setDragMode('crop');
+    this.cropper.crop();
     this.cropper.setAspectRatio(NaN);
   }
 
@@ -59,6 +63,7 @@ export class PhotoEditor {
    * @param {string} sign - '+' or '-'
    */
   rotate(sign) {
+    this.cropper.clear();
     if (sign === '+') this.cropper.rotate(90);
     if (sign === '-') this.cropper.rotate(-90);
   }
@@ -68,9 +73,9 @@ export class PhotoEditor {
    * @param {string} direction - 'X' or 'Y'
    */
   flip(direction) {
+    this.cropper.clear();
     if (direction === direction.toLowerCase())
       direction = direction.toUpperCase();
-
     if (direction === 'X') this.cropper.scaleX(-1);
     if (direction === 'Y') this.cropper.scaleY(-1);
   }
