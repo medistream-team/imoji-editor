@@ -138,8 +138,7 @@ export default {
   data() {
     return {
       layout: '',
-      // toggleEdit: false,
-      // toggleSticker: false,
+      url: null,
       stickers: [
         {
           id: 1,

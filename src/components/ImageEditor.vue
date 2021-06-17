@@ -67,6 +67,7 @@ export default {};
   color: white;
   border-style: none;
   cursor: pointer;
+  font-size: 1rem;
 }
 
 .image-ratio-editor-button:hover {
