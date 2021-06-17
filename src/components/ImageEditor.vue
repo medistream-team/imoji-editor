@@ -54,6 +54,25 @@ export default {};
   margin: 10px auto;
 }
 
+.aspect-ratio-editor {
+  display: flex;
+  justify-content: space-around;
+  border-style: none;
+  margin: 10px auto;
+}
+
+.image-ratio-editor-button {
+  height: 1.938rem;
+  background-color: black;
+  color: white;
+  border-style: none;
+  cursor: pointer;
+}
+
+.image-ratio-editor-button:hover {
+  color: grey;
+}
+
 img.image-sticker {
   width: 1.938rem;
   cursor: pointer;

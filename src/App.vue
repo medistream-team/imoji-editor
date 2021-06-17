@@ -29,7 +29,10 @@
             <i class="mdi mdi-crop"></i>
           </button>
 
-          <button class="image-detail-editor-button">
+          <button
+            class="image-detail-editor-button"
+            @click="layout = 'aspect-ratio'"
+          >
             <i class="mdi mdi-aspect-ratio"></i>
           </button>
 
@@ -55,6 +58,27 @@
 
           <button class="image-detail-editor-button">
             <i class="mdi mdi-flip-vertical"></i>
+          </button>
+        </div>
+
+        <div v-if="layout === 'aspect-ratio'" class="aspect-ratio-editor">
+          <button
+            class="image-ratio-editor-button"
+            @click="layout = 'image-detail-editor'"
+          >
+            <i class="mdi mdi-arrow-left"></i>
+          </button>
+          <button class="image-ratio-editor-button">
+            16:9
+          </button>
+          <button class="image-ratio-editor-button">
+            4:3
+          </button>
+          <button class="image-ratio-editor-button">
+            2:3
+          </button>
+          <button class="image-ratio-editor-button">
+            1:1
           </button>
         </div>
 
@@ -114,8 +138,8 @@ export default {
   data() {
     return {
       layout: '',
-      toggleEdit: false,
-      toggleSticker: false,
+      // toggleEdit: false,
+      // toggleSticker: false,
       stickers: [
         {
           id: 1,
