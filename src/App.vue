@@ -18,7 +18,17 @@
       </template>
     </image-controller>
     <!-- <image-loader /> -->
-    <image-canvas />
+    <!-- canvas -->
+    <template>
+      <div class="vue-photo-editor-wrapper">
+        <div id="sticker-wrapper">
+          <canvas id="sticker-canvas"></canvas>
+        </div>
+        <div>
+          <img id="user-photo" :src="userPhoto" />
+        </div>
+      </div>
+    </template>
     <image-editor>
       <template #imageEditor>
         <div
@@ -64,12 +74,20 @@
             :key="sticker.id"
             class="image-sticker"
             :src="sticker.src"
+            @click="addSticker"
           />
         </div>
 
         <div class="imageEditorWrap">
-          <button class="image-editor-button" title="image upload">
-            <i class="mdi mdi-file-image"></i>
+          <button
+            class="image-editor-button"
+            title="image upload"
+            @click="addImage"
+          >
+            <label>
+              <i class="mdi mdi-file-image"></i>
+              <input type="file" class="file" @change="onChangePhoto" />
+            </label>
           </button>
 
           <button
@@ -98,73 +116,117 @@
 </template>
 
 <script>
+import { PhotoEditor, StickerEditor } from '@/js/editor.js';
+// To Do : 사진 가져올 때 src import해야만 사용 가능?
+import userPhoto from '/public/Image/photo.jpg';
+import sticker01 from '/src/assets/01.png';
+import sticker02 from '/src/assets/02.png';
+import sticker03 from '/src/assets/03.png';
+import sticker04 from '/src/assets/04.png';
+
 import ImageController from '@/components/ImageController.vue';
-// import ImageLoader from './components/ImageLoader.vue';
-import ImageCanvas from '@/components/ImageCanvas.vue';
 import ImageEditor from '@/components/ImageEditor.vue';
 
 export default {
   components: {
     'image-controller': ImageController,
-    // 'image-loader': ImageLoader,
-    'image-canvas': ImageCanvas,
     'image-editor': ImageEditor
   },
-
   data() {
     return {
       layout: '',
+      userPhoto: userPhoto,
       toggleEdit: false,
       toggleSticker: false,
       stickers: [
         {
           id: 1,
-          src:
-            'https://stickershop.line-scdn.net/stickershop/v1/product/7120772/LINEStorePC/main.png;compress=s'
+          src: sticker01
         },
         {
           id: 2,
-          src:
-            'https://stickershop.line-scdn.net/stickershop/v1/product/7120772/LINEStorePC/main.png;compress=s'
+          src: sticker02
         },
         {
           id: 3,
-          src:
-            'https://stickershop.line-scdn.net/stickershop/v1/product/7120772/LINEStorePC/main.png;compress=s'
+          src: sticker03
         },
         {
           id: 4,
-          src:
-            'https://stickershop.line-scdn.net/stickershop/v1/product/7120772/LINEStorePC/main.png;compress=s'
-        },
-        {
-          id: 5,
-          src:
-            'https://stickershop.line-scdn.net/stickershop/v1/product/7120772/LINEStorePC/main.png;compress=s'
-        },
-        {
-          id: 6,
-          src:
-            'https://stickershop.line-scdn.net/stickershop/v1/product/7120772/LINEStorePC/main.png;compress=s'
-        },
-        {
-          id: 7,
-          src:
-            'https://stickershop.line-scdn.net/stickershop/v1/product/7120772/LINEStorePC/main.png;compress=s'
+          src: sticker04
         }
-      ]
+      ],
+      wrapperDimension: [0, 0],
+      isFirstAdd: false,
+      stickerCanvas: null
     };
+  },
+  mounted() {
+    const photoCanvas = new PhotoEditor('user-photo', {
+      zoomOnWheel: false,
+      background: false,
+      ready: () => {
+        // To Do : 뷰포트 너비/높이가 변할 때마다 실행되어야 함
+        this.wrapperDimension = photoCanvas.getContainerDimension();
+      }
+    });
+  },
+  methods: {
+    addImage: function() {
+      console.log('addImage');
+    },
+    onChangePhoto: function(e) {
+      this.userPhoto = e.target.files[0];
+    },
+    addSticker: function(e) {
+      if (this.isFirstAdd === false) {
+        this.stickerCanvas = new StickerEditor(
+          'sticker-canvas',
+          this.wrapperDimension[0],
+          this.wrapperDimension[1]
+        );
+        this.isFirstAdd = true;
+      }
+      this.stickerCanvas.addSticker(e.target.src);
+    }
   }
 };
 </script>
 
 <style scoped>
+.vue-photo-editor-wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#sticker-wrapper {
+  position: absolute;
+  top: 0;
+  z-index: 1;
+}
+
+#user-photo {
+  display: block;
+  max-width: 100%;
+}
+
+.hide {
+  display: none;
+}
+
 .photo-editor {
-  background-color: black;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   padding-top: 100px;
   padding-bottom: 100px;
+  background-color: black;
+}
+
+.file {
+  display: none;
 }
 </style>
