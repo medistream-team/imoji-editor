@@ -134,14 +134,6 @@ export class StickerEditor {
     );
   }
 
-  hideCanvas() {
-    this.stickerCanvas.classList.add('hide');
-  }
-
-  showCanvas() {
-    this.stickerCanvas.classList.remove('hide');
-  }
-
   // To Do : save 2. 편집된 사진을 최하단에 깔고 스티커 레이어를 그 위에 올려서 merge후 내보냄(compressor)
   /**
    *
