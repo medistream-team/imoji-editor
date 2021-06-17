@@ -1,7 +1,6 @@
 import Cropper from 'cropperjs';
 import { fabric } from 'fabric';
 import 'cropperjs/dist/cropper.css';
-// import './editor.css';
 
 export class PhotoEditor {
   constructor(selector, options) {
@@ -29,7 +28,7 @@ export class PhotoEditor {
   }
 
   getContainerDimension() {
-    const { width, height } = this.cropper.getContainerData();
+    const { width, height } = this.cropper.getImageData();
     return [width, height];
   }
 
