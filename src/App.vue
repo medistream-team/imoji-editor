@@ -7,7 +7,7 @@
             <i class="mdi mdi-undo"></i>
           </button>
 
-          <button class="image-control-button">
+          <button class="image-control-button" @click="reset">
             Reset
           </button>
 
@@ -35,37 +35,17 @@
           v-if="layout === 'image-detail-editor'"
           class="image-detail-editor"
         >
-          <button class="image-detail-editor-button">
-            <i class="mdi mdi-crop"></i>
-          </button>
-
-          <button class="image-detail-editor-button">
-            <i class="mdi mdi-aspect-ratio"></i>
-          </button>
-
-          <button class="image-detail-editor-button">
-            <i class="mdi mdi-magnify-plus"></i>
-          </button>
-
-          <button class="image-detail-editor-button">
-            <i class="mdi mdi-magnify-minus"></i>
-          </button>
-
-          <button class="image-detail-editor-button">
-            <i class="mdi mdi-rotate-right"></i>
-          </button>
-
-          <button class="image-detail-editor-button">
-            <i class="mdi mdi-rotate-left"></i>
-          </button>
-
-          <button class="image-detail-editor-button">
-            <i class="mdi mdi-flip-horizontal"></i>
-          </button>
-
-          <button class="image-detail-editor-button">
-            <i class="mdi mdi-flip-vertical"></i>
-          </button>
+          <detail-editor-button
+            v-for="detailEditor in detailEditors"
+            :key="detailEditor.id"
+            :detail-editor="detailEditor"
+            @rotate-right="rotateRight"
+            @rotate-left="rotateLeft"
+            @free-crop="freeCrop"
+            @ratio-crop="ratioCrop"
+            @flip-x="flipX"
+            @flip-y="flipY"
+          />
         </div>
 
         <div v-if="layout === 'sticker-editor'" class="sticker-editor">
@@ -126,11 +106,13 @@ import sticker04 from '/src/assets/04.png';
 
 import ImageController from '@/components/ImageController.vue';
 import ImageEditor from '@/components/ImageEditor.vue';
+import DetailEditorButton from '@/components/DetailEditorButton.vue';
 
 export default {
   components: {
     'image-controller': ImageController,
-    'image-editor': ImageEditor
+    'image-editor': ImageEditor,
+    'detail-editor-button': DetailEditorButton
   },
   data() {
     return {
@@ -138,6 +120,7 @@ export default {
       userPhoto: userPhoto,
       toggleEdit: false,
       toggleSticker: false,
+      //To Do : 상수 데이터르 분리가능한지 알아보기
       stickers: [
         {
           id: 1,
@@ -156,29 +139,40 @@ export default {
           src: sticker04
         }
       ],
+      detailEditors: [
+        { id: 1, icon: 'mdi-crop', emitEvent: 'free-crop' },
+        { id: 2, icon: 'mdi-aspect-ratio', emitEvent: 'ratio-crop' },
+        { id: 3, icon: 'mdi-magnify-plus', emitEvent: 'zoom-in' },
+        { id: 4, icon: 'mdi-magnify-minus', emitEvent: 'zoom-out' },
+        { id: 5, icon: 'mdi-rotate-right', emitEvent: 'rotate-right' },
+        { id: 6, icon: 'mdi-rotate-left', emitEvent: 'rotate-left' },
+        { id: 7, icon: 'mdi-flip-horizontal', emitEvent: 'flip-x' },
+        { id: 8, icon: 'mdi-flip-vertical', emitEvent: 'flip-y' }
+      ],
       wrapperDimension: [0, 0],
       isFirstAdd: false,
-      stickerCanvas: null
+      stickerCanvas: null,
+      photoCanvas: null
     };
   },
   mounted() {
-    const photoCanvas = new PhotoEditor('user-photo', {
+    this.photoCanvas = new PhotoEditor('user-photo', {
       zoomOnWheel: false,
       background: false,
       ready: () => {
         // To Do : 뷰포트 너비/높이가 변할 때마다 실행되어야 함
-        this.wrapperDimension = photoCanvas.getContainerDimension();
+        this.wrapperDimension = this.photoCanvas.getContainerDimension();
       }
     });
   },
   methods: {
-    addImage: function() {
+    addImage() {
       console.log('addImage');
     },
-    onChangePhoto: function(e) {
+    onChangePhoto(e) {
       this.userPhoto = e.target.files[0];
     },
-    addSticker: function(e) {
+    addSticker(e) {
       if (this.isFirstAdd === false) {
         this.stickerCanvas = new StickerEditor(
           'sticker-canvas',
@@ -188,6 +182,27 @@ export default {
         this.isFirstAdd = true;
       }
       this.stickerCanvas.addSticker(e.target.src);
+    },
+    rotateRight() {
+      this.photoCanvas.rotate('+');
+    },
+    rotateLeft() {
+      this.photoCanvas.rotate('-');
+    },
+    freeCrop() {
+      this.photoCanvas.setFreeCrop();
+    },
+    ratioCrop() {
+      this.photoCanvas.setCropRatio(16, 9);
+    },
+    flipX() {
+      this.photoCanvas.flip('X');
+    },
+    flipY() {
+      this.photoCanvas.flip('Y');
+    },
+    reset() {
+      this.photoCanvas.reset();
     }
   }
 };

@@ -25,13 +25,6 @@ export default {};
   margin: 10px auto;
 }
 
-.image-detail-editor-button {
-  background-color: black;
-  color: white;
-  border-style: none;
-  cursor: pointer;
-}
-
 .image-editor-button {
   display: flex;
   justify-content: space-around;
@@ -47,6 +40,7 @@ export default {};
 .image-editor-button:hover {
   color: grey;
 }
+
 .sticker-editor {
   display: flex;
   flex-direction: row;
