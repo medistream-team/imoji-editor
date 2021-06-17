@@ -45,6 +45,8 @@
             @ratio-crop="ratioCrop"
             @flip-x="flipX"
             @flip-y="flipY"
+            @zoom-in="zoomIn"
+            @zoom-out="zoomOut"
           />
         </div>
 
@@ -91,23 +93,19 @@
             </label>
           </button>
 
-          <button
-            class="image-editor-button"
-            title="edit"
-            @click="layout = 'image-detail-editor'"
-          >
+          <button class="image-editor-button" title="edit" @click="openEditor">
             Edit
           </button>
 
           <button
             class="image-editor-button"
             title="sticker"
-            @click="layout = 'sticker-editor'"
+            @click="openSticker"
           >
             Sticker
           </button>
 
-          <button class="image-editor-button" title="complete">
+          <button class="image-editor-button" title="complete" @click="crop">
             <i class="mdi mdi-check"></i>
           </button>
         </div>
@@ -187,9 +185,7 @@ export default {
     });
   },
   methods: {
-    addImage() {
-      console.log('addImage');
-    },
+    //To Do : 업로드 이미지 바꾸기
     onChangePhoto(e) {
       this.userPhoto = e.target.files[0];
     },
@@ -224,6 +220,27 @@ export default {
     },
     reset() {
       this.photoCanvas.reset();
+    },
+    zoomIn() {
+      this.photoCanvas.zoomIn();
+    },
+    zoomOut() {
+      this.photoCanvas.zoomOut();
+    },
+    crop() {
+      this.photoCanvas.crop();
+    },
+    openEditor() {
+      this.layout = 'image-detail-editor';
+      // 스티커 캔버스 열려있는데 edit으로 이동하면 스티커 캔버스 숨기기
+      document.getElementById('sticker-wrapper').classList.add('hide');
+      // //스티커 캔버스 열려있을 땐 edit 비활성화
+      // this.photoCanvas.disable();
+    },
+    openSticker() {
+      this.layout = 'sticker-editor';
+      this.photoCanvas.clear();
+      document.getElementById('sticker-wrapper').classList.remove('hide');
     }
   }
 };
