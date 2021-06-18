@@ -186,6 +186,9 @@ export default {
   },
   methods: {
     //To Do : 업로드 이미지 바꾸기
+    addImage() {
+      console.log('addImage');
+    },
     onChangePhoto(e) {
       this.userPhoto = e.target.files[0];
     },
@@ -219,6 +222,7 @@ export default {
       this.photoCanvas.flip('Y');
     },
     reset() {
+      //To Do : 스티커 다 지우기
       this.photoCanvas.reset();
     },
     zoomIn() {
