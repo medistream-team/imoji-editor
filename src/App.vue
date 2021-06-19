@@ -85,7 +85,8 @@
           <button
             class="image-editor-button"
             title="image upload"
-            @click="addImage"
+            accept="image/*"
+            @input="addImage"
           >
             <label>
               <i class="mdi mdi-file-image"></i>
@@ -126,6 +127,10 @@ import sticker04 from '/src/assets/04.png';
 import ImageController from '@/components/ImageController.vue';
 import ImageEditor from '@/components/ImageEditor.vue';
 import DetailEditorButton from '@/components/DetailEditorButton.vue';
+
+const URL = window.URL || window.webkitURL;
+const REGEXP_MIME_TYPE_IMAGES = /^image\/\w+$/;
+const REGEXP_URLS = /^(?:https?|data):/;
 
 export default {
   components: {
@@ -185,9 +190,23 @@ export default {
     });
   },
   methods: {
-    //To Do : 업로드 이미지 바꾸기
-    addImage() {
+    addImage(e) {
       console.log('addImage');
+      const file = e.target.files[0];
+      const fileSrc = URL.createObjectURL(file);
+      this.userPhoto = fileSrc;
+
+      // if (files && files.length > 0) {
+      //   this.read(files[0])
+      //     .then(data => {
+      //       target.value = '';
+      //       this.update(data);
+      //     })
+      //     .catch(e => {
+      //       target.value = '';
+      //       this.alert(e);
+      //     });
+      // }
     },
     onChangePhoto(e) {
       this.userPhoto = e.target.files[0];
