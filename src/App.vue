@@ -86,11 +86,10 @@
             class="image-editor-button"
             title="image upload"
             accept="image/*"
-            @input="addImage"
           >
             <label>
               <i class="mdi mdi-file-image"></i>
-              <input type="file" class="file" @change="onChangePhoto" />
+              <input type="file" class="file" @change="importPhoto" />
             </label>
           </button>
 
@@ -128,10 +127,6 @@ import ImageController from '@/components/ImageController.vue';
 import ImageEditor from '@/components/ImageEditor.vue';
 import DetailEditorButton from '@/components/DetailEditorButton.vue';
 
-const URL = window.URL || window.webkitURL;
-const REGEXP_MIME_TYPE_IMAGES = /^image\/\w+$/;
-const REGEXP_URLS = /^(?:https?|data):/;
-
 export default {
   components: {
     'image-controller': ImageController,
@@ -141,7 +136,7 @@ export default {
   data() {
     return {
       layout: '',
-      userPhoto: userPhoto,
+      userPhoto: null,
       toggleEdit: false,
       toggleSticker: false,
       //To Do : 상수 데이터르 분리가능한지 알아보기
@@ -179,37 +174,17 @@ export default {
       photoCanvas: null
     };
   },
-  mounted() {
-    this.photoCanvas = new PhotoEditor('user-photo', {
-      zoomOnWheel: false,
-      background: false,
-      ready: () => {
-        // To Do : 뷰포트 너비/높이가 변할 때마다 실행되어야 함
-        this.wrapperDimension = this.photoCanvas.getContainerDimension();
-      }
-    });
-  },
   methods: {
-    addImage(e) {
-      console.log('addImage');
-      const file = e.target.files[0];
-      const fileSrc = URL.createObjectURL(file);
-      this.userPhoto = fileSrc;
-
-      // if (files && files.length > 0) {
-      //   this.read(files[0])
-      //     .then(data => {
-      //       target.value = '';
-      //       this.update(data);
-      //     })
-      //     .catch(e => {
-      //       target.value = '';
-      //       this.alert(e);
-      //     });
-      // }
-    },
-    onChangePhoto(e) {
-      this.userPhoto = e.target.files[0];
+    importPhoto(e) {
+      this.userPhoto = URL.createObjectURL(e.target.files[0]);
+      this.photoCanvas = new PhotoEditor('user-photo', {
+        zoomOnWheel: false,
+        background: false,
+        ready: () => {
+          // To Do : 뷰포트 너비/높이가 변할 때마다 실행되어야 함
+          this.wrapperDimension = this.photoCanvas.getContainerDimension();
+        }
+      });
     },
     addSticker(e) {
       if (this.isFirstAdd === false) {
@@ -251,7 +226,7 @@ export default {
       this.photoCanvas.zoomOut();
     },
     crop() {
-      this.photoCanvas.crop();
+      this.photoCanvas.finishCrop();
     },
     openEditor() {
       this.layout = 'image-detail-editor';

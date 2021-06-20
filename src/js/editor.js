@@ -6,7 +6,7 @@ export class PhotoEditor {
   constructor(selector, options) {
     /**
      * Create a new Cropper for edit Photo
-     * @param {string} selector - id of img/canvas element(The target element for cropping.)
+     * @param {string} selector - Id of img or canvas element(The target element for cropping.)
      * @param {Object} options - The configuration options.
      */
     if (!selector) throw new Error('Please provide a selector.');
@@ -44,7 +44,7 @@ export class PhotoEditor {
   }
 
   //tools
-  crop() {
+  finishCrop() {
     const canvas = this.cropper.getCroppedCanvas();
     const croppedImgSrc = canvas.toDataURL();
     this.cropper.replace(croppedImgSrc);
@@ -99,8 +99,29 @@ export class PhotoEditor {
   zoomOut() {
     this.cropper.zoom(-0.1);
   }
-  //To Do : disable when sticker canvas exists
-  //To Do : save canvas to img 1. 편집된 이미지를 fabric으로 보냄
+
+  saveEditedPhoto() {
+    const canvas = this.cropper.getCroppedCanvas();
+    const editedPhotoSrc = canvas.toDataURL();
+    return editedPhotoSrc;
+  }
+
+  /**
+   * @param {string} fileName - (optional)
+   * @param {number} quality - quality of image (optional)
+   * @return {FormData} FromData of editedPhoto
+   */
+  getFormData(fileName, quality) {
+    this.cropper.getCroppedCanvas().toBlob(blob => {
+      const formData = new FormData();
+      if (fileName && quality) {
+        formData.append('editedPhoto', blob, fileName, quality);
+        return formData;
+      }
+      formData.append('editedPhoto', blob);
+      return formData;
+    });
+  }
 }
 
 export class StickerEditor {
@@ -112,10 +133,13 @@ export class StickerEditor {
   constructor(canvasID, width, height) {
     if (!canvasID)
       throw new Error('Please provide a canvas element with id canvas.');
+
     this.stickerCanvas = new fabric.Canvas(canvasID);
+
     if (width && height) {
       this.stickerCanvas.setDimensions({ width, height });
     }
+
     this.stickerCanvas.backgroundColor = null;
     this.stickerCanvas.renderAll.bind(this.stickerCanvas)();
   }
@@ -134,10 +158,25 @@ export class StickerEditor {
     );
   }
 
-  // To Do : save 2. 편집된 사진을 최하단에 깔고 스티커 레이어를 그 위에 올려서 merge후 내보냄(compressor)
   /**
    *
    * @param {string} editedPhoto - src of editedPhoto from PhotoEditor
+   * @returns {string} Src of merged image
    */
-  // saveResultImg(editedPhoto) {}
+  saveResultImg(editedPhoto) {
+    //put editedPhoto behind sticker
+    this.stickerCanvas.setBackgroundImage(
+      editedPhoto,
+      this.stickerCanvas.renderAll.bind(this.stickerCanvas),
+      {
+        originX: 'left',
+        originY: 'top'
+      }
+    );
+
+    //save to img
+    const resultImgSrc = this.stickerCanvas.toDataURL('image/png');
+
+    return resultImgSrc;
+  }
 }
