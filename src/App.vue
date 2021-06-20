@@ -6,11 +6,12 @@
           <button class="image-control-button">
             <i class="mdi mdi-undo"></i>
           </button>
-
           <button class="image-control-button" @click="reset">
             Reset
           </button>
-
+          <button class="image-control-button" @click="deleteSticker">
+            Delete
+          </button>
           <button class="image-control-button">
             <i class="mdi mdi-redo"></i>
           </button>
@@ -25,10 +26,11 @@
           <canvas id="sticker-canvas"></canvas>
         </div>
         <div>
-          <img id="user-photo" :src="userPhoto" />
+          <img id="user-photo" ref="userPhoto" :src="userPhoto" />
         </div>
       </div>
     </template>
+    <!-- canvas -->
     <image-editor>
       <template #imageEditor>
         <div
@@ -117,7 +119,6 @@
 <script>
 import { PhotoEditor, StickerEditor } from '@/js/editor.js';
 // To Do : 사진 가져올 때 src import해야만 사용 가능?
-import userPhoto from '/public/Image/photo.jpg';
 import sticker01 from '/src/assets/01.png';
 import sticker02 from '/src/assets/02.png';
 import sticker03 from '/src/assets/03.png';
@@ -176,25 +177,10 @@ export default {
   },
   methods: {
     importPhoto(e) {
+      //To Do : 이미지 추가시 '이미지를 입력해주세요' 삭제
       this.userPhoto = URL.createObjectURL(e.target.files[0]);
-      this.photoCanvas = new PhotoEditor('user-photo', {
-        zoomOnWheel: false,
-        background: false,
-        ready: () => {
-          // To Do : 뷰포트 너비/높이가 변할 때마다 실행되어야 함
-          this.wrapperDimension = this.photoCanvas.getContainerDimension();
-        }
-      });
     },
     addSticker(e) {
-      if (this.isFirstAdd === false) {
-        this.stickerCanvas = new StickerEditor(
-          'sticker-canvas',
-          this.wrapperDimension[0],
-          this.wrapperDimension[1]
-        );
-        this.isFirstAdd = true;
-      }
       this.stickerCanvas.addSticker(e.target.src);
     },
     rotateRight() {
@@ -227,9 +213,18 @@ export default {
     },
     crop() {
       this.photoCanvas.finishCrop();
+      this.wrapperDimension = this.photoCanvas.getContainerDimension();
     },
     openEditor() {
       this.layout = 'image-detail-editor';
+      this.photoCanvas = new PhotoEditor('user-photo', {
+        zoomOnWheel: false,
+        background: false,
+        ready: () => {
+          // To Do : 뷰포트 너비/높이가 변할 때마다 실행되어야 함
+          this.wrapperDimension = this.photoCanvas.getContainerDimension();
+        }
+      });
       // 스티커 캔버스 열려있는데 edit으로 이동하면 스티커 캔버스 숨기기
       document.getElementById('sticker-wrapper').classList.add('hide');
       // //스티커 캔버스 열려있을 땐 edit 비활성화
@@ -237,8 +232,47 @@ export default {
     },
     openSticker() {
       this.layout = 'sticker-editor';
-      this.photoCanvas.clear();
+
+      if (this.photoCanvas) {
+        this.photoCanvas.clear();
+      }
+
+      const canvasWidth =
+        this.wrapperDimension[0] || this.$refs.userPhoto.width;
+      const canvasHeight =
+        this.wrapperDimension[1] || this.$refs.userPhoto.height;
+
+      if (this.isFirstAdd === false) {
+        this.stickerCanvas = new StickerEditor(
+          'sticker-canvas',
+          canvasWidth,
+          canvasHeight
+        );
+        this.isFirstAdd = true;
+      }
+
       document.getElementById('sticker-wrapper').classList.remove('hide');
+    },
+    getResultImageSrc() {
+      // case 1. 스티커 없이 편집만 해서 저장
+      if (!this.stickerCanvas) {
+        this.photoCanvas.saveEditedPhoto();
+      }
+
+      // case 2. 스티커만 붙여서 저장
+      if (!this.photoCanvas) {
+        this.stickerCanvas.saveResultImg(this.userPhoto);
+      }
+
+      // case 3. 편집, 스티커 둘 다 했을 때 저장
+      if (this.photoCanvas && this.stickerCanvas) {
+        this.stickerCanvas.saveResultImg(this.photoCanvas.saveEditedPhoto());
+      }
+
+      //결과물 src를 가지고 image 요소를 만들거나 files 인스턴스를 만들어서 form data에 싸서 서버로 post
+    },
+    deleteSticker() {
+      this.stickerCanvas.removeSticker();
     }
   }
 };

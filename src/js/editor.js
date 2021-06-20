@@ -130,6 +130,7 @@ export class StickerEditor {
    * @param {Element} canvasID - The id of canvas element
    * @param {Object} options - The option of image
    */
+  //To Do : 스티커 컨트롤러 색상 & 이미지 컨트롤러 색상 통일 (옵션으로 지정)
   constructor(canvasID, width, height) {
     if (!canvasID)
       throw new Error('Please provide a canvas element with id canvas.');
@@ -156,6 +157,11 @@ export class StickerEditor {
       },
       options
     );
+  }
+
+  removeSticker() {
+    const selectedSticker = this.stickerCanvas.getActiveObject();
+    this.stickerCanvas.remove(selectedSticker);
   }
 
   /**
