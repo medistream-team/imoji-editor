@@ -138,7 +138,7 @@ export class StickerEditor {
     this.stickerCanvas = new fabric.Canvas(canvasID);
 
     if (width && height) {
-      this.stickerCanvas.setDimensions({ width, height });
+      this.resizeStickerCanvas(width, height);
     }
 
     this.stickerCanvas.backgroundColor = null;
@@ -182,7 +182,21 @@ export class StickerEditor {
 
     //save to img
     const resultImgSrc = this.stickerCanvas.toDataURL('image/png');
+    const resultElement = new Image();
+    resultElement.src = resultImgSrc;
 
-    return resultImgSrc;
+    return resultElement;
+  }
+
+  /**
+   * Resize Sticker Canvas (ex. after crop)
+   * @param {number | string} width
+   * @param {number | string} height
+   */
+  resizeStickerCanvas(width, height) {
+    this.stickerCanvas.setDimensions({
+      width,
+      height
+    });
   }
 }

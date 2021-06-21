@@ -169,8 +169,6 @@ export default {
         { id: 7, icon: 'mdi-flip-horizontal', emitEvent: 'flip-x' },
         { id: 8, icon: 'mdi-flip-vertical', emitEvent: 'flip-y' }
       ],
-      wrapperDimension: [0, 0],
-      isFirstAdd: false,
       stickerCanvas: null,
       photoCanvas: null
     };
@@ -202,7 +200,7 @@ export default {
       this.photoCanvas.flip('Y');
     },
     reset() {
-      //To Do : 스티커 다 지우기
+      //To Do : 스티커 모드일 때는 스티커 다 지우기
       this.photoCanvas.reset();
     },
     zoomIn() {
@@ -213,45 +211,59 @@ export default {
     },
     crop() {
       this.photoCanvas.finishCrop();
-      this.wrapperDimension = this.photoCanvas.getContainerDimension();
-    },
-    openEditor() {
-      this.layout = 'image-detail-editor';
-      this.photoCanvas = new PhotoEditor('user-photo', {
-        zoomOnWheel: false,
-        background: false,
-        ready: () => {
-          // To Do : 뷰포트 너비/높이가 변할 때마다 실행되어야 함
-          this.wrapperDimension = this.photoCanvas.getContainerDimension();
+
+      //resize sticker canvas size by cropped size
+      this.$refs.userPhoto.addEventListener('load', () => {
+        const resizeWidth = this.$refs.userPhoto.width;
+        const resizeHeight = this.$refs.userPhoto.height;
+        if (this.stickerCanvas) {
+          this.stickerCanvas.resizeStickerCanvas(resizeWidth, resizeHeight);
         }
       });
-      // 스티커 캔버스 열려있는데 edit으로 이동하면 스티커 캔버스 숨기기
-      document.getElementById('sticker-wrapper').classList.add('hide');
-      // //스티커 캔버스 열려있을 땐 edit 비활성화
-      // this.photoCanvas.disable();
     },
-    openSticker() {
-      this.layout = 'sticker-editor';
-
-      if (this.photoCanvas) {
-        this.photoCanvas.clear();
+    openEditor() {
+      if (!this.userPhoto) {
+        alert('편집할 사진을 선택해주세요');
+        throw new Error('Please pick photo.');
       }
 
-      const canvasWidth =
-        this.wrapperDimension[0] || this.$refs.userPhoto.width;
-      const canvasHeight =
-        this.wrapperDimension[1] || this.$refs.userPhoto.height;
+      this.layout = 'image-detail-editor';
 
-      if (this.isFirstAdd === false) {
+      if (!this.photoCanvas) {
+        this.photoCanvas = new PhotoEditor('user-photo', {
+          zoomOnWheel: false,
+          background: false
+        });
+      }
+
+      if (this.stickerCanvas) {
+        document.getElementById('sticker-wrapper').classList.add('hide');
+      }
+    },
+    openSticker() {
+      if (!this.userPhoto) {
+        alert('스티커를 붙일 사진을 선택해주세요');
+        throw new Error('Please pick photo.');
+      }
+
+      this.layout = 'sticker-editor';
+      const canvasWidth = this.$refs.userPhoto.width;
+      const canvasHeight = this.$refs.userPhoto.height;
+
+      if (!this.stickerCanvas) {
         this.stickerCanvas = new StickerEditor(
           'sticker-canvas',
           canvasWidth,
           canvasHeight
         );
-        this.isFirstAdd = true;
+        return;
       }
 
-      document.getElementById('sticker-wrapper').classList.remove('hide');
+      if (this.photoCanvas) {
+        //처음 전환시에만 clear되지 않는 문제가 있음
+        this.photoCanvas.clear();
+        document.getElementById('sticker-wrapper').classList.remove('hide');
+      }
     },
     getResultImageSrc() {
       // case 1. 스티커 없이 편집만 해서 저장
@@ -269,7 +281,7 @@ export default {
         this.stickerCanvas.saveResultImg(this.photoCanvas.saveEditedPhoto());
       }
 
-      //결과물 src를 가지고 image 요소를 만들거나 files 인스턴스를 만들어서 form data에 싸서 서버로 post
+      //결과물 src를 가지고 image 요소를 만들거나 files 인스턴스를 만들어서 form data에 싸서 서버로 post => 이용자가 알아서...
     },
     deleteSticker() {
       this.stickerCanvas.removeSticker();
