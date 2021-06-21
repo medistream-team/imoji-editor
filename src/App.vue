@@ -213,9 +213,10 @@ export default {
       this.photoCanvas.finishCrop();
 
       //resize sticker canvas size by cropped size
-      this.$refs.userPhoto.addEventListener('load', () => {
-        const resizeWidth = this.$refs.userPhoto.width;
-        const resizeHeight = this.$refs.userPhoto.height;
+      const { userPhoto } = this.$refs;
+      userPhoto.addEventListener('load', () => {
+        const resizeWidth = userPhoto.width;
+        const resizeHeight = userPhoto.height;
         if (this.stickerCanvas) {
           this.stickerCanvas.resizeStickerCanvas(resizeWidth, resizeHeight);
         }
@@ -247,8 +248,10 @@ export default {
       }
 
       this.layout = 'sticker-editor';
-      const canvasWidth = this.$refs.userPhoto.width;
-      const canvasHeight = this.$refs.userPhoto.height;
+
+      const { userPhoto } = this.$refs;
+      const canvasWidth = userPhoto.width;
+      const canvasHeight = userPhoto.height;
 
       if (!this.stickerCanvas) {
         this.stickerCanvas = new StickerEditor(
