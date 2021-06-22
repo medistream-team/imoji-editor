@@ -1,180 +1,173 @@
 <template>
   <div>
-    <slot name="imageController"></slot>
+    <slot name="imageController" :reset="reset"></slot>
     <div class="vue-photo-editor-wrapper">
       <div id="sticker-wrapper">
         <canvas id="sticker-canvas"></canvas>
       </div>
       <div>
-        <img id="user-photo" :src="userPhoto" />
+        <img id="user-photo" ref="uploadedPhoto" :src="uploadedPhotoSrc" />
       </div>
     </div>
-
-    <slot name="detailEditor"></slot>
-    <slot name="aspectRatioCrop"></slot>
-    <slot name="sticker"></slot>
-    <slot name="imageEditor"></slot>
+    <slot
+      name="detailEditor"
+      :photoCanvas="photoCanvas"
+      :layout="layout"
+    ></slot>
+    <slot name="aspectRatioCrop" :ratioCrop="ratioCrop" :layout="layout"></slot>
+    <slot name="sticker" :addSticker="addSticker" :layout="layout"></slot>
+    <slot
+      name="imageEditor"
+      :photoCanvas="photoCanvas"
+      :openPhotoEditor="openPhotoEditor"
+      :importPhoto="importPhoto"
+      :openStickerEditor="openStickerEditor"
+      :crop="crop"
+    ></slot>
   </div>
 </template>
 
 <script>
-import Vue from 'vue';
 import { PhotoEditor, StickerEditor } from '@/js/editor.js';
 
 export default {
   data() {
     return {
-      uploadedPhotoSrc: null,
-      stickerCanvas: null,
-      photoCanvas: null,
-      photoCanvasSize: [0, 0]
+      layout: '',
+      stickerCanvas: undefined,
+      photoCanvas: undefined,
+      photoCanvasSize: [0, 0],
+      uploadedPhotoSrc: '',
+      initImageSrc: '',
+      previousImageSrc: ''
     };
   },
+
   methods: {
     //To Do : inline으로 넘기기
     addSticker(e) {
       this.stickerCanvas.addSticker(e.target.src);
     },
-    rotateRight() {
-      this.photoCanvas.rotate('+');
-    },
-    rotateLeft() {
-      this.photoCanvas.rotate('-');
-    },
     freeCrop() {
       this.photoCanvas.setFreeCrop();
     },
-    ratioCrop() {
-      this.photoCanvas.setCropRatio(16, 9);
+    ratioCrop(x, y) {
+      this.photoCanvas.setCropRatio(x, y);
     },
-    flipX() {
-      this.photoCanvas.flip('X');
-    },
-    flipY() {
-      this.photoCanvas.flip('Y');
-    },
-    reset() {
-      //To Do : 스티커 모드일 때는 스티커 다 지우기
-      this.photoCanvas.reset();
-    },
-    zoomIn() {
-      this.photoCanvas.zoomIn();
-    },
-    zoomOut() {
-      this.photoCanvas.zoomOut();
-    },
+
     deleteSticker() {
       this.stickerCanvas.removeSticker();
     },
-    //여기서부터는 methods에서 관리
-    setCanvasDimension() {
-      //resize sticker canvas size by cropped size
-      const { uploadedPhoto } = this.$refs;
-      console.log('set');
 
-      // 이미지를 업로드하고 포토 캔버스를 불러오지 않은 상황에서 포토캔버스의 디멘션을 구하려 하니까 에러가 남
-      // 포토 캔버스가 없으니까 이미지 본연의 크기를 저장함
-      if (!this.photoCanvas) {
-        uploadedPhoto.addEventListener('load', () => {
-          Vue.set(this.photoCanvasSize, 0, uploadedPhoto.width);
-          Vue.set(this.photoCanvasSize, 1, uploadedPhoto.height);
-        });
-
-        uploadedPhoto.removeEventListener('load', () => {
-          Vue.set(this.photoCanvasSize, 0, uploadedPhoto.width);
-          Vue.set(this.photoCanvasSize, 1, uploadedPhoto.height);
-        });
-        return;
-      }
-
+    importPhoto(e) {
+      console.log(e.target);
+      this.uploadedPhotoSrc = URL.createObjectURL(e.target.files[0]);
+      this.initImageSrc = this.uploadedPhotoSrc;
       if (this.photoCanvas) {
-        // 이미지를 업로드하고 포토 캔버스를 불러온 상황
-        uploadedPhoto.addEventListener('load', () => {
-          const [width, height] = this.photoCanvas.getContainerDimension();
-          Vue.set(this.photoCanvasSize, 0, width);
-          Vue.set(this.photoCanvasSize, 1, height);
-        });
-
-        uploadedPhoto.removeEventListener('load', () => {
-          const [width, height] = this.photoCanvas.getContainerDimension();
-          Vue.set(this.photoCanvasSize, 0, width);
-          Vue.set(this.photoCanvasSize, 1, height);
-        });
+        this.photoCanvas.changePhoto(this.uploadedPhotoSrc);
+      }
+      this.$refs.uploadedPhoto.addEventListener(
+        'load',
+        () => {
+          this.setPhotoCanvasSize();
+          this.resizeStickerCanvas();
+        },
+        { once: true }
+      );
+    },
+    reset() {
+      /**
+       * 사진을 처음 업로드 했을 때로 되돌림
+       * 그에 맞게 스티커 캔버스의 사이즈도 업데이트
+       * 모든 스티커를 삭제함
+       */
+      if (this.photoCanvas) {
+        this.photoCanvas.changePhoto(this.initImageSrc);
+        if (this.photoCanvas) {
+          this.photoCanvas.clear();
+        }
+        this.$refs.uploadedPhoto.addEventListener(
+          'load',
+          () => {
+            this.setPhotoCanvasSize(), this.resizeStickerCanvas();
+          },
+          { once: true }
+        );
+      }
+      if (this.stickerCanvas) {
+        this.stickerCanvas.removeAllSticker();
       }
     },
+    async setPhotoCanvasSize() {
+      if (!this.photoCanvas) {
+        const { uploadedPhoto } = this.$refs;
+        this.$set(this.photoCanvasSize, 0, uploadedPhoto.width);
+        this.$set(this.photoCanvasSize, 1, uploadedPhoto.height);
+        return;
+      }
+      const res = await this.photoCanvas.getPhotoSize();
+      this.$set(this.photoCanvasSize, 0, res[0]);
+      this.$set(this.photoCanvasSize, 1, res[1]);
+      this.resizeStickerCanvas();
+    },
     resizeStickerCanvas() {
-      console.log('resize');
+      /**
+       * 사진의 크기에 맞춰 스티커 캔버스의 크기를 재설정함
+       */
       const [width, height] = this.photoCanvasSize;
       if (this.stickerCanvas) {
         this.stickerCanvas.resizeStickerCanvas(width, height);
       }
     },
-    importPhoto(e) {
-      this.uploadedPhotoSrc = URL.createObjectURL(e.target.files[0]);
-      // 이미 로드되어 캔버스가 있는 상황에서 재 업로드
-      if (this.photoCanvas) {
-        this.photoCanvas.changePhoto(this.uploadedPhotoSrc);
-        this.setCanvasDimension();
-        this.resizeStickerCanvas();
-        return;
-      }
-      // 첫 로드 때 사진 dimension 저장, 스티커 캔버스 사이즈 결정
-      this.setCanvasDimension();
-      this.resizeStickerCanvas();
-    },
     crop() {
-      //Bug : 크롭 여러번 했을 때 크기 저장이 제대로 안됨 (undefined)
-      console.log('before', this.photoCanvasSize);
+      /**
+       * 크롭이 완료되면 모듈에서 제공하는 메소드에 의해 크롭된 이미지로 대체됨
+       * 크롭된 사이즈를 저장하고 그에 맞춰 스티커 캔버스의 사이즈를 재설정함
+       */
       this.photoCanvas.finishCrop();
-      //크롭한 크기 저장
-      //set, resize가 crop한 이미지가 load되는 것보다 먼저 발생해서 load 이벤트리스너 걸었음
-      const { uploadedPhoto } = this.$refs;
-      uploadedPhoto.addEventListener('load', () => {
-        this.setCanvasDimension();
-        this.resizeStickerCanvas();
-      });
-
-      uploadedPhoto.removeEventListener('load', () => {
-        this.setCanvasDimension();
-        this.resizeStickerCanvas();
-      });
-
-      console.log('after', this.photoCanvasSize);
+      this.setPhotoCanvasSize();
     },
-    openEditor() {
+    openPhotoEditor() {
+      /**
+       * 'edit' 버튼을 누르면 photo editor 인스턴스가 생성되고, 툴 버튼들을 보여줌
+       * 인스턴스가 생성되는 것은 초기 단 한번만임. 생성 이후 이미지를 재업로드한다면 이미 생성된 캔버스 안에서 이미지만 replace됨
+       * 사진이 업로드 되어 있지 않은데 누르면 에러를 반환함
+       */
       if (!this.uploadedPhotoSrc) {
         alert('편집할 사진을 선택해주세요');
         throw new Error('Please pick photo.');
       }
-
       this.layout = 'image-detail-editor';
-
       if (!this.photoCanvas) {
         this.photoCanvas = new PhotoEditor('user-photo', {
           zoomOnWheel: false,
           background: false
         });
       }
-
       if (this.stickerCanvas) {
         document.getElementById('sticker-wrapper').classList.add('hide');
       }
     },
-    openSticker() {
+    openStickerEditor() {
+      // To Do : 스티커 캔버스도 flex 정렬
+      /**
+       * 처음으로 'sticker'버튼을 눌렀을 때만 스티커 캔버스가 생성되며 width, height값을 따로 넣어줘야 함.
+       * 이후 'edit'으로 넘어갈 때에는 스티커 캔버스를 안 보이게 숨김
+       * 업로드한 사진이 없다면 에러를 반환함
+       * 'edit'에서 크롭박스가 생긴 상태에서 스티커로 넘어갈 경우 크롭박스를 지움
+       */
       if (!this.uploadedPhotoSrc) {
         alert('스티커를 붙일 사진을 선택해주세요');
         throw new Error('Please pick photo.');
       }
-
       this.layout = 'sticker-editor';
-
-      const [width, height] = this.photoCanvasSize;
       if (this.photoCanvas) {
         this.photoCanvas.clear();
+        //To Do : 돔에 직접 접근하지 않고 classList를 toggle하는 방법으로 수정하기
         document.getElementById('sticker-wrapper').classList.remove('hide');
       }
-
       if (!this.stickerCanvas) {
+        const [width, height] = this.photoCanvasSize;
         this.stickerCanvas = new StickerEditor('sticker-canvas', width, height);
       }
     },
@@ -183,17 +176,14 @@ export default {
       if (!this.stickerCanvas) {
         this.photoCanvas.saveEditedPhoto();
       }
-
       // case 2. 스티커만 붙여서 저장
       if (!this.photoCanvas) {
         this.stickerCanvas.saveResultImg(this.uploadedPhotoSrc);
       }
-
       // case 3. 편집, 스티커 둘 다 했을 때 저장
       if (this.photoCanvas && this.stickerCanvas) {
         this.stickerCanvas.saveResultImg(this.photoCanvas.saveEditedPhoto());
       }
-
       //결과물 src를 가지고 image 요소를 만들거나 files 인스턴스를 만들어서 form data에 싸서 서버로 post => 이용자가 알아서...
     }
   }

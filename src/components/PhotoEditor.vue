@@ -1,12 +1,12 @@
 <template>
   <photo-editor-canvas>
-    <template #imageController>
+    <template #imageController="{reset}">
       <div class="image-controller-wrap">
         <button class="image-control-button">
           <i class="mdi mdi-undo"></i>
         </button>
 
-        <button class="image-control-button">
+        <button class="image-control-button" @click="reset">
           Reset
         </button>
 
@@ -15,10 +15,13 @@
         </button>
       </div>
     </template>
-    <template #detailEditor>
+    <template #detailEditor="{photoCanvas, layout}">
       <div v-if="layout === 'image-detail-editor'" class="image-detail-editor">
-        <button class="image-detail-editor-button">
-          <i class="mdi mdi-crop"></i>
+        <button
+          class="image-detail-editor-button"
+          @click="photoCanvas.setFreeCrop()"
+        >
+          <i class="mdi mdi-crop"> </i>
         </button>
 
         <button
@@ -28,32 +31,50 @@
           <i class="mdi mdi-aspect-ratio"></i>
         </button>
 
-        <button class="image-detail-editor-button">
+        <button
+          class="image-detail-editor-button"
+          @click="photoCanvas.zoomIn()"
+        >
           <i class="mdi mdi-magnify-plus"></i>
         </button>
 
-        <button class="image-detail-editor-button">
+        <button
+          class="image-detail-editor-button"
+          @click="photoCanvas.zoomOut()"
+        >
           <i class="mdi mdi-magnify-minus"></i>
         </button>
 
-        <button class="image-detail-editor-button">
+        <button
+          class="image-detail-editor-button"
+          @click="photoCanvas.rotate('+')"
+        >
           <i class="mdi mdi-rotate-right"></i>
         </button>
 
-        <button class="image-detail-editor-button">
+        <button
+          class="image-detail-editor-button"
+          @click="photoCanvas.rotate('-')"
+        >
           <i class="mdi mdi-rotate-left"></i>
         </button>
 
-        <button class="image-detail-editor-button">
+        <button
+          class="image-detail-editor-button"
+          @click="photoCanvas.flip('X')"
+        >
           <i class="mdi mdi-flip-horizontal"></i>
         </button>
 
-        <button class="image-detail-editor-button">
+        <button
+          class="image-detail-editor-button"
+          @click="photoCanvas.flip('Y')"
+        >
           <i class="mdi mdi-flip-vertical"></i>
         </button>
       </div>
     </template>
-    <template #aspectRatioCrop>
+    <template #aspectRatioCrop="{ratioCrop , layout}">
       <div v-if="layout === 'aspect-ratio'" class="aspect-ratio-editor">
         <button
           class="image-ratio-editor-button"
@@ -62,61 +83,66 @@
           <i class="mdi mdi-arrow-left"></i>
         </button>
 
-        <button class="image-ratio-editor-button">
+        <button class="image-ratio-editor-button" @click="ratioCrop(16, 9)">
           16:9
         </button>
 
-        <button class="image-ratio-editor-button">
+        <button class="image-ratio-editor-button" @click="ratioCrop(4, 3)">
           4:3
         </button>
 
-        <button class="image-ratio-editor-button">
+        <button class="image-ratio-editor-button" @click="ratioCrop(2, 3)">
           2:3
         </button>
 
-        <button class="image-ratio-editor-button">
+        <button class="image-ratio-editor-button" @click="ratioCrop(1, 1)">
           1:1
         </button>
       </div>
     </template>
-
-    <template #sticker>
+    <template #sticker="{addSticker , layout}">
       <div v-if="layout === 'sticker-editor'" class="sticker-editor">
         <img
           v-for="StickerImage in StickerImages"
           :key="StickerImage.id"
           :src="StickerImage.src"
           class="image-sticker"
+          @click="addSticker"
         />
       </div>
     </template>
-
-    <template #imageEditor>
+    <template
+      #imageEditor="{openPhotoEditor, importPhoto, openStickerEditor, crop}"
+    >
       <div class="imageEditorWrap">
         <button
           class="image-editor-button"
           title="image upload"
-          @click="addImage"
+          accept="image/*"
         >
           <label>
             <i class="mdi mdi-file-image"></i>
-            <input type="file" class="file" @change="onChangePhoto" />
+            <input type="file" class="file" @change="importPhoto" />
           </label>
         </button>
 
-        <button class="image-editor-button" title="edit" @click="openEditor">
+        <button
+          class="image-editor-button"
+          title="edit"
+          @click="openPhotoEditor"
+        >
           Edit
         </button>
 
         <button
           class="image-editor-button"
           title="sticker"
-          @click="openSticker"
+          @click="openStickerEditor"
         >
           Sticker
         </button>
 
-        <button class="image-editor-button" title="complete">
+        <button class="image-editor-button" title="complete" @click="crop">
           <i class="mdi mdi-check"></i>
         </button>
       </div>
@@ -134,46 +160,13 @@ export default {
   },
   data() {
     return {
-      layout: '',
       StickerImages: StickerImages
     };
-  },
-
-  methods: {
-    openEditor() {
-      this.layout = 'image-detail-editor';
-    },
-    openSticker() {
-      this.layout = 'sticker-editor';
-      // this.photoCanvas.clear();
-      // document.getElementById('sticker-wrapper').classList.remove('hide');
-    },
-    addImage() {
-      console.log('addImage');
-    },
-    onChangePhoto(e) {
-      this.userPhoto = e.target.files[0];
-    }
-    // addSticker(e) {
-    //   if (this.isFirstAdd === false) {
-    //     this.stickerCanvas = new StickerEditor(
-    //       'sticker-canvas',
-    //       this.wrapperDimension[0],
-    //       this.wrapperDimension[1]
-    //     );
-    //     this.isFirstAdd = true;
-    //   }
-    //   this.stickerCanvas.addSticker(e.target.src);
-    // }
   }
 };
 </script>
 
 <style scoped>
-/* body {
-  position: relative;
-} */
-
 .photo-editor {
   display: flex;
   flex-direction: column;
