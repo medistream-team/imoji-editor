@@ -1,6 +1,7 @@
 import Cropper from 'cropperjs';
 import { fabric } from 'fabric';
 import 'cropperjs/dist/cropper.css';
+
 export class PhotoEditor {
   constructor(selector, options) {
     /**
@@ -17,9 +18,11 @@ export class PhotoEditor {
       ...options
     });
   }
-  reset() {
-    this.cropper.reset();
+
+  changePhoto(src) {
+    this.cropper.replace(src);
   }
+
   getPhotoSize() {
     return new Promise((resolve, reject) => {
       try {
@@ -36,28 +39,34 @@ export class PhotoEditor {
       }
     });
   }
+
+  reset() {
+    this.cropper.reset();
+  }
+
   clear() {
     this.cropper.clear();
   }
+
   disable() {
     const stickerCanvas = document.querySelector('.canvas-container');
     stickerCanvas && this.cropper.disable();
   }
+
   //To Do : undo
   undo() {
-    //이전 크롭박스 상태만 기억. 크롭하고, undo시 직전의 크롭박스가 유지됨
+    //아래 메소드는 이전 크롭박스 상태만 기억. 크롭하고, undo시 직전의 크롭박스가 유지됨
     this.cropper.restore();
     //flip, zoom 등등도 undo 되도록
     //지금 생각나는 것은 edit이 일어날 때마다 그때의 상태를 img url로 만들어서 previous url에 저장
   }
+
   finishCrop() {
     const canvas = this.cropper.getCroppedCanvas();
     const croppedImgSrc = canvas.toDataURL();
     this.cropper.replace(croppedImgSrc);
   }
-  changePhoto(src) {
-    this.cropper.replace(src);
-  }
+
   /**
    * Set two number for calculate ratio (x/y) of crop box
    * @param {number} x - numerator
@@ -69,11 +78,13 @@ export class PhotoEditor {
     this.cropper.crop();
     this.cropper.setAspectRatio(x / y);
   }
+
   setFreeCrop() {
     this.cropper.setDragMode('crop');
     this.cropper.crop();
     this.cropper.setAspectRatio(NaN);
   }
+
   /**
    * Set sign of rotate direction
    * @param {string} sign - '+' or '-'
@@ -83,6 +94,7 @@ export class PhotoEditor {
     if (sign === '+') this.cropper.rotate(90);
     if (sign === '-') this.cropper.rotate(-90);
   }
+
   /**
    * Set direction of flip canvas
    * @param {string} direction - 'X' or 'Y'
@@ -96,23 +108,27 @@ export class PhotoEditor {
     if (direction === 'Y')
       this.cropper.scaleY(-this.cropper.getData().scaleY || -1);
   }
+
   zoomIn() {
     this.cropper.zoom(0.1);
   }
+
   zoomOut() {
     this.cropper.zoom(-0.1);
   }
+
   saveEditedPhoto() {
     const canvas = this.cropper.getCroppedCanvas();
     const editedPhotoSrc = canvas.toDataURL();
     return editedPhotoSrc;
   }
+
   /**
    * @param {string} fileName - (optional)
    * @param {number} quality - quality of image (optional)
    * @return {FormData} FromData of editedPhoto
    */
-  getFormData(fileName, quality) {
+  exportFormData(fileName, quality) {
     this.cropper.getCroppedCanvas().toBlob(blob => {
       const formData = new FormData();
       if (fileName && quality) {
@@ -147,7 +163,6 @@ export class StickerEditor {
    * @param {string} src - The src of sticker image
    * @param {Object} options - The options of sticker image
    */
-
   addSticker(src, options) {
     fabric.Image.fromURL(
       src,
@@ -158,10 +173,6 @@ export class StickerEditor {
     );
   }
 
-  removeSticker() {
-    const selectedSticker = this.stickerCanvas.getActiveObject();
-    this.stickerCanvas.remove(selectedSticker);
-  }
   /**
    *
    * @param {string} editedPhoto - src of editedPhoto from PhotoEditor
@@ -183,6 +194,7 @@ export class StickerEditor {
     resultElement.src = resultImgSrc;
     return resultElement;
   }
+
   /**
    * Resize Sticker Canvas (ex. after crop)
    * @param {number | string} width
@@ -197,5 +209,10 @@ export class StickerEditor {
 
   removeAllSticker() {
     this.stickerCanvas.clear();
+  }
+
+  removeSticker() {
+    const selectedSticker = this.stickerCanvas.getActiveObject();
+    this.stickerCanvas.remove(selectedSticker);
   }
 }

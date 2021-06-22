@@ -1,6 +1,6 @@
 <template>
   <photo-editor-canvas>
-    <template #imageController="{reset}">
+    <template #imageController="{reset, stickerCanvas}">
       <div class="image-controller-wrap">
         <button class="image-control-button">
           <i class="mdi mdi-undo"></i>
@@ -10,12 +10,19 @@
           Reset
         </button>
 
+        <button
+          class="image-control-button"
+          @click="stickerCanvas.removeSticker()"
+        >
+          Delete
+        </button>
+
         <button class="image-control-button">
           <i class="mdi mdi-redo"></i>
         </button>
       </div>
     </template>
-    <template #detailEditor="{photoCanvas, layout}">
+    <template #detailEditor="{photoCanvas, layout, turnToRatioCrop}">
       <div v-if="layout === 'image-detail-editor'" class="image-detail-editor">
         <button
           class="image-detail-editor-button"
@@ -24,10 +31,7 @@
           <i class="mdi mdi-crop"> </i>
         </button>
 
-        <button
-          class="image-detail-editor-button"
-          @click="layout = 'aspect-ratio'"
-        >
+        <button class="image-detail-editor-button" @click="turnToRatioCrop">
           <i class="mdi mdi-aspect-ratio"></i>
         </button>
 
@@ -74,40 +78,49 @@
         </button>
       </div>
     </template>
-    <template #aspectRatioCrop="{ratioCrop , layout}">
+    <template #aspectRatioCrop="{photoCanvas, layout, turnToFreeCrop}">
       <div v-if="layout === 'aspect-ratio'" class="aspect-ratio-editor">
-        <button
-          class="image-ratio-editor-button"
-          @click="layout = 'image-detail-editor'"
-        >
+        <button class="image-ratio-editor-button" @click="turnToFreeCrop">
           <i class="mdi mdi-arrow-left"></i>
         </button>
 
-        <button class="image-ratio-editor-button" @click="ratioCrop(16, 9)">
+        <button
+          class="image-ratio-editor-button"
+          @click="photoCanvas.setCropRatio(16, 9)"
+        >
           16:9
         </button>
 
-        <button class="image-ratio-editor-button" @click="ratioCrop(4, 3)">
+        <button
+          class="image-ratio-editor-button"
+          @click="photoCanvas.setCropRatio(4, 3)"
+        >
           4:3
         </button>
 
-        <button class="image-ratio-editor-button" @click="ratioCrop(2, 3)">
+        <button
+          class="image-ratio-editor-button"
+          @click="photoCanvas.setCropRatio(2, 3)"
+        >
           2:3
         </button>
 
-        <button class="image-ratio-editor-button" @click="ratioCrop(1, 1)">
+        <button
+          class="image-ratio-editor-button"
+          @click="photoCanvas.setCropRatio(1, 1)"
+        >
           1:1
         </button>
       </div>
     </template>
-    <template #sticker="{addSticker , layout}">
+    <template #sticker="{stickerCanvas , layout}">
       <div v-if="layout === 'sticker-editor'" class="sticker-editor">
         <img
           v-for="StickerImage in StickerImages"
           :key="StickerImage.id"
           :src="StickerImage.src"
           class="image-sticker"
-          @click="addSticker"
+          @click="e => stickerCanvas.addSticker(e.target.src)"
         />
       </div>
     </template>
