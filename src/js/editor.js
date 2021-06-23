@@ -13,8 +13,10 @@ export class PhotoEditor {
     this.userImage = document.getElementById(selector);
     this.cropper = new Cropper(this.userImage, {
       viewMode: 1,
+      background: false,
       autoCrop: false,
       dragMode: 'none',
+      zoomOnWheel: false,
       minContainerHeight: document.documentElement.clientHeight,
       minContainerWidth: document.documentElement.clientWidth,
       ...options
@@ -40,6 +42,10 @@ export class PhotoEditor {
         reject(error);
       }
     });
+  }
+  test() {
+    const { width, height } = this.cropper.getCanvasData();
+    return [width, height];
   }
 
   reset() {
@@ -111,35 +117,20 @@ export class PhotoEditor {
       this.cropper.scaleY(-this.cropper.getData().scaleY || -1);
   }
 
-  zoomIn() {
-    this.cropper.zoom(0.1);
+  zoom(x) {
+    this.cropper.zoom(x);
   }
 
-  zoomOut() {
-    this.cropper.zoom(-0.1);
+  returnZoomLevel() {
+    const image = this.cropper.getImageData();
+    const zoomLevel = (image.naturalWidth - image.width) / image.width;
+    return zoomLevel;
   }
 
   saveEditedPhoto() {
     const canvas = this.cropper.getCroppedCanvas();
     const editedPhotoSrc = canvas.toDataURL();
     return editedPhotoSrc;
-  }
-
-  /**
-   * @param {string} fileName - (optional)
-   * @param {number} quality - quality of image (optional)
-   * @return {FormData} FromData of editedPhoto
-   */
-  exportFormData(fileName, quality) {
-    this.cropper.getCroppedCanvas().toBlob(blob => {
-      const formData = new FormData();
-      if (fileName && quality) {
-        formData.append('editedPhoto', blob, fileName, quality);
-        return formData;
-      }
-      formData.append('editedPhoto', blob);
-      return formData;
-    });
   }
 }
 

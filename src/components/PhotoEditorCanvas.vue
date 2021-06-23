@@ -20,6 +20,8 @@
       :photoCanvas="photoCanvas"
       :layout="layout"
       :turnToRatioCrop="turnToRatioCrop"
+      :rotate="rotate"
+      :zoom="zoom"
     ></slot>
     <slot
       name="aspectRatioCrop"
@@ -51,7 +53,8 @@ export default {
       photoCanvasSize: [0, 0],
       uploadedPhotoSrc: '',
       initImageSrc: '',
-      previousImageSrc: ''
+      previousImageSrc: '',
+      zoomLevel: 0
     };
   },
   methods: {
@@ -78,7 +81,30 @@ export default {
         { once: true }
       );
     },
+    zoom(x) {
+      this.photoCanvas.zoom(x);
+      this.zoomLevel += x;
+      console.log(this.zoomLevel);
+    },
+    resetZoom() {
+      if (this.zoomLevel > 0) {
+        this.photoCanvas.zoom(-1 * this.zoomLevel);
+      }
+      if (this.zoomLevel < 0) {
+        this.photoCanvas.zoom(Math.abs(this.zoomLevel));
+      }
+    },
+    rotate(sign) {
+      const { photoCanvas, photoCanvasSize, resizeStickerCanvas } = this;
+
+      photoCanvas.rotate(sign);
+      const [width, height] = photoCanvas.test();
+      this.$set(photoCanvasSize, 0, width);
+      this.$set(photoCanvasSize, 1, height);
+      resizeStickerCanvas();
+    },
     reset() {
+      this.zoomLevel = 0;
       if (this.photoCanvas) {
         this.photoCanvas.changePhoto(this.initImageSrc);
 
@@ -130,18 +156,12 @@ export default {
         throw new Error('Please pick photo.');
       }
 
+      document.getElementById('sticker-wrapper').classList.add('hide');
+
       this.layout = 'image-detail-editor';
 
       if (!this.photoCanvas) {
-        this.photoCanvas = new PhotoEditor('user-photo', {
-          zoomOnWheel: false,
-          background: false
-        });
-      }
-
-      if (this.stickerCanvas) {
-        //To Do : 돔에 직접 접근하지 않는 방법 알아보기
-        document.getElementById('sticker-wrapper').classList.add('hide');
+        this.photoCanvas = new PhotoEditor('user-photo');
       }
     },
     openStickerEditor() {
@@ -149,7 +169,7 @@ export default {
         alert('스티커를 붙일 사진을 선택해주세요');
         throw new Error('Please pick photo.');
       }
-
+      this.resetZoom();
       this.layout = 'sticker-editor';
 
       if (this.photoCanvas) {
@@ -196,11 +216,13 @@ export default {
 
 .vue-photo-editor-container {
   position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 #sticker-wrapper {
   position: absolute;
-  top: 0;
   z-index: 1;
 }
 

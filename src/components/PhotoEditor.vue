@@ -22,7 +22,9 @@
         </button>
       </div>
     </template>
-    <template #detailEditor="{photoCanvas, layout, turnToRatioCrop}">
+    <template
+      #detailEditor="{photoCanvas, layout, turnToRatioCrop, rotate, zoom}"
+    >
       <div v-if="layout === 'image-detail-editor'" class="image-detail-editor">
         <button
           class="image-detail-editor-button"
@@ -35,31 +37,19 @@
           <i class="mdi mdi-aspect-ratio"></i>
         </button>
 
-        <button
-          class="image-detail-editor-button"
-          @click="photoCanvas.zoomIn()"
-        >
+        <button class="image-detail-editor-button" @click="zoom(0.1)">
           <i class="mdi mdi-magnify-plus"></i>
         </button>
 
-        <button
-          class="image-detail-editor-button"
-          @click="photoCanvas.zoomOut()"
-        >
+        <button class="image-detail-editor-button" @click="zoom(-0.1)">
           <i class="mdi mdi-magnify-minus"></i>
         </button>
 
-        <button
-          class="image-detail-editor-button"
-          @click="photoCanvas.rotate('+')"
-        >
+        <button class="image-detail-editor-button" @click="rotate('+')">
           <i class="mdi mdi-rotate-right"></i>
         </button>
 
-        <button
-          class="image-detail-editor-button"
-          @click="photoCanvas.rotate('-')"
-        >
+        <button class="image-detail-editor-button" @click="rotate('-')">
           <i class="mdi mdi-rotate-left"></i>
         </button>
 
