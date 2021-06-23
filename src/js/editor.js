@@ -12,7 +12,7 @@ export class PhotoEditor {
     if (!selector) throw new Error('Please provide a selector.');
     this.userImage = document.getElementById(selector);
     this.cropper = new Cropper(this.userImage, {
-      viewMode: 2,
+      viewMode: 1,
       autoCrop: false,
       dragMode: 'none',
       minContainerHeight: document.documentElement.clientHeight,

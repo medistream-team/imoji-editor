@@ -10,7 +10,7 @@
         <div id="sticker-wrapper">
           <canvas id="sticker-canvas"></canvas>
         </div>
-        <div>
+        <div class="user-photo-wrapper">
           <img id="user-photo" ref="uploadedPhoto" :src="uploadedPhotoSrc" />
         </div>
       </div>
@@ -211,5 +211,11 @@ export default {
 
 .hide {
   display: none;
+}
+
+.user-photo-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>
