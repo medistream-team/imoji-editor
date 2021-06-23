@@ -44,6 +44,9 @@
 <script>
 import { PhotoEditor, StickerEditor } from '@/js/editor.js';
 
+let isInitZoom = true;
+let isCropped = false;
+
 export default {
   data() {
     return {
@@ -54,7 +57,7 @@ export default {
       uploadedPhotoSrc: '',
       initImageSrc: '',
       previousImageSrc: '',
-      zoomLevel: 0
+      initZoomLevel: 0
     };
   },
   methods: {
@@ -82,17 +85,12 @@ export default {
       );
     },
     zoom(x) {
+      if (isInitZoom) {
+        this.initZoomLevel = this.photoCanvas.getInitZoomLevel();
+        console.log(this.initZoomLevel);
+        isInitZoom = false;
+      }
       this.photoCanvas.zoom(x);
-      this.zoomLevel += x;
-      console.log(this.zoomLevel);
-    },
-    resetZoom() {
-      if (this.zoomLevel > 0) {
-        this.photoCanvas.zoom(-1 * this.zoomLevel);
-      }
-      if (this.zoomLevel < 0) {
-        this.photoCanvas.zoom(Math.abs(this.zoomLevel));
-      }
     },
     rotate(sign) {
       const { photoCanvas, photoCanvasSize, resizeStickerCanvas } = this;
@@ -104,7 +102,7 @@ export default {
       resizeStickerCanvas();
     },
     reset() {
-      this.zoomLevel = 0;
+      isCropped = false;
       if (this.photoCanvas) {
         this.photoCanvas.changePhoto(this.initImageSrc);
 
@@ -148,7 +146,9 @@ export default {
     },
     crop() {
       this.photoCanvas.finishCrop();
+      isCropped = true;
       this.setPhotoCanvasSize();
+      console.log('크롭시', isCropped);
     },
     openPhotoEditor() {
       if (!this.uploadedPhotoSrc) {
@@ -157,7 +157,6 @@ export default {
       }
 
       document.getElementById('sticker-wrapper').classList.add('hide');
-
       this.layout = 'image-detail-editor';
 
       if (!this.photoCanvas) {
@@ -169,7 +168,10 @@ export default {
         alert('스티커를 붙일 사진을 선택해주세요');
         throw new Error('Please pick photo.');
       }
-      this.resetZoom();
+      console.log('스티커오픈', isCropped);
+      if (!isCropped) {
+        this.photoCanvas.resetZoomLevel(this.initZoomLevel);
+      }
       this.layout = 'sticker-editor';
 
       if (this.photoCanvas) {

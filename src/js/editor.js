@@ -43,9 +43,21 @@ export class PhotoEditor {
       }
     });
   }
+
   test() {
     const { width, height } = this.cropper.getCanvasData();
     return [width, height];
+  }
+
+  //이게 처음 이미지가 불러와졌을 때 실행되어야 함
+  getInitZoomLevel() {
+    const image = this.cropper.getImageData();
+    const zoomLevel = image.width / image.naturalWidth;
+    return zoomLevel;
+  }
+
+  resetZoomLevel(init) {
+    this.cropper.zoomTo(init);
   }
 
   reset() {
