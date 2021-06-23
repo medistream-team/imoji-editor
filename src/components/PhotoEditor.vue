@@ -115,7 +115,7 @@
       </div>
     </template>
     <template
-      #imageEditor="{openPhotoEditor, importPhoto, openStickerEditor, crop}"
+      #imageEditor="{openPhotoEditor, changePhoto, openStickerEditor, crop}"
     >
       <div class="imageEditorWrap">
         <button
@@ -125,7 +125,7 @@
         >
           <label>
             <i class="mdi mdi-file-image"></i>
-            <input type="file" class="file" @change="importPhoto" />
+            <input type="file" class="file" @change="changePhoto" />
           </label>
         </button>
 

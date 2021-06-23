@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <section>
     <slot
       name="imageController"
       :stickerCanvas="stickerCanvas"
@@ -34,15 +34,15 @@
       name="imageEditor"
       :photoCanvas="photoCanvas"
       :openPhotoEditor="openPhotoEditor"
-      :importPhoto="importPhoto"
+      :changePhoto="changePhoto"
       :openStickerEditor="openStickerEditor"
       :crop="crop"
     ></slot>
-  </div>
+  </section>
 </template>
 
 <script>
-import { PhotoEditor, StickerEditor } from '@/js/editor.js';
+import { PhotoEditor, StickerEditor } from '@/js/imojiEditor.js';
 
 let isInitZoom = true;
 let isCropped = false;
@@ -67,7 +67,7 @@ export default {
     turnToFreeCrop() {
       this.layout = 'image-detail-editor';
     },
-    importPhoto(e) {
+    changePhoto(e) {
       this.uploadedPhotoSrc = URL.createObjectURL(e.target.files[0]);
       this.initImageSrc = this.uploadedPhotoSrc;
 
@@ -87,7 +87,6 @@ export default {
     zoom(x) {
       if (isInitZoom) {
         this.initZoomLevel = this.photoCanvas.getInitZoomLevel();
-        console.log(this.initZoomLevel);
         isInitZoom = false;
       }
       this.photoCanvas.zoom(x);
@@ -148,7 +147,6 @@ export default {
       this.photoCanvas.finishCrop();
       isCropped = true;
       this.setPhotoCanvasSize();
-      console.log('크롭시', isCropped);
     },
     openPhotoEditor() {
       if (!this.uploadedPhotoSrc) {
@@ -168,10 +166,11 @@ export default {
         alert('스티커를 붙일 사진을 선택해주세요');
         throw new Error('Please pick photo.');
       }
-      console.log('스티커오픈', isCropped);
+
       if (!isCropped) {
         this.photoCanvas.resetZoomLevel(this.initZoomLevel);
       }
+
       this.layout = 'sticker-editor';
 
       if (this.photoCanvas) {
