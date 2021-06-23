@@ -44,20 +44,23 @@ export class PhotoEditor {
     });
   }
 
-  test() {
+  getRotatedCanvasSize() {
     const { width, height } = this.cropper.getCanvasData();
     return [width, height];
   }
 
-  //이게 처음 이미지가 불러와졌을 때 실행되어야 함
   getInitZoomLevel() {
     const image = this.cropper.getImageData();
     const zoomLevel = image.width / image.naturalWidth;
     return zoomLevel;
   }
 
-  resetZoomLevel(init) {
-    this.cropper.zoomTo(init);
+  /**
+   * Reset zoom to init state
+   * @param {number} initZoomLevel
+   */
+  resetZoomLevel(initZoomLevel) {
+    this.cropper.zoomTo(initZoomLevel);
   }
 
   reset() {
@@ -75,8 +78,6 @@ export class PhotoEditor {
 
   //To Do : undo
   undo() {
-    //아래 메소드는 이전 크롭박스 상태만 기억. 크롭하고, undo시 직전의 크롭박스가 유지됨
-    this.cropper.restore();
     //flip, zoom 등등도 undo 되도록
     //지금 생각나는 것은 edit이 일어날 때마다 그때의 상태를 img url로 만들어서 previous url에 저장
   }
@@ -129,20 +130,24 @@ export class PhotoEditor {
       this.cropper.scaleY(-this.cropper.getData().scaleY || -1);
   }
 
+  /**
+   * Set ratio of zoom in or zoom out
+   * @param {number} x - positive for zoom in, negative for zoom out
+   */
   zoom(x) {
     this.cropper.zoom(x);
   }
 
-  returnZoomLevel() {
-    const image = this.cropper.getImageData();
-    const zoomLevel = (image.naturalWidth - image.width) / image.width;
-    return zoomLevel;
-  }
-
+  /**
+   *
+   * @returns Image Object
+   */
   saveEditedPhoto() {
     const canvas = this.cropper.getCroppedCanvas();
     const editedPhotoSrc = canvas.toDataURL();
-    return editedPhotoSrc;
+    const editedPhoto = new Image();
+    editedPhoto.src = editedPhotoSrc;
+    return editedPhoto;
   }
 }
 
@@ -181,7 +186,7 @@ export class StickerEditor {
   /**
    *
    * @param {string} editedPhoto - src of editedPhoto from PhotoEditor
-   * @returns {string} Src of merged image
+   * @returns {Object} Image Object
    */
   saveResultImg(editedPhoto) {
     //put editedPhoto behind sticker

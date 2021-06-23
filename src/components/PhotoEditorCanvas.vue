@@ -96,7 +96,7 @@ export default {
       const { photoCanvas, photoCanvasSize, resizeStickerCanvas } = this;
 
       photoCanvas.rotate(sign);
-      const [width, height] = photoCanvas.test();
+      const [width, height] = photoCanvas.getRotatedCanvasSize();
       this.$set(photoCanvasSize, 0, width);
       this.$set(photoCanvasSize, 1, height);
       resizeStickerCanvas();
