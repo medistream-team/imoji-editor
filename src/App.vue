@@ -1,5 +1,5 @@
 <template>
-  <photo-editor />
+  <imoji-editor />
 </template>
 
 <script>
@@ -7,7 +7,7 @@ import PhotoEditor from '@/components/PhotoEditor.vue';
 
 export default {
   components: {
-    'photo-editor': PhotoEditor
+    'imoji-editor': PhotoEditor
   }
 };
 </script>

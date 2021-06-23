@@ -1,79 +1,78 @@
 <template>
-  <photo-editor-canvas>
-    <template #imageController="{reset, stickerCanvas}">
-      <div class="image-controller-wrap">
-        <button class="image-control-button">
-          <i class="mdi mdi-undo"></i>
+  <imoji-editor-canvas>
+    <template #controllerBar="{reset, stickerCanvas, importPhoto, crop}">
+      <div class="controller-bar-wrap">
+        <button
+          class="controller-bar-button"
+          title="image upload"
+          accept="image/*"
+        >
+          <label>
+            <i class="mdi mdi-file-image"></i>
+            <input type="file" class="file" @change="importPhoto" />
+          </label>
         </button>
 
-        <button class="image-control-button" @click="reset">
-          Reset
+        <button class="controller-bar-button" title="move" @click="reset">
+          <i class="mdi mdi-cursor-move"></i>
+        </button>
+
+        <button class="controller-bar-button" title="reset" @click="reset">
+          <i class="mdi mdi-restore"></i>
         </button>
 
         <button
-          class="image-control-button"
+          class="controller-bar-button"
+          title="delete sticker"
           @click="stickerCanvas.removeSticker()"
         >
-          Delete
+          <i class="mdi mdi-delete"></i>
         </button>
 
-        <button class="image-control-button">
-          <i class="mdi mdi-redo"></i>
+        <button
+          class="controller-bar-button"
+          title="complete crop"
+          @click="crop"
+        >
+          <i class="mdi mdi-check"></i>
+        </button>
+
+        <button class="controller-bar-button" title="complete">
+          <i class="mdi mdi-download"></i>
         </button>
       </div>
     </template>
-    <template #detailEditor="{photoCanvas, layout, turnToRatioCrop}">
-      <div v-if="layout === 'image-detail-editor'" class="image-detail-editor">
-        <button
-          class="image-detail-editor-button"
-          @click="photoCanvas.setFreeCrop()"
-        >
+    <template #toolBar="{photoCanvas, layout, turnToRatioCrop}">
+      <div v-if="layout === 'tool-bar'" class="tool-bar">
+        <button class="tool-bar-button" @click="photoCanvas.setFreeCrop()">
           <i class="mdi mdi-crop"> </i>
         </button>
 
-        <button class="image-detail-editor-button" @click="turnToRatioCrop">
+        <button class="tool-bar-button" @click="turnToRatioCrop">
           <i class="mdi mdi-aspect-ratio"></i>
         </button>
 
-        <button
-          class="image-detail-editor-button"
-          @click="photoCanvas.zoomIn()"
-        >
+        <button class="tool-bar-button" @click="photoCanvas.zoomIn()">
           <i class="mdi mdi-magnify-plus"></i>
         </button>
 
-        <button
-          class="image-detail-editor-button"
-          @click="photoCanvas.zoomOut()"
-        >
+        <button class="tool-bar-button" @click="photoCanvas.zoomOut()">
           <i class="mdi mdi-magnify-minus"></i>
         </button>
 
-        <button
-          class="image-detail-editor-button"
-          @click="photoCanvas.rotate('+')"
-        >
+        <button class="tool-bar-button" @click="photoCanvas.rotate('+')">
           <i class="mdi mdi-rotate-right"></i>
         </button>
 
-        <button
-          class="image-detail-editor-button"
-          @click="photoCanvas.rotate('-')"
-        >
+        <button class="tool-bar-button" @click="photoCanvas.rotate('-')">
           <i class="mdi mdi-rotate-left"></i>
         </button>
 
-        <button
-          class="image-detail-editor-button"
-          @click="photoCanvas.flip('X')"
-        >
+        <button class="tool-bar-button" @click="photoCanvas.flip('X')">
           <i class="mdi mdi-flip-horizontal"></i>
         </button>
 
-        <button
-          class="image-detail-editor-button"
-          @click="photoCanvas.flip('Y')"
-        >
+        <button class="tool-bar-button" @click="photoCanvas.flip('Y')">
           <i class="mdi mdi-flip-vertical"></i>
         </button>
       </div>
@@ -124,21 +123,8 @@
         />
       </div>
     </template>
-    <template
-      #imageEditor="{openPhotoEditor, importPhoto, openStickerEditor, crop}"
-    >
+    <template #imageEditor="{openPhotoEditor, openStickerEditor}">
       <div class="imageEditorWrap">
-        <button
-          class="image-editor-button"
-          title="image upload"
-          accept="image/*"
-        >
-          <label>
-            <i class="mdi mdi-file-image"></i>
-            <input type="file" class="file" @change="importPhoto" />
-          </label>
-        </button>
-
         <button
           class="image-editor-button"
           title="edit"
@@ -154,13 +140,9 @@
         >
           Sticker
         </button>
-
-        <button class="image-editor-button" title="complete" @click="crop">
-          <i class="mdi mdi-check"></i>
-        </button>
       </div>
     </template>
-  </photo-editor-canvas>
+  </imoji-editor-canvas>
 </template>
 
 <script>
@@ -169,7 +151,7 @@ import StickerImages from '@/assets/StickerImages.js';
 
 export default {
   components: {
-    'photo-editor-canvas': PhotoEditorCanvas
+    'imoji-editor-canvas': PhotoEditorCanvas
   },
   data() {
     return {
@@ -180,20 +162,11 @@ export default {
 </script>
 
 <style scoped>
-.photo-editor {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  padding-top: 100px;
-  padding-bottom: 100px;
-  background-color: black;
-}
-
 .file {
   display: none;
 }
 
-.image-controller-wrap {
+.controller-bar-wrap {
   position: absolute;
   z-index: 2;
   display: flex;
@@ -202,17 +175,38 @@ export default {
   padding: 10px;
   border: none;
   width: 100vw;
+  background: rgba(0, 0, 0, 0.1);
 }
 
-.image-control-button {
+.controller-bar-button {
   background-color: transparent;
   color: aliceblue;
   border-style: none;
   cursor: pointer;
 }
 
-.image-control-button:hover {
+.controller-bar-button:hover {
   color: grey;
+}
+
+.tool-bar {
+  position: absolute;
+  bottom: 3rem;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin: 2px auto;
+  width: 100vw;
+  size: 1.938rem;
+  background: rgba(0, 0, 0, 0.1);
+  z-index: 2;
+}
+
+.tool-bar-button {
+  background-color: transparent;
+  color: white;
+  border-style: none;
+  cursor: pointer;
 }
 
 .imageEditorWrap {
@@ -225,18 +219,7 @@ export default {
   z-index: 2;
   bottom: 0;
   width: 100vw;
-}
-
-.image-detail-editor {
-  position: absolute;
-  z-index: 2;
-  bottom: 3rem;
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  size: 1.938rem;
-  margin: 10px auto;
-  width: 100vw;
+  background: rgba(0, 0, 0, 0.1);
 }
 
 .image-editor-button {
@@ -270,16 +253,17 @@ export default {
   display: flex;
   justify-content: space-around;
   border-style: none;
-  margin: 10px auto;
+  margin: 2px auto;
   position: absolute;
   z-index: 2;
   bottom: 3rem;
-  width: 100vh;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.1);
 }
 
 .image-ratio-editor-button {
   height: 1.938rem;
-  background-color: black;
+  background-color: transparent;
   color: white;
   border-style: none;
   cursor: pointer;
@@ -288,13 +272,6 @@ export default {
 
 .image-ratio-editor-button:hover {
   color: grey;
-}
-
-.image-detail-editor-button {
-  background-color: transparent;
-  color: white;
-  border-style: none;
-  cursor: pointer;
 }
 
 img.image-sticker {
