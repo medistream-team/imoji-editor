@@ -15,6 +15,8 @@ export class PhotoEditor {
       viewMode: 2,
       autoCrop: false,
       dragMode: 'none',
+      minContainerHeight: document.documentElement.clientHeight,
+      minContainerWidth: document.documentElement.clientWidth,
       ...options
     });
   }
