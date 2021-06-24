@@ -6,6 +6,7 @@
       :reset="reset"
       :importPhoto="importPhoto"
       :crop="crop"
+      :layout="layout"
     ></slot>
     <div class="vue-photo-editor-wrapper">
       <div class="vue-photo-editor-container">
@@ -17,21 +18,14 @@
         </div>
       </div>
     </div>
+    <slot name="toolBar" :photoCanvas="photoCanvas" :layout="layout"></slot>
     <slot
-      name="aspectRatioCrop"
-      :photoCanvas="photoCanvas"
+      name="stickerToolBar"
+      :stickerCanvas="stickerCanvas"
       :layout="layout"
-      :turnToFreeCrop="turnToFreeCrop"
     ></slot>
     <slot
-      name="toolBar"
-      :photoCanvas="photoCanvas"
-      :layout="layout"
-      :turnToRatioCrop="turnToRatioCrop"
-    ></slot>
-    <slot name="sticker" :stickerCanvas="stickerCanvas" :layout="layout"></slot>
-    <slot
-      name="imageEditor"
+      name="toolNavigation"
       :photoCanvas="photoCanvas"
       :openPhotoEditor="openPhotoEditor"
       :importPhoto="importPhoto"
@@ -57,12 +51,6 @@ export default {
     };
   },
   methods: {
-    turnToRatioCrop() {
-      this.layout = 'aspect-ratio';
-    },
-    turnToFreeCrop() {
-      this.layout = 'tool-bar';
-    },
     importPhoto(e) {
       this.uploadedPhotoSrc = URL.createObjectURL(e.target.files[0]);
       this.initImageSrc = this.uploadedPhotoSrc;
@@ -152,7 +140,7 @@ export default {
         throw new Error('Please pick photo.');
       }
 
-      this.layout = 'sticker-editor';
+      this.layout = 'sticker-tool-bar';
 
       if (this.photoCanvas) {
         this.photoCanvas.clear();

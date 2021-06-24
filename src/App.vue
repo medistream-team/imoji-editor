@@ -3,11 +3,11 @@
 </template>
 
 <script>
-import PhotoEditor from '@/components/PhotoEditor.vue';
+import ImojiEditor from '@/components/ImojiEditor.vue';
 
 export default {
   components: {
-    'imoji-editor': PhotoEditor
+    'imoji-editor': ImojiEditor
   }
 };
 </script>

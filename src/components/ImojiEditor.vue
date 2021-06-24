@@ -1,6 +1,8 @@
 <template>
   <imoji-editor-canvas>
-    <template #controllerBar="{reset, stickerCanvas, importPhoto, crop}">
+    <template
+      #controllerBar="{reset, stickerCanvas, importPhoto, crop, layout}"
+    >
       <div class="controller-bar-wrap">
         <button
           class="controller-bar-button"
@@ -21,35 +23,75 @@
           <i class="mdi mdi-restore"></i>
         </button>
 
-        <button
-          class="controller-bar-button"
-          title="delete sticker"
-          @click="stickerCanvas.removeSticker()"
-        >
-          <i class="mdi mdi-delete"></i>
-        </button>
+        <div v-if="layout === 'sticker-tool-bar'" class="delete-sticker">
+          <button
+            class="controller-bar-button"
+            title="delete sticker"
+            @click="stickerCanvas.removeSticker()"
+          >
+            <i class="mdi mdi-delete"></i>
+          </button>
+        </div>
 
-        <button
-          class="controller-bar-button"
-          title="complete crop"
-          @click="crop"
-        >
-          <i class="mdi mdi-check"></i>
-        </button>
+        <div v-if="layout === 'tool-bar'" class="complete-crop">
+          <button
+            class="controller-bar-button"
+            title="complete crop"
+            @click="crop"
+          >
+            <i class="mdi mdi-check"></i>
+          </button>
+        </div>
 
         <button class="controller-bar-button" title="complete">
           <i class="mdi mdi-download"></i>
         </button>
       </div>
     </template>
-    <template #toolBar="{photoCanvas, layout, turnToRatioCrop}">
+    <template #toolBar="{photoCanvas, layout}">
       <div v-if="layout === 'tool-bar'" class="tool-bar">
-        <button class="tool-bar-button" @click="photoCanvas.setFreeCrop()">
-          <i class="mdi mdi-crop"> </i>
-        </button>
+        <div v-show="isActiveRatioCrop" class="aspect-ratio-tool-bar">
+          <button
+            class="aspect-ratio-tool-bar-button"
+            @click="photoCanvas.setFreeCrop()"
+          >
+            Free
+          </button>
 
-        <button class="tool-bar-button" @click="turnToRatioCrop">
-          <i class="mdi mdi-aspect-ratio"></i>
+          <button
+            class="aspect-ratio-tool-bar-button"
+            @click="photoCanvas.setCropRatio(16, 9)"
+          >
+            16:9
+          </button>
+
+          <button
+            class="aspect-ratio-tool-bar-button"
+            @click="photoCanvas.setCropRatio(4, 3)"
+          >
+            4:3
+          </button>
+
+          <button
+            class="aspect-ratio-tool-bar-button"
+            @click="photoCanvas.setCropRatio(2, 3)"
+          >
+            2:3
+          </button>
+
+          <button
+            class="aspect-ratio-tool-bar-button"
+            @click="photoCanvas.setCropRatio(1, 1)"
+          >
+            1:1
+          </button>
+        </div>
+
+        <button
+          class="tool-bar-button"
+          @click="isActiveRatioCrop = !isActiveRatioCrop"
+        >
+          <i class="mdi mdi-crop"> </i>
         </button>
 
         <button class="tool-bar-button" @click="photoCanvas.zoomIn()">
@@ -77,43 +119,9 @@
         </button>
       </div>
     </template>
-    <template #aspectRatioCrop="{photoCanvas, layout, turnToFreeCrop}">
-      <div v-if="layout === 'aspect-ratio'" class="aspect-ratio-editor">
-        <button class="image-ratio-editor-button" @click="turnToFreeCrop">
-          <i class="mdi mdi-arrow-left"></i>
-        </button>
 
-        <button
-          class="image-ratio-editor-button"
-          @click="photoCanvas.setCropRatio(16, 9)"
-        >
-          16:9
-        </button>
-
-        <button
-          class="image-ratio-editor-button"
-          @click="photoCanvas.setCropRatio(4, 3)"
-        >
-          4:3
-        </button>
-
-        <button
-          class="image-ratio-editor-button"
-          @click="photoCanvas.setCropRatio(2, 3)"
-        >
-          2:3
-        </button>
-
-        <button
-          class="image-ratio-editor-button"
-          @click="photoCanvas.setCropRatio(1, 1)"
-        >
-          1:1
-        </button>
-      </div>
-    </template>
-    <template #sticker="{stickerCanvas , layout}">
-      <div v-if="layout === 'sticker-editor'" class="sticker-editor">
+    <template #stickerToolBar="{stickerCanvas , layout}">
+      <div v-if="layout === 'sticker-tool-bar'" class="sticker-tool-bar">
         <img
           v-for="StickerImage in StickerImages"
           :key="StickerImage.id"
@@ -123,10 +131,10 @@
         />
       </div>
     </template>
-    <template #imageEditor="{openPhotoEditor, openStickerEditor}">
-      <div class="imageEditorWrap">
+    <template #toolNavigation="{openPhotoEditor, openStickerEditor}">
+      <div class="tool-navigation-wrap">
         <button
-          class="image-editor-button"
+          class="tool-navigation-button"
           title="edit"
           @click="openPhotoEditor"
         >
@@ -134,7 +142,7 @@
         </button>
 
         <button
-          class="image-editor-button"
+          class="tool-navigation-button"
           title="sticker"
           @click="openStickerEditor"
         >
@@ -146,15 +154,16 @@
 </template>
 
 <script>
-import PhotoEditorCanvas from '@/components/PhotoEditorCanvas.vue';
+import ImojiEditorCanvas from '@/components/ImojiEditorCanvas.vue';
 import StickerImages from '@/assets/StickerImages.js';
 
 export default {
   components: {
-    'imoji-editor-canvas': PhotoEditorCanvas
+    'imoji-editor-canvas': ImojiEditorCanvas
   },
   data() {
     return {
+      isActiveRatioCrop: false,
       StickerImages: StickerImages
     };
   }
@@ -196,6 +205,7 @@ export default {
   justify-content: space-around;
   align-items: center;
   margin: 2px auto;
+  padding-top: 8px;
   width: 100vw;
   size: 1.938rem;
   background: rgba(0, 0, 0, 0.1);
@@ -209,7 +219,7 @@ export default {
   cursor: pointer;
 }
 
-.imageEditorWrap {
+.tool-navigation-wrap {
   display: flex;
   justify-content: space-around;
   align-items: center;
@@ -222,7 +232,7 @@ export default {
   background: rgba(0, 0, 0, 0.1);
 }
 
-.image-editor-button {
+.tool-navigation-button {
   display: flex;
   justify-content: space-around;
   align-items: center;
@@ -234,34 +244,38 @@ export default {
   cursor: pointer;
 }
 
-.image-editor-button:hover {
+.tool-navigation-button:hover {
   color: grey;
 }
 
-.sticker-editor {
-  display: flex;
-  flex-direction: row;
+.sticker-tool-bar {
+  display: grid;
+  grid-auto-flow: column;
   justify-content: space-around;
   margin: 10px auto;
   position: absolute;
   z-index: 2;
+  margin: 2px auto;
+  padding-top: 8px;
   bottom: 3rem;
   width: 100vw;
+  height: 3rem;
+  background: rgba(0, 0, 0, 0.1);
 }
 
-.aspect-ratio-editor {
+.aspect-ratio-tool-bar {
   display: flex;
   justify-content: space-around;
   border-style: none;
-  margin: 2px auto;
+  padding: 10px;
   position: absolute;
   z-index: 2;
-  bottom: 3rem;
+  bottom: 2.43rem;
   width: 100%;
   background: rgba(0, 0, 0, 0.1);
 }
 
-.image-ratio-editor-button {
+.aspect-ratio-tool-bar-button {
   height: 1.938rem;
   background-color: transparent;
   color: white;
@@ -270,7 +284,7 @@ export default {
   font-size: 1rem;
 }
 
-.image-ratio-editor-button:hover {
+.aspect-ratio-tool-bar-button:hover {
   color: grey;
 }
 
