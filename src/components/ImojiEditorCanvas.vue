@@ -51,7 +51,12 @@ let isInitZoom = true;
 let isCropped = false;
 
 export default {
-  props: ['defaultImage'],
+  props: {
+    defaultImage: {
+      type: Image,
+      required: false
+    }
+  },
   data() {
     return {
       layout: '',
@@ -66,7 +71,13 @@ export default {
   },
   watch: {
     //To Do : import image 변경시마다 importPhoto()실행
-    test() {}
+    defaultImage: {
+      deep: true,
+      immediate: true,
+      handler() {
+        this.importPhoto();
+      }
+    }
   },
   mounted() {
     this.importPhoto();
@@ -75,10 +86,6 @@ export default {
     importPhoto() {
       this.uploadedPhotoSrc = this.defaultImage.src;
       this.initImageSrc = this.defaultImage.src;
-
-      // 밖에서 넣어주는 default 이미지를 다루는 함수를 importPhoto로 하기 (watch가 관리)
-      // 컴포넌트를 설치하는 순간부터 watch가 돌게 할 수 있다. vue watch immediate
-      // default-image 변경되는것을 watch가 관찰하여 변경이 발생하면 importPhoto가 실행되게 하기
     },
     turnToRatioCrop() {
       this.layout = 'aspect-ratio';

@@ -164,7 +164,12 @@ export default {
   components: {
     'imoji-editor-canvas': ImojiEditorCanvas
   },
-  props: ['defaultImage'],
+  props: {
+    defaultImage: {
+      type: Image,
+      required: false
+    }
+  },
   data() {
     return {
       isActiveRatioCrop: false,
