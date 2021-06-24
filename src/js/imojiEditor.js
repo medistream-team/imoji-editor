@@ -12,9 +12,13 @@ export class PhotoEditor {
     if (!selector) throw new Error('Please provide a selector.');
     this.userImage = document.getElementById(selector);
     this.cropper = new Cropper(this.userImage, {
-      viewMode: 2,
+      viewMode: 1,
+      background: false,
       autoCrop: false,
       dragMode: 'none',
+      zoomOnWheel: false,
+      minContainerHeight: document.documentElement.clientHeight,
+      minContainerWidth: document.documentElement.clientWidth,
       ...options
     });
   }
@@ -40,6 +44,25 @@ export class PhotoEditor {
     });
   }
 
+  getRotatedCanvasSize() {
+    const { width, height } = this.cropper.getCanvasData();
+    return [width, height];
+  }
+
+  getInitZoomLevel() {
+    const image = this.cropper.getImageData();
+    const zoomLevel = image.width / image.naturalWidth;
+    return zoomLevel;
+  }
+
+  /**
+   * Reset zoom to init state
+   * @param {number} initZoomLevel
+   */
+  resetZoomLevel(initZoomLevel) {
+    this.cropper.zoomTo(initZoomLevel);
+  }
+
   reset() {
     this.cropper.reset();
   }
@@ -55,8 +78,6 @@ export class PhotoEditor {
 
   //To Do : undo
   undo() {
-    //아래 메소드는 이전 크롭박스 상태만 기억. 크롭하고, undo시 직전의 크롭박스가 유지됨
-    this.cropper.restore();
     //flip, zoom 등등도 undo 되도록
     //지금 생각나는 것은 edit이 일어날 때마다 그때의 상태를 img url로 만들어서 previous url에 저장
   }
@@ -109,35 +130,24 @@ export class PhotoEditor {
       this.cropper.scaleY(-this.cropper.getData().scaleY || -1);
   }
 
-  zoomIn() {
-    this.cropper.zoom(0.1);
-  }
-
-  zoomOut() {
-    this.cropper.zoom(-0.1);
-  }
-
-  saveEditedPhoto() {
-    const canvas = this.cropper.getCroppedCanvas();
-    const editedPhotoSrc = canvas.toDataURL();
-    return editedPhotoSrc;
+  /**
+   * Set ratio of zoom in or zoom out
+   * @param {number} x - positive for zoom in, negative for zoom out
+   */
+  zoom(x) {
+    this.cropper.zoom(x);
   }
 
   /**
-   * @param {string} fileName - (optional)
-   * @param {number} quality - quality of image (optional)
-   * @return {FormData} FromData of editedPhoto
+   *
+   * @returns Image Object
    */
-  exportFormData(fileName, quality) {
-    this.cropper.getCroppedCanvas().toBlob(blob => {
-      const formData = new FormData();
-      if (fileName && quality) {
-        formData.append('editedPhoto', blob, fileName, quality);
-        return formData;
-      }
-      formData.append('editedPhoto', blob);
-      return formData;
-    });
+  saveEditedPhoto() {
+    const canvas = this.cropper.getCroppedCanvas();
+    const editedPhotoSrc = canvas.toDataURL();
+    const editedPhoto = new Image();
+    editedPhoto.src = editedPhotoSrc;
+    return editedPhoto;
   }
 }
 
@@ -176,7 +186,7 @@ export class StickerEditor {
   /**
    *
    * @param {string} editedPhoto - src of editedPhoto from PhotoEditor
-   * @returns {string} Src of merged image
+   * @returns {Object} Image Object
    */
   saveResultImg(editedPhoto) {
     //put editedPhoto behind sticker

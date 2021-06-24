@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <section>
     <slot
       name="controllerBar"
       :stickerCanvas="stickerCanvas"
@@ -13,7 +13,7 @@
         <div id="sticker-wrapper">
           <canvas id="sticker-canvas"></canvas>
         </div>
-        <div>
+        <div class="user-photo-wrapper">
           <img id="user-photo" ref="uploadedPhoto" :src="uploadedPhotoSrc" />
         </div>
       </div>
@@ -23,22 +23,34 @@
       name="stickerToolBar"
       :stickerCanvas="stickerCanvas"
       :layout="layout"
+      :turnToRatioCrop="turnToRatioCrop"
+      :rotate="rotate"
+      :zoom="zoom"
+    ></slot>
+    <slot
+      name="aspectRatioCrop"
+      :photoCanvas="photoCanvas"
+      :layout="layout"
     ></slot>
     <slot
       name="toolNavigation"
       :photoCanvas="photoCanvas"
       :openPhotoEditor="openPhotoEditor"
-      :importPhoto="importPhoto"
+      :changePhoto="changePhoto"
       :openStickerEditor="openStickerEditor"
       :crop="crop"
     ></slot>
-  </div>
+  </section>
 </template>
 
 <script>
-import { PhotoEditor, StickerEditor } from '@/js/editor.js';
+import { PhotoEditor, StickerEditor } from '@/js/imojiEditor.js';
+
+let isInitZoom = true;
+let isCropped = false;
 
 export default {
+  props: ['defaultImage'],
   data() {
     return {
       layout: '',
@@ -47,13 +59,34 @@ export default {
       photoCanvasSize: [0, 0],
       uploadedPhotoSrc: '',
       initImageSrc: '',
-      previousImageSrc: ''
+      previousImageSrc: '',
+      initZoomLevel: 0
     };
   },
+  watch: {
+    test() {}
+  },
+  mounted() {
+    this.importPhoto();
+  },
   methods: {
-    importPhoto(e) {
+    importPhoto() {
+      this.uploadedPhotoSrc = this.defaultImage.src;
+      this.initImageSrc = this.defaultImage.src;
+
+      // 밖에서 넣어주는 default 이미지를 다루는 함수를 importPhoto로 하기 (watch가 관리)
+      // 컴포넌트를 설치하는 순간부터 watch가 돌게 할 수 있다. vue watch immediate
+      // default-image 변경되는것을 watch가 관찰하여 변경이 발생하면 importPhoto가 실행되게 하기
+    },
+    turnToRatioCrop() {
+      this.layout = 'aspect-ratio';
+    },
+    turnToFreeCrop() {
+      this.layout = 'image-detail-editor';
+    },
+    changePhoto(e) {
       this.uploadedPhotoSrc = URL.createObjectURL(e.target.files[0]);
-      this.initImageSrc = this.uploadedPhotoSrc;
+      this.initImageSrc = URL.createObjectURL(e.target.files[0]);
 
       if (this.photoCanvas) {
         this.photoCanvas.changePhoto(this.uploadedPhotoSrc);
@@ -68,7 +101,23 @@ export default {
         { once: true }
       );
     },
+    zoom(x) {
+      if (isInitZoom) {
+        this.initZoomLevel = this.photoCanvas.getInitZoomLevel();
+        isInitZoom = false;
+      }
+      this.photoCanvas.zoom(x);
+    },
+    rotate(sign) {
+      this.photoCanvas.rotate(sign);
+      const [width, height] = this.photoCanvas.getRotatedCanvasSize();
+      this.$set(this.photoCanvasSize, 0, width);
+      this.$set(this.photoCanvasSize, 1, height);
+      this.resizeStickerCanvas();
+    },
     reset() {
+      isCropped = false;
+
       if (this.photoCanvas) {
         this.photoCanvas.changePhoto(this.initImageSrc);
 
@@ -112,7 +161,10 @@ export default {
     },
     crop() {
       this.photoCanvas.finishCrop();
+      isCropped = true;
       this.setPhotoCanvasSize();
+      isInitZoom = true;
+      //크롭된 사진의 비율을 업데이트해야함
     },
     openPhotoEditor() {
       if (!this.uploadedPhotoSrc) {
@@ -120,24 +172,21 @@ export default {
         throw new Error('Please pick photo.');
       }
 
+      document.getElementById('sticker-wrapper').classList.add('hide');
       this.layout = 'tool-bar';
 
       if (!this.photoCanvas) {
-        this.photoCanvas = new PhotoEditor('user-photo', {
-          zoomOnWheel: false,
-          background: false
-        });
-      }
-
-      if (this.stickerCanvas) {
-        //To Do : 돔에 직접 접근하지 않는 방법 알아보기
-        document.getElementById('sticker-wrapper').classList.add('hide');
+        this.photoCanvas = new PhotoEditor('user-photo');
       }
     },
     openStickerEditor() {
       if (!this.uploadedPhotoSrc) {
         alert('스티커를 붙일 사진을 선택해주세요');
         throw new Error('Please pick photo.');
+      }
+
+      if (!isCropped) {
+        this.photoCanvas.resetZoomLevel(this.initZoomLevel);
       }
 
       this.layout = 'sticker-tool-bar';
@@ -168,7 +217,6 @@ export default {
       if (this.photoCanvas && this.stickerCanvas) {
         this.stickerCanvas.saveResultImg(this.photoCanvas.saveEditedPhoto());
       }
-      //결과물 src를 가지고 image 요소를 만들거나 files 인스턴스를 만들어서 form data에 싸서 서버로 post => 이용자가 알아서...
     }
   }
 };
@@ -186,11 +234,13 @@ export default {
 
 .vue-photo-editor-container {
   position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 #sticker-wrapper {
   position: absolute;
-  top: 0;
   z-index: 1;
 }
 
@@ -201,5 +251,11 @@ export default {
 
 .hide {
   display: none;
+}
+
+.user-photo-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>
