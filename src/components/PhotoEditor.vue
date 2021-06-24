@@ -1,5 +1,5 @@
 <template>
-  <photo-editor-canvas>
+  <photo-editor-canvas :default-image="defaultImage">
     <template #imageController="{reset, stickerCanvas}">
       <div class="image-controller-wrap">
         <button class="image-control-button">
@@ -161,6 +161,7 @@ export default {
   components: {
     'photo-editor-canvas': PhotoEditorCanvas
   },
+  props: ['defaultImage'],
   data() {
     return {
       StickerImages: StickerImages

@@ -48,6 +48,7 @@ let isInitZoom = true;
 let isCropped = false;
 
 export default {
+  props: ['defaultImage'],
   data() {
     return {
       layout: '',
@@ -60,7 +61,21 @@ export default {
       initZoomLevel: 0
     };
   },
+  watch: {
+    test() {}
+  },
+  mounted() {
+    this.importPhoto();
+  },
   methods: {
+    importPhoto() {
+      this.uploadedPhotoSrc = this.defaultImage.src;
+      this.initImageSrc = this.defaultImage.src;
+
+      // 밖에서 넣어주는 default 이미지를 다루는 함수를 importPhoto로 하기 (watch가 관리)
+      // 컴포넌트를 설치하는 순간부터 watch가 돌게 할 수 있다. vue watch immediate
+      // default-image 변경되는것을 watch가 관찰하여 변경이 발생하면 importPhoto가 실행되게 하기
+    },
     turnToRatioCrop() {
       this.layout = 'aspect-ratio';
     },
@@ -69,7 +84,7 @@ export default {
     },
     changePhoto(e) {
       this.uploadedPhotoSrc = URL.createObjectURL(e.target.files[0]);
-      this.initImageSrc = this.uploadedPhotoSrc;
+      this.initImageSrc = URL.createObjectURL(e.target.files[0]);
 
       if (this.photoCanvas) {
         this.photoCanvas.changePhoto(this.uploadedPhotoSrc);
@@ -92,16 +107,15 @@ export default {
       this.photoCanvas.zoom(x);
     },
     rotate(sign) {
-      const { photoCanvas, photoCanvasSize, resizeStickerCanvas } = this;
-
-      photoCanvas.rotate(sign);
-      const [width, height] = photoCanvas.getRotatedCanvasSize();
-      this.$set(photoCanvasSize, 0, width);
-      this.$set(photoCanvasSize, 1, height);
-      resizeStickerCanvas();
+      this.photoCanvas.rotate(sign);
+      const [width, height] = this.photoCanvas.getRotatedCanvasSize();
+      this.$set(this.photoCanvasSize, 0, width);
+      this.$set(this.photoCanvasSize, 1, height);
+      this.resizeStickerCanvas();
     },
     reset() {
       isCropped = false;
+
       if (this.photoCanvas) {
         this.photoCanvas.changePhoto(this.initImageSrc);
 
@@ -147,6 +161,8 @@ export default {
       this.photoCanvas.finishCrop();
       isCropped = true;
       this.setPhotoCanvasSize();
+      isInitZoom = true;
+      //크롭된 사진의 비율을 업데이트해야함
     },
     openPhotoEditor() {
       if (!this.uploadedPhotoSrc) {
@@ -199,7 +215,6 @@ export default {
       if (this.photoCanvas && this.stickerCanvas) {
         this.stickerCanvas.saveResultImg(this.photoCanvas.saveEditedPhoto());
       }
-      //결과물 src를 가지고 image 요소를 만들거나 files 인스턴스를 만들어서 form data에 싸서 서버로 post => 이용자가 알아서...
     }
   }
 };
