@@ -1,7 +1,7 @@
 <template>
-  <imoji-editor-canvas>
+  <imoji-editor-canvas :default-image="defaultImage">
     <template
-      #controllerBar="{reset, stickerCanvas, importPhoto, crop, layout}"
+      #controllerBar="{reset, stickerCanvas, changePhoto, crop, layout}"
     >
       <div class="controller-bar-wrap">
         <button
@@ -11,7 +11,7 @@
         >
           <label>
             <i class="mdi mdi-file-image"></i>
-            <input type="file" class="file" @change="importPhoto" />
+            <input type="file" class="file" @change="changePhoto" />
           </label>
         </button>
 
@@ -48,7 +48,7 @@
         </button>
       </div>
     </template>
-    <template #toolBar="{photoCanvas, layout}">
+    <template #toolBar="{photoCanvas, layout, zoom, rotate}">
       <div v-if="layout === 'tool-bar'" class="tool-bar">
         <div v-show="isActiveRatioCrop" class="aspect-ratio-tool-bar">
           <button
@@ -94,19 +94,19 @@
           <i class="mdi mdi-crop"> </i>
         </button>
 
-        <button class="tool-bar-button" @click="photoCanvas.zoomIn()">
+        <button class="tool-bar-button" @click="zoom(0.1)">
           <i class="mdi mdi-magnify-plus"></i>
         </button>
 
-        <button class="tool-bar-button" @click="photoCanvas.zoomOut()">
+        <button class="tool-bar-button" @click="zoom(-0.1)">
           <i class="mdi mdi-magnify-minus"></i>
         </button>
 
-        <button class="tool-bar-button" @click="photoCanvas.rotate('+')">
+        <button class="tool-bar-button" @click="rotate('+')">
           <i class="mdi mdi-rotate-right"></i>
         </button>
 
-        <button class="tool-bar-button" @click="photoCanvas.rotate('-')">
+        <button class="tool-bar-button" @click="rotate('-')">
           <i class="mdi mdi-rotate-left"></i>
         </button>
 
@@ -119,7 +119,6 @@
         </button>
       </div>
     </template>
-
     <template #stickerToolBar="{stickerCanvas , layout}">
       <div v-if="layout === 'sticker-tool-bar'" class="sticker-tool-bar">
         <img
@@ -161,6 +160,7 @@ export default {
   components: {
     'imoji-editor-canvas': ImojiEditorCanvas
   },
+  props: ['defaultImage'],
   data() {
     return {
       isActiveRatioCrop: false,

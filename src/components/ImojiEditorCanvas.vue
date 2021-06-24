@@ -2,9 +2,9 @@
   <section>
     <slot
       name="controllerBar"
-      :stickerCanvas="stickerCanvas"
       :reset="reset"
-      :importPhoto="importPhoto"
+      :stickerCanvas="stickerCanvas"
+      :changePhoto="changePhoto"
       :crop="crop"
       :layout="layout"
     ></slot>
@@ -18,14 +18,17 @@
         </div>
       </div>
     </div>
-    <slot name="toolBar" :photoCanvas="photoCanvas" :layout="layout"></slot>
+    <slot
+      name="toolBar"
+      :photoCanvas="photoCanvas"
+      :layout="layout"
+      :zoom="zoom"
+      :rotate="rotate"
+    ></slot>
     <slot
       name="stickerToolBar"
       :stickerCanvas="stickerCanvas"
       :layout="layout"
-      :turnToRatioCrop="turnToRatioCrop"
-      :rotate="rotate"
-      :zoom="zoom"
     ></slot>
     <slot
       name="aspectRatioCrop"
@@ -34,11 +37,8 @@
     ></slot>
     <slot
       name="toolNavigation"
-      :photoCanvas="photoCanvas"
       :openPhotoEditor="openPhotoEditor"
-      :changePhoto="changePhoto"
       :openStickerEditor="openStickerEditor"
-      :crop="crop"
     ></slot>
   </section>
 </template>
