@@ -1,9 +1,9 @@
 <template>
   <imoji-editor-canvas :default-image="defaultImage">
     <template
-      #controllerBar="{reset, stickerCanvas, changePhoto, crop, layout}"
+      #controllerBar="{reset, stickerCanvas, changePhoto, crop, layout, photoCanvas}"
     >
-      <div class="controller-bar-wrap">
+      <div class="controller-bar-wrapper">
         <button
           class="controller-bar-button"
           title="image upload"
@@ -15,7 +15,11 @@
           </label>
         </button>
 
-        <button class="controller-bar-button" title="move" @click="reset">
+        <button
+          class="controller-bar-button"
+          title="move"
+          @click="photoCanvas.setDragMode('move')"
+        >
           <i class="mdi mdi-cursor-move"></i>
         </button>
 
@@ -50,37 +54,37 @@
     </template>
     <template #toolBar="{photoCanvas, layout, zoom, rotate}">
       <div v-if="layout === 'tool-bar'" class="tool-bar">
-        <div v-show="isActiveRatioCrop" class="aspect-ratio-tool-bar">
+        <div v-show="isActiveRatioCrop" class="ratio-crop-tool-bar">
           <button
-            class="aspect-ratio-tool-bar-button"
+            class="ratio-crop-tool-bar-button"
             @click="photoCanvas.setFreeCrop()"
           >
             Free
           </button>
 
           <button
-            class="aspect-ratio-tool-bar-button"
+            class="ratio-crop-tool-bar-button"
             @click="photoCanvas.setCropRatio(16, 9)"
           >
             16:9
           </button>
 
           <button
-            class="aspect-ratio-tool-bar-button"
+            class="ratio-crop-tool-bar-button"
             @click="photoCanvas.setCropRatio(4, 3)"
           >
             4:3
           </button>
 
           <button
-            class="aspect-ratio-tool-bar-button"
+            class="ratio-crop-tool-bar-button"
             @click="photoCanvas.setCropRatio(2, 3)"
           >
             2:3
           </button>
 
           <button
-            class="aspect-ratio-tool-bar-button"
+            class="ratio-crop-tool-bar-button"
             @click="photoCanvas.setCropRatio(1, 1)"
           >
             1:1
@@ -106,7 +110,7 @@
           <i class="mdi mdi-rotate-right"></i>
         </button>
 
-        <button class="tool-bar-button" @click="rotate('-')">
+        <button class="tool-bar-button" @click="rotate('')">
           <i class="mdi mdi-rotate-left"></i>
         </button>
 
@@ -131,7 +135,7 @@
       </div>
     </template>
     <template #toolNavigation="{openPhotoEditor, openStickerEditor}">
-      <div class="tool-navigation-wrap">
+      <div class="tool-navigation-wrapper">
         <button
           class="tool-navigation-button"
           title="edit"
@@ -175,15 +179,15 @@ export default {
   display: none;
 }
 
-.controller-bar-wrap {
+.controller-bar-wrapper {
   position: absolute;
   z-index: 2;
   display: flex;
   justify-content: space-around;
   align-items: center;
+  width: 100vw;
   padding: 10px;
   border: none;
-  width: 100vw;
   background: rgba(0, 0, 0, 0.1);
 }
 
@@ -200,16 +204,16 @@ export default {
 
 .tool-bar {
   position: absolute;
+  z-index: 2;
   bottom: 3rem;
   display: flex;
   justify-content: space-around;
   align-items: center;
+  width: 100vw;
   margin: 2px auto;
   padding-top: 8px;
-  width: 100vw;
   size: 1.938rem;
   background: rgba(0, 0, 0, 0.1);
-  z-index: 2;
 }
 
 .tool-bar-button {
@@ -219,16 +223,16 @@ export default {
   cursor: pointer;
 }
 
-.tool-navigation-wrap {
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  height: 50px;
-  color: #152447;
+.tool-navigation-wrapper {
   position: absolute;
   z-index: 2;
   bottom: 0;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
   width: 100vw;
+  height: 50px;
+  color: #152447;
   background: rgba(0, 0, 0, 0.1);
 }
 
@@ -249,42 +253,41 @@ export default {
 }
 
 .sticker-tool-bar {
+  position: absolute;
+  z-index: 2;
+  bottom: 3rem;
   display: grid;
   grid-auto-flow: column;
   justify-content: space-around;
-  margin: 10px auto;
-  position: absolute;
-  z-index: 2;
-  margin: 2px auto;
-  padding-top: 8px;
-  bottom: 3rem;
   width: 100vw;
   height: 3rem;
+  margin: 2px auto;
+  padding-top: 8px;
   background: rgba(0, 0, 0, 0.1);
 }
 
-.aspect-ratio-tool-bar {
-  display: flex;
-  justify-content: space-around;
-  border-style: none;
-  padding: 10px;
+.ratio-crop-tool-bar {
   position: absolute;
   z-index: 2;
   bottom: 2.43rem;
+  display: flex;
+  justify-content: space-around;
   width: 100%;
+  padding: 10px;
+  border-style: none;
   background: rgba(0, 0, 0, 0.1);
 }
 
-.aspect-ratio-tool-bar-button {
+.ratio-crop-tool-bar-button {
   height: 1.938rem;
   background-color: transparent;
+  font-size: 1rem;
   color: white;
   border-style: none;
   cursor: pointer;
-  font-size: 1rem;
 }
 
-.aspect-ratio-tool-bar-button:hover {
+.ratio-crop-tool-bar-button:hover {
   color: grey;
 }
 

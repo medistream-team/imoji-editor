@@ -7,13 +7,14 @@
       :changePhoto="changePhoto"
       :crop="crop"
       :layout="layout"
+      :photoCanvas="photoCanvas"
     ></slot>
-    <div class="vue-photo-editor-wrapper">
-      <div class="vue-photo-editor-container">
+    <div class="imoji-editor-wrapper">
+      <div class="imoji-editor-container">
         <div id="sticker-wrapper">
           <canvas id="sticker-canvas"></canvas>
         </div>
-        <div class="user-photo-wrapper">
+        <div class="uploaded-photo-wrapper">
           <img id="user-photo" ref="uploadedPhoto" :src="uploadedPhotoSrc" />
         </div>
       </div>
@@ -31,7 +32,7 @@
       :layout="layout"
     ></slot>
     <slot
-      name="aspectRatioCrop"
+      name="ratioCropToolBar"
       :photoCanvas="photoCanvas"
       :layout="layout"
     ></slot>
@@ -44,7 +45,7 @@
 </template>
 
 <script>
-import { PhotoEditor, StickerEditor } from '@/js/imojiEditor.js';
+import { PhotoEditor, StickerEditor } from '@/js/ImojiEditor.js';
 
 let isInitZoom = true;
 let isCropped = false;
@@ -64,6 +65,7 @@ export default {
     };
   },
   watch: {
+    //To Do : import image 변경시마다 importPhoto()실행
     test() {}
   },
   mounted() {
@@ -164,7 +166,6 @@ export default {
       isCropped = true;
       this.setPhotoCanvasSize();
       isInitZoom = true;
-      //크롭된 사진의 비율을 업데이트해야함
     },
     openPhotoEditor() {
       if (!this.uploadedPhotoSrc) {
@@ -180,12 +181,13 @@ export default {
       }
     },
     openStickerEditor() {
+      //To Do : import된 이미지의 경우 캔버스 크기를 따라가지 않고 있는 문제
       if (!this.uploadedPhotoSrc) {
         alert('스티커를 붙일 사진을 선택해주세요');
         throw new Error('Please pick photo.');
       }
 
-      if (!isCropped) {
+      if (!isCropped && this.photoCanvas) {
         this.photoCanvas.resetZoomLevel(this.initZoomLevel);
       }
 
@@ -223,7 +225,7 @@ export default {
 </script>
 
 <style scoped>
-.vue-photo-editor-wrapper {
+.imoji-editor-wrapper {
   position: relative;
   display: flex;
   flex-direction: column;
@@ -232,7 +234,7 @@ export default {
   height: 100vh;
 }
 
-.vue-photo-editor-container {
+.imoji-editor-container {
   position: relative;
   display: flex;
   justify-content: center;
@@ -253,7 +255,7 @@ export default {
   display: none;
 }
 
-.user-photo-wrapper {
+.uploaded-photo-wrapper {
   display: flex;
   justify-content: center;
   align-items: center;

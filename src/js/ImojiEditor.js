@@ -27,6 +27,10 @@ export class PhotoEditor {
     this.cropper.replace(src);
   }
 
+  setDragMode(mode) {
+    this.cropper.setDragMode(mode);
+  }
+
   getPhotoSize() {
     return new Promise((resolve, reject) => {
       try {
