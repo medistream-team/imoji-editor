@@ -11,7 +11,7 @@
     ></slot>
     <div class="imoji-editor-wrapper">
       <div class="imoji-editor-container">
-        <div id="sticker-wrapper">
+        <div id="sticker-wrapper" :class="[hide ? 'hide' : '']">
           <canvas id="sticker-canvas"></canvas>
         </div>
         <div class="uploaded-photo-wrapper">
@@ -66,11 +66,11 @@ export default {
       uploadedPhotoSrc: '',
       initImageSrc: '',
       previousImageSrc: '',
-      initZoomLevel: 0
+      initZoomLevel: 0,
+      hide: true
     };
   },
   watch: {
-    //To Do : import image 변경시마다 importPhoto()실행
     defaultImage: {
       deep: true,
       immediate: true,
@@ -86,12 +86,6 @@ export default {
     importPhoto() {
       this.uploadedPhotoSrc = this.defaultImage.src;
       this.initImageSrc = this.defaultImage.src;
-    },
-    turnToRatioCrop() {
-      this.layout = 'aspect-ratio';
-    },
-    turnToFreeCrop() {
-      this.layout = 'image-detail-editor';
     },
     changePhoto(e) {
       this.uploadedPhotoSrc = URL.createObjectURL(e.target.files[0]);
@@ -109,6 +103,26 @@ export default {
         },
         { once: true }
       );
+    },
+    async setPhotoCanvasSize() {
+      if (!this.photoCanvas) {
+        const { uploadedPhoto } = this.$refs;
+        this.$set(this.photoCanvasSize, 0, uploadedPhoto.width);
+        this.$set(this.photoCanvasSize, 1, uploadedPhoto.height);
+        return;
+      }
+
+      const res = await this.photoCanvas.getPhotoSize();
+      this.$set(this.photoCanvasSize, 0, res[0]);
+      this.$set(this.photoCanvasSize, 1, res[1]);
+      this.resizeStickerCanvas();
+    },
+    resizeStickerCanvas() {
+      const [width, height] = this.photoCanvasSize;
+
+      if (this.stickerCanvas) {
+        this.stickerCanvas.resizeStickerCanvas(width, height);
+      }
     },
     zoom(x) {
       if (isInitZoom) {
@@ -148,27 +162,9 @@ export default {
         this.stickerCanvas.removeAllSticker();
       }
     },
-    async setPhotoCanvasSize() {
-      if (!this.photoCanvas) {
-        const { uploadedPhoto } = this.$refs;
-        this.$set(this.photoCanvasSize, 0, uploadedPhoto.width);
-        this.$set(this.photoCanvasSize, 1, uploadedPhoto.height);
-        return;
-      }
-
-      const res = await this.photoCanvas.getPhotoSize();
-      this.$set(this.photoCanvasSize, 0, res[0]);
-      this.$set(this.photoCanvasSize, 1, res[1]);
-      this.resizeStickerCanvas();
-    },
-    resizeStickerCanvas() {
-      const [width, height] = this.photoCanvasSize;
-
-      if (this.stickerCanvas) {
-        this.stickerCanvas.resizeStickerCanvas(width, height);
-      }
-    },
     crop() {
+      // To Do : crop시에만 move 버튼 활성화
+      // crop 버튼 누르면 기본적으로 auto crop세팅
       this.photoCanvas.finishCrop();
       isCropped = true;
       this.setPhotoCanvasSize();
@@ -180,36 +176,55 @@ export default {
         throw new Error('Please pick photo.');
       }
 
-      document.getElementById('sticker-wrapper').classList.add('hide');
+      this.hide = true;
       this.layout = 'tool-bar';
 
       if (!this.photoCanvas) {
         this.photoCanvas = new PhotoEditor('user-photo');
       }
+
+      this.setPhotoCanvasSize();
     },
     openStickerEditor() {
-      //To Do : import된 이미지의 경우 캔버스 크기를 따라가지 않고 있는 문제
       if (!this.uploadedPhotoSrc) {
         alert('스티커를 붙일 사진을 선택해주세요');
         throw new Error('Please pick photo.');
       }
 
-      if (!isCropped && this.photoCanvas) {
-        this.photoCanvas.resetZoomLevel(this.initZoomLevel);
-      }
-
+      this.hide = false;
       this.layout = 'sticker-tool-bar';
 
-      if (this.photoCanvas) {
-        this.photoCanvas.clear();
-        //To Do : 돔에 직접 접근하지 않는 방법 알아보기
-        document.getElementById('sticker-wrapper').classList.remove('hide');
-      }
-
+      // 스티커 캔버스 첫 생성
       if (!this.stickerCanvas) {
+        console.log('첫 생성');
+        this.setPhotoCanvasSize();
         const [width, height] = this.photoCanvasSize;
         this.stickerCanvas = new StickerEditor('sticker-canvas', width, height);
       }
+
+      // edit 눌렀다
+      if (this.photoCanvas) {
+        console.log('edit누르고 sticker누름');
+        this.photoCanvas.clear();
+        // 아무것도 안 함
+        // crop 완료 => crop 메소드에서 처리
+        if (!isCropped) {
+          // zoom만 발생 => zoom 복구
+          console.log('크롭하지 않음');
+          // To Do : edit 버튼을 누르고 sticker 버튼을 누르면 width height가 0으로 설정 - 원인은 아래 코드 때문임
+          // this.photoCanvas.resetZoomLevel(this.initZoomLevel);
+        }
+      } else {
+        // eidt 안 눌렀다
+        console.log('edit 안 누름');
+        this.setPhotoCanvasSize();
+      }
+    },
+    turnToRatioCrop() {
+      this.layout = 'aspect-ratio';
+    },
+    turnToFreeCrop() {
+      this.layout = 'image-detail-editor';
     },
     getResultImageSrc() {
       // case 1. 스티커 없이 편집만 해서 저장
@@ -264,6 +279,7 @@ export default {
 
 .uploaded-photo-wrapper {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
 }

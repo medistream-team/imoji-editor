@@ -17,6 +17,7 @@ export class PhotoEditor {
       autoCrop: false,
       dragMode: 'none',
       zoomOnWheel: false,
+      // width, height가 변할 때마다 이것도 같이 변하게 만들고 싶음
       minContainerHeight: document.documentElement.clientHeight,
       minContainerWidth: document.documentElement.clientWidth,
       ...options
@@ -78,6 +79,10 @@ export class PhotoEditor {
   disable() {
     const stickerCanvas = document.querySelector('.canvas-container');
     stickerCanvas && this.cropper.disable();
+  }
+
+  destroy() {
+    this.cropper.destroy();
   }
 
   //To Do : undo
@@ -165,6 +170,7 @@ export class StickerEditor {
   constructor(canvasID, width, height) {
     if (!canvasID)
       throw new Error('Please provide a canvas element with id canvas.');
+
     this.stickerCanvas = new fabric.Canvas(canvasID);
     if (width && height) {
       this.resizeStickerCanvas(width, height);
@@ -183,7 +189,13 @@ export class StickerEditor {
       sticker => {
         this.stickerCanvas.add(sticker);
       },
-      options
+      {
+        borderColor: '#39f',
+        cornerColor: '#39f',
+        cornerSize: 5,
+        transparentCorners: false,
+        ...options
+      }
     );
   }
 
