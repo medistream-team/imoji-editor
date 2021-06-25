@@ -1,5 +1,9 @@
 <template>
-  <imoji-editor :default-image="defaultImage" @done="test" />
+  <imoji-editor
+    :default-image="defaultImage"
+    :sticker-images="stickerImages"
+    @done="test"
+  />
 </template>
 
 <script>
@@ -15,7 +19,33 @@ export default {
   },
   data() {
     return {
-      defaultImage: testImage
+      defaultImage: testImage,
+      stickerImages: [
+        {
+          name: 'surprised',
+          svg: '',
+          jpg: '',
+          png: '01.png'
+        },
+        {
+          name: 'happy',
+          svg: '',
+          jpg: '',
+          png: '02.png'
+        },
+        {
+          name: 'sad',
+          svg: '',
+          jpg: '',
+          png: '03.png'
+        },
+        {
+          name: 'cry',
+          svg: '',
+          jpg: '',
+          png: '04.png'
+        }
+      ]
     };
   },
   methods: {

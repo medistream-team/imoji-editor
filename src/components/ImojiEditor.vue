@@ -16,6 +16,7 @@
         </button>
 
         <button
+          v-show="isActiveMove"
           class="controller-bar-button"
           title="move"
           @click="photoCanvas.setDragMode('move')"
@@ -95,10 +96,7 @@
           </button>
         </div>
 
-        <button
-          class="tool-bar-button"
-          @click="isActiveRatioCrop = !isActiveRatioCrop"
-        >
+        <button class="tool-bar-button" @click="toggleButton()">
           <i class="mdi mdi-crop"> </i>
         </button>
 
@@ -130,9 +128,9 @@
     <template #stickerToolBar="{stickerCanvas , layout}">
       <div v-if="layout === 'sticker-tool-bar'" class="sticker-tool-bar">
         <img
-          v-for="StickerImage in StickerImages"
-          :key="StickerImage.id"
-          :src="StickerImage.src"
+          v-for="stickerImage in stickerImages"
+          :key="stickerImage.id"
+          :src="stickerImage.png"
           class="image-sticker"
           @click="e => stickerCanvas.addSticker(e.target.src)"
         />
@@ -162,7 +160,6 @@
 
 <script>
 import ImojiEditorCanvas from '@/components/ImojiEditorCanvas.vue';
-import StickerImages from '@/assets/StickerImages.js';
 
 export default {
   components: {
@@ -171,18 +168,29 @@ export default {
   props: {
     defaultImage: {
       type: Image,
-      required: false
+      require: false
+    },
+    stickerImages: {
+      require: false,
+      type: Array,
+      default: function() {
+        return;
+      }
     }
   },
   data() {
     return {
       isActiveRatioCrop: false,
-      StickerImages: StickerImages
+      isActiveMove: false
     };
   },
   methods: {
     done() {
       this.$emit('done');
+    },
+    toggleButton() {
+      this.isActiveRatioCrop = !this.isActiveRatioCrop;
+      this.isActiveMove = !this.isActiveMove;
     }
   }
 };
@@ -195,7 +203,6 @@ export default {
 
 .controller-bar-wrapper {
   position: absolute;
-  z-index: 2;
   display: flex;
   justify-content: space-around;
   align-items: center;
@@ -203,6 +210,7 @@ export default {
   padding: 10px;
   border: none;
   background: rgba(0, 0, 0, 0.1);
+  z-index: 2;
 }
 
 .controller-bar-button {
@@ -218,7 +226,6 @@ export default {
 
 .tool-bar {
   position: absolute;
-  z-index: 2;
   bottom: 3rem;
   display: flex;
   justify-content: space-around;
@@ -226,8 +233,9 @@ export default {
   width: 100vw;
   margin: 2px auto;
   padding-top: 8px;
-  size: 1.938rem;
   background: rgba(0, 0, 0, 0.1);
+  size: 1.938rem;
+  z-index: 2;
 }
 
 .tool-bar-button {
@@ -239,7 +247,6 @@ export default {
 
 .tool-navigation-wrapper {
   position: absolute;
-  z-index: 2;
   bottom: 0;
   display: flex;
   justify-content: space-around;
@@ -248,16 +255,17 @@ export default {
   height: 50px;
   color: #152447;
   background: rgba(0, 0, 0, 0.1);
+  z-index: 2;
 }
 
 .tool-navigation-button {
   display: flex;
   justify-content: space-around;
   align-items: center;
-  size: 30px;
   margin: 10px auto;
-  background-color: transparent;
+  size: 30px;
   color: white;
+  background-color: transparent;
   border-style: none;
   cursor: pointer;
 }
@@ -268,7 +276,6 @@ export default {
 
 .sticker-tool-bar {
   position: absolute;
-  z-index: 2;
   bottom: 3rem;
   display: grid;
   grid-auto-flow: column;
@@ -278,11 +285,11 @@ export default {
   margin: 2px auto;
   padding-top: 8px;
   background: rgba(0, 0, 0, 0.1);
+  z-index: 2;
 }
 
 .ratio-crop-tool-bar {
   position: absolute;
-  z-index: 2;
   bottom: 2.43rem;
   display: flex;
   justify-content: space-around;
@@ -290,13 +297,14 @@ export default {
   padding: 10px;
   border-style: none;
   background: rgba(0, 0, 0, 0.1);
+  z-index: 2;
 }
 
 .ratio-crop-tool-bar-button {
   height: 1.938rem;
+  color: white;
   background-color: transparent;
   font-size: 1rem;
-  color: white;
   border-style: none;
   cursor: pointer;
 }
