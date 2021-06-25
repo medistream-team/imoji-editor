@@ -196,7 +196,6 @@ export default {
 
 .controller-bar-wrapper {
   position: absolute;
-  z-index: 2;
   display: flex;
   justify-content: space-around;
   align-items: center;
@@ -204,6 +203,7 @@ export default {
   padding: 10px;
   border: none;
   background: rgba(0, 0, 0, 0.1);
+  z-index: 2;
 }
 
 .controller-bar-button {
@@ -219,7 +219,6 @@ export default {
 
 .tool-bar {
   position: absolute;
-  z-index: 2;
   bottom: 3rem;
   display: flex;
   justify-content: space-around;
@@ -227,8 +226,9 @@ export default {
   width: 100vw;
   margin: 2px auto;
   padding-top: 8px;
-  size: 1.938rem;
   background: rgba(0, 0, 0, 0.1);
+  size: 1.938rem;
+  z-index: 2;
 }
 
 .tool-bar-button {
@@ -240,7 +240,6 @@ export default {
 
 .tool-navigation-wrapper {
   position: absolute;
-  z-index: 2;
   bottom: 0;
   display: flex;
   justify-content: space-around;
@@ -249,16 +248,17 @@ export default {
   height: 50px;
   color: #152447;
   background: rgba(0, 0, 0, 0.1);
+  z-index: 2;
 }
 
 .tool-navigation-button {
   display: flex;
   justify-content: space-around;
   align-items: center;
-  size: 30px;
   margin: 10px auto;
-  background-color: transparent;
+  size: 30px;
   color: white;
+  background-color: transparent;
   border-style: none;
   cursor: pointer;
 }
@@ -269,7 +269,6 @@ export default {
 
 .sticker-tool-bar {
   position: absolute;
-  z-index: 2;
   bottom: 3rem;
   display: grid;
   grid-auto-flow: column;
@@ -279,11 +278,11 @@ export default {
   margin: 2px auto;
   padding-top: 8px;
   background: rgba(0, 0, 0, 0.1);
+  z-index: 2;
 }
 
 .ratio-crop-tool-bar {
   position: absolute;
-  z-index: 2;
   bottom: 2.43rem;
   display: flex;
   justify-content: space-around;
@@ -291,13 +290,14 @@ export default {
   padding: 10px;
   border-style: none;
   background: rgba(0, 0, 0, 0.1);
+  z-index: 2;
 }
 
 .ratio-crop-tool-bar-button {
   height: 1.938rem;
+  color: white;
   background-color: transparent;
   font-size: 1rem;
-  color: white;
   border-style: none;
   cursor: pointer;
 }
