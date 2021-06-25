@@ -110,7 +110,7 @@
           <i class="mdi mdi-rotate-right"></i>
         </button>
 
-        <button class="tool-bar-button" @click="rotate('')">
+        <button class="tool-bar-button" @click="rotate('-')">
           <i class="mdi mdi-rotate-left"></i>
         </button>
 
