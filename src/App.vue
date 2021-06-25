@@ -1,5 +1,5 @@
 <template>
-  <imoji-editor :default-image="defaultImage" />
+  <imoji-editor :default-image="defaultImage" @done="test" />
 </template>
 
 <script>
@@ -17,6 +17,12 @@ export default {
     return {
       defaultImage: testImage
     };
+  },
+  methods: {
+    test() {
+      //이미지 객체를 return 받아서 그걸 알아서 씀
+      console.log('저장');
+    }
   }
 };
 </script>

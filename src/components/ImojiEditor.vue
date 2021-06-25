@@ -1,7 +1,7 @@
 <template>
   <imoji-editor-canvas :default-image="defaultImage">
     <template
-      #controllerBar="{reset, stickerCanvas, changePhoto, crop, layout, photoCanvas}"
+      #controllerBar="{reset, stickerCanvas, changePhoto, crop, layout, photoCanvas,getResultImage}"
     >
       <div class="controller-bar-wrapper">
         <button
@@ -47,7 +47,11 @@
           </button>
         </div>
 
-        <button class="controller-bar-button" title="complete">
+        <button
+          class="controller-bar-button"
+          title="done"
+          @click="getResultImage"
+        >
           <i class="mdi mdi-download"></i>
         </button>
       </div>
@@ -175,6 +179,11 @@ export default {
       isActiveRatioCrop: false,
       StickerImages: StickerImages
     };
+  },
+  methods: {
+    done() {
+      this.$emit('done');
+    }
   }
 };
 </script>

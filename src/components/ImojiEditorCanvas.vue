@@ -8,6 +8,7 @@
       :crop="crop"
       :layout="layout"
       :photoCanvas="photoCanvas"
+      :getResultImage="getResultImage"
     ></slot>
     <div class="imoji-editor-wrapper">
       <div class="imoji-editor-container">
@@ -226,20 +227,25 @@ export default {
     turnToFreeCrop() {
       this.layout = 'image-detail-editor';
     },
-    getResultImageSrc() {
+    getResultImage() {
       // case 1. 스티커 없이 편집만 해서 저장
       if (!this.stickerCanvas) {
+        // return image
         this.photoCanvas.saveEditedPhoto();
       }
 
       // case 2. 스티커만 붙여서 저장
       if (!this.photoCanvas) {
+        // return image
         this.stickerCanvas.saveResultImg(this.uploadedPhotoSrc);
       }
 
       // case 3. 편집, 스티커 둘 다 했을 때 저장
       if (this.photoCanvas && this.stickerCanvas) {
-        this.stickerCanvas.saveResultImg(this.photoCanvas.saveEditedPhoto());
+        // return image
+        this.stickerCanvas.saveResultImg(
+          this.photoCanvas.saveEditedPhoto().src
+        );
       }
     }
   }

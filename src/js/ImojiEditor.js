@@ -148,7 +148,7 @@ export class PhotoEditor {
   }
 
   /**
-   *
+   * Edited Photo Image Object without sticker
    * @returns Image Object
    */
   saveEditedPhoto() {
@@ -210,8 +210,8 @@ export class StickerEditor {
       editedPhoto,
       this.stickerCanvas.renderAll.bind(this.stickerCanvas),
       {
-        originX: 'left',
-        originY: 'top'
+        scaleX: this.stickerCanvas.width / editedPhoto.width,
+        scaleY: this.stickerCanvas.height / editedPhoto.height
       }
     );
     //save to img
