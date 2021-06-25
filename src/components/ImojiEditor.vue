@@ -1,7 +1,7 @@
 <template>
-  <imoji-editor-canvas :default-image="defaultImage">
+  <imoji-editor-canvas ref="test" :default-image="defaultImage">
     <template
-      #controllerBar="{reset, stickerCanvas, changePhoto, crop, layout, photoCanvas,getResultImage}"
+      #controllerBar="{reset, stickerCanvas, changePhoto, crop, layout, photoCanvas}"
     >
       <div class="controller-bar-wrapper">
         <button
@@ -47,11 +47,7 @@
           </button>
         </div>
 
-        <button
-          class="controller-bar-button"
-          title="done"
-          @click="getResultImage"
-        >
+        <button class="controller-bar-button" title="done" @click="done">
           <i class="mdi mdi-download"></i>
         </button>
       </div>
@@ -156,6 +152,9 @@
           Sticker
         </button>
       </div>
+      <div id="testA">
+        <img id="testB" />
+      </div>
     </template>
   </imoji-editor-canvas>
 </template>
@@ -170,8 +169,7 @@ export default {
   },
   props: {
     defaultImage: {
-      type: Image,
-      required: false
+      type: [Image, undefined]
     }
   },
   data() {
@@ -182,7 +180,13 @@ export default {
   },
   methods: {
     done() {
-      this.$emit('done');
+      // a
+      const result = this.$refs.test.getResultImage().outerHTML;
+
+      const d = document.getElementById('testB');
+      d.outerHTML = result;
+
+      this.$emit('done', result);
     }
   }
 };

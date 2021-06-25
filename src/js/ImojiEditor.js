@@ -15,6 +15,7 @@ export class PhotoEditor {
       viewMode: 1,
       background: false,
       autoCrop: false,
+      // autoCropArea: 1,
       dragMode: 'none',
       zoomOnWheel: false,
       // width, height가 변할 때마다 이것도 같이 변하게 만들고 싶음
@@ -38,7 +39,7 @@ export class PhotoEditor {
         this.userImage.addEventListener(
           'ready',
           () => {
-            const { width, height } = this.cropper.getImageData();
+            const { width, height } = this.cropper.getCanvasData();
             resolve([width, height]);
           },
           { once: true }
@@ -216,9 +217,9 @@ export class StickerEditor {
     );
     //save to img
     const resultImgSrc = this.stickerCanvas.toDataURL('image/png');
-    const resultElement = new Image();
-    resultElement.src = resultImgSrc;
-    return resultElement;
+    const resultImg = new Image();
+    resultImg.src = resultImgSrc;
+    return resultImg;
   }
 
   /**

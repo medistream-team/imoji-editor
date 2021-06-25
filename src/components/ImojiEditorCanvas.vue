@@ -54,8 +54,7 @@ let isCropped = false;
 export default {
   props: {
     defaultImage: {
-      type: Image,
-      required: false
+      type: [Image, undefined]
     }
   },
   data() {
@@ -76,12 +75,11 @@ export default {
       deep: true,
       immediate: true,
       handler() {
-        this.importPhoto();
+        if (this.defaultImage) {
+          this.importPhoto();
+        }
       }
     }
-  },
-  mounted() {
-    this.importPhoto();
   },
   methods: {
     importPhoto() {
@@ -231,21 +229,21 @@ export default {
       // case 1. 스티커 없이 편집만 해서 저장
       if (!this.stickerCanvas) {
         // return image
-        this.photoCanvas.saveEditedPhoto();
+        return this.photoCanvas.saveEditedPhoto();
       }
 
       // case 2. 스티커만 붙여서 저장
       if (!this.photoCanvas) {
         // return image
-        this.stickerCanvas.saveResultImg(this.uploadedPhotoSrc);
+        return this.stickerCanvas.saveResultImg(this.uploadedPhotoSrc);
       }
 
       // case 3. 편집, 스티커 둘 다 했을 때 저장
       if (this.photoCanvas && this.stickerCanvas) {
         // return image
-        this.stickerCanvas.saveResultImg(
-          this.photoCanvas.saveEditedPhoto().src
-        );
+        const editedImage = this.photoCanvas.saveEditedPhoto().src;
+        console.log(this.stickerCanvas.saveResultImg(editedImage));
+        return this.stickerCanvas.saveResultImg(editedImage);
       }
     }
   }
