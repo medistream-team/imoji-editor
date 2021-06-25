@@ -16,6 +16,7 @@
         </button>
 
         <button
+          v-show="isActiveMove"
           class="controller-bar-button"
           title="move"
           @click="photoCanvas.setDragMode('move')"
@@ -91,10 +92,7 @@
           </button>
         </div>
 
-        <button
-          class="tool-bar-button"
-          @click="isActiveRatioCrop = !isActiveRatioCrop"
-        >
+        <button class="tool-bar-button" @click="toggleButton()">
           <i class="mdi mdi-crop"> </i>
         </button>
 
@@ -110,7 +108,7 @@
           <i class="mdi mdi-rotate-right"></i>
         </button>
 
-        <button class="tool-bar-button" @click="rotate('')">
+        <button class="tool-bar-button" @click="rotate('-')">
           <i class="mdi mdi-rotate-left"></i>
         </button>
 
@@ -126,9 +124,9 @@
     <template #stickerToolBar="{stickerCanvas , layout}">
       <div v-if="layout === 'sticker-tool-bar'" class="sticker-tool-bar">
         <img
-          v-for="StickerImage in StickerImages"
-          :key="StickerImage.id"
-          :src="StickerImage.src"
+          v-for="stickerImage in stickerImages"
+          :key="stickerImage.id"
+          :src="stickerImage.png"
           class="image-sticker"
           @click="e => stickerCanvas.addSticker(e.target.src)"
         />
@@ -158,18 +156,35 @@
 
 <script>
 import ImojiEditorCanvas from '@/components/ImojiEditorCanvas.vue';
-import StickerImages from '@/assets/StickerImages.js';
 
 export default {
   components: {
     'imoji-editor-canvas': ImojiEditorCanvas
   },
-  props: ['defaultImage'],
+  props: {
+    defaultImage: {
+      require: false,
+      type: Image
+    },
+    stickerImages: {
+      require: false,
+      type: Array,
+      default: function() {
+        return;
+      }
+    }
+  },
   data() {
     return {
       isActiveRatioCrop: false,
-      StickerImages: StickerImages
+      isActiveMove: false
     };
+  },
+  methods: {
+    toggleButton() {
+      this.isActiveRatioCrop = !this.isActiveRatioCrop;
+      this.isActiveMove = !this.isActiveMove;
+    }
   }
 };
 </script>
