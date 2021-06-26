@@ -9,20 +9,20 @@ export default {
   components: {
     'imoji-editor': ImojiEditor
   },
-  data: function() {
+  data() {
     return {
       stickerImages: [
         {
           name: 'surprised',
           svg: '',
           jpg: '',
-          png: '01.png'
+          png: 'test.svg'
         },
         {
           name: 'happy',
           svg: '',
           jpg: '',
-          png: '02.png'
+          png: 'medi-01.svg'
         },
         {
           name: 'sad',

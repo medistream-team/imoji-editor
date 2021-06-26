@@ -166,9 +166,15 @@ export default {
     'imoji-editor-canvas': ImojiEditorCanvas
   },
   props: {
-    //To Do
     defaultImage: {
       type: [Image, undefined]
+    },
+    stickerImages: {
+      require: false,
+      type: Array,
+      default: function() {
+        return;
+      }
     }
   },
   data() {
@@ -178,6 +184,10 @@ export default {
     };
   },
   methods: {
+    toggleButton() {
+      this.isActiveRatioCrop = !this.isActiveRatioCrop;
+      this.isActiveMove = !this.isActiveMove;
+    },
     done() {
       //이미지 잘 저장되는지 테스트용
       const result = this.$refs.test.getResultImage();
