@@ -152,8 +152,9 @@
           Sticker
         </button>
       </div>
+      <!-- 이미지 잘 저장되는지 테스트용 -->
       <div id="testA">
-        <img id="testB" />
+        <image id="testB" />
       </div>
     </template>
   </imoji-editor-canvas>
@@ -180,11 +181,10 @@ export default {
   },
   methods: {
     done() {
-      // a
-      const result = this.$refs.test.getResultImage().outerHTML;
-
+      //이미지 잘 저장되는지 테스트용
+      const result = this.$refs.test.getResultImage();
       const d = document.getElementById('testB');
-      d.outerHTML = result;
+      d.outerHTML = result.outerHTML;
 
       this.$emit('done', result);
     }

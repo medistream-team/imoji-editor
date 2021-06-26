@@ -1,6 +1,7 @@
 import Cropper from 'cropperjs';
 import { fabric } from 'fabric';
 import 'cropperjs/dist/cropper.css';
+import { Promise } from 'core-js';
 
 export class PhotoEditor {
   constructor(selector, options) {
@@ -15,10 +16,9 @@ export class PhotoEditor {
       viewMode: 1,
       background: false,
       autoCrop: false,
-      // autoCropArea: 1,
       dragMode: 'none',
       zoomOnWheel: false,
-      // width, height가 변할 때마다 이것도 같이 변하게 만들고 싶음
+      //To Do : user가 입력한 값으로 재설정
       minContainerHeight: document.documentElement.clientHeight,
       minContainerWidth: document.documentElement.clientWidth,
       ...options
@@ -86,12 +86,6 @@ export class PhotoEditor {
     this.cropper.destroy();
   }
 
-  //To Do : undo
-  undo() {
-    //flip, zoom 등등도 undo 되도록
-    //지금 생각나는 것은 edit이 일어날 때마다 그때의 상태를 img url로 만들어서 previous url에 저장
-  }
-
   finishCrop() {
     const canvas = this.cropper.getCroppedCanvas();
     const croppedImgSrc = canvas.toDataURL();
@@ -154,10 +148,10 @@ export class PhotoEditor {
    */
   saveEditedPhoto() {
     const canvas = this.cropper.getCroppedCanvas();
-    const editedPhotoSrc = canvas.toDataURL();
+    const editedPhotoSrc = canvas.toDataURL('image/png');
     const editedPhoto = new Image();
     editedPhoto.src = editedPhotoSrc;
-    return editedPhoto;
+    return [editedPhoto, editedPhotoSrc];
   }
 }
 
@@ -167,16 +161,19 @@ export class StickerEditor {
    * @param {Element} canvasID - The id of canvas element
    * @param {Object} options - The option of image
    */
-  //To Do : 스티커 컨트롤러 색상 & 이미지 컨트롤러 색상 통일 (옵션으로 지정)
   constructor(canvasID, width, height) {
     if (!canvasID)
       throw new Error('Please provide a canvas element with id canvas.');
 
     this.stickerCanvas = new fabric.Canvas(canvasID);
+
     if (width && height) {
+      //resize stickerCanvas
       this.resizeStickerCanvas(width, height);
     }
+
     this.stickerCanvas.backgroundColor = null;
+
     this.stickerCanvas.renderAll.bind(this.stickerCanvas)();
   }
 
@@ -188,7 +185,9 @@ export class StickerEditor {
     fabric.Image.fromURL(
       src,
       sticker => {
-        this.stickerCanvas.add(sticker);
+        sticker.scaleToWidth(this.stickerCanvas.width * 0.2);
+        sticker.scaleToHeight(this.stickerCanvas.width * 0.2);
+        this.stickerCanvas.add(sticker).renderAll();
       },
       {
         borderColor: '#39f',
@@ -201,24 +200,34 @@ export class StickerEditor {
   }
 
   /**
-   *
-   * @param {string} editedPhoto - src of editedPhoto from PhotoEditor
-   * @returns {Object} Image Object
+   * Set edited photo to background of sticker canvas at all the time when user open sticker editor
+   * @param {string} editedPhoto - src of photo
    */
-  saveResultImg(editedPhoto) {
-    //put editedPhoto behind sticker
-    this.stickerCanvas.setBackgroundImage(
-      editedPhoto,
-      this.stickerCanvas.renderAll.bind(this.stickerCanvas),
-      {
-        scaleX: this.stickerCanvas.width / editedPhoto.width,
-        scaleY: this.stickerCanvas.height / editedPhoto.height
-      }
-    );
-    //save to img
-    const resultImgSrc = this.stickerCanvas.toDataURL('image/png');
+  setBackground(src) {
+    fabric.Image.fromURL(src, img => {
+      img.set({
+        width: this.stickerCanvas.getWidth(),
+        height: this.stickerCanvas.getHeight(),
+        originX: 'left',
+        scaleX: this.stickerCanvas.getWidth() / img.width,
+        scaleY: this.stickerCanvas.getHeight() / img.height,
+        originY: 'top'
+      });
+
+      this.stickerCanvas.setBackgroundImage(
+        img,
+        this.stickerCanvas.renderAll.bind(this.stickerCanvas)
+      );
+    });
+  }
+
+  /**
+   * Return result image with sticker by Image Object
+   * @returns Image Object
+   */
+  getToImg() {
     const resultImg = new Image();
-    resultImg.src = resultImgSrc;
+    resultImg.src = this.stickerCanvas.toDataURL('image/png');
     return resultImg;
   }
 

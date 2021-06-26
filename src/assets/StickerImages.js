@@ -1,5 +1,5 @@
-import sticker01 from '/src/assets/01.png';
-import sticker02 from '/src/assets/02.png';
+import sticker01 from '/src/assets/medi-01.svg';
+import sticker02 from '/src/assets/test.svg';
 import sticker03 from '/src/assets/03.png';
 import sticker04 from '/src/assets/04.png';
 
