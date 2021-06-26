@@ -54,8 +54,7 @@ let isCropped = false;
 export default {
   props: {
     defaultImage: {
-      type: Image,
-      required: false
+      type: [Image, undefined]
     }
   },
   data() {
@@ -76,12 +75,11 @@ export default {
       deep: true,
       immediate: true,
       handler() {
-        this.importPhoto();
+        if (this.defaultImage) {
+          this.importPhoto();
+        }
       }
     }
-  },
-  mounted() {
-    this.importPhoto();
   },
   methods: {
     importPhoto() {
@@ -173,6 +171,7 @@ export default {
     },
     openPhotoEditor() {
       if (!this.uploadedPhotoSrc) {
+        //To Do : 에러메세지 커스터마이징
         alert('편집할 사진을 선택해주세요');
         throw new Error('Please pick photo.');
       }
@@ -188,6 +187,7 @@ export default {
     },
     openStickerEditor() {
       if (!this.uploadedPhotoSrc) {
+        //To Do : 에러메세지 커스터마이징
         alert('스티커를 붙일 사진을 선택해주세요');
         throw new Error('Please pick photo.');
       }
@@ -206,19 +206,21 @@ export default {
       // edit 눌렀다
       if (this.photoCanvas) {
         console.log('edit누르고 sticker누름');
+        const croppedUrl = this.photoCanvas.saveEditedPhoto()[1];
+        this.stickerCanvas.setBackground(croppedUrl);
         this.photoCanvas.clear();
-        // 아무것도 안 함
-        // crop 완료 => crop 메소드에서 처리
         if (!isCropped) {
-          // zoom만 발생 => zoom 복구
           console.log('크롭하지 않음');
           // To Do : edit 버튼을 누르고 sticker 버튼을 누르면 width height가 0으로 설정 - 원인은 아래 코드 때문임
           // this.photoCanvas.resetZoomLevel(this.initZoomLevel);
         }
-      } else {
-        // eidt 안 눌렀다
+      }
+
+      // eidt 안 눌렀다
+      if (!this.photoCanvas) {
         console.log('edit 안 누름');
         this.setPhotoCanvasSize();
+        this.stickerCanvas.setBackground(this.$refs.uploadedPhoto.src);
       }
     },
     turnToRatioCrop() {
@@ -228,24 +230,20 @@ export default {
       this.layout = 'image-detail-editor';
     },
     getResultImage() {
-      // case 1. 스티커 없이 편집만 해서 저장
-      if (!this.stickerCanvas) {
+      // case 1. 스티커 없이 편집만 해서 저장 => 잘됨 / canvas 상으로는 확대되어 보이는데 저장은 실제 크기로 저장됨
+      if (!this.stickerCanvas && this.photoCanvas) {
         // return image
-        this.photoCanvas.saveEditedPhoto();
+        return this.photoCanvas.saveEditedPhoto()[0];
       }
 
-      // case 2. 스티커만 붙여서 저장
-      if (!this.photoCanvas) {
-        // return image
-        this.stickerCanvas.saveResultImg(this.uploadedPhotoSrc);
+      // case 2. 스티커만 붙여서 저장 => 잘 됨
+      if (!this.photoCanvas && this.stickerCanvas) {
+        return this.stickerCanvas.getToImg();
       }
 
-      // case 3. 편집, 스티커 둘 다 했을 때 저장
+      // case 3. 편집, 스티커 둘 다 했을 때 저장 => 잘 됨
       if (this.photoCanvas && this.stickerCanvas) {
-        // return image
-        this.stickerCanvas.saveResultImg(
-          this.photoCanvas.saveEditedPhoto().src
-        );
+        return this.stickerCanvas.getToImg();
       }
     }
   }

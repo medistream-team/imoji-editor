@@ -1,7 +1,7 @@
 <template>
-  <imoji-editor-canvas :default-image="defaultImage">
+  <imoji-editor-canvas ref="test" :default-image="defaultImage">
     <template
-      #controllerBar="{reset, stickerCanvas, changePhoto, crop, layout, photoCanvas,getResultImage}"
+      #controllerBar="{reset, stickerCanvas, changePhoto, crop, layout, photoCanvas}"
     >
       <div class="controller-bar-wrapper">
         <button
@@ -48,11 +48,7 @@
           </button>
         </div>
 
-        <button
-          class="controller-bar-button"
-          title="done"
-          @click="getResultImage"
-        >
+        <button class="controller-bar-button" title="done" @click="done">
           <i class="mdi mdi-download"></i>
         </button>
       </div>
@@ -154,6 +150,10 @@
           Sticker
         </button>
       </div>
+      <!-- 이미지 잘 저장되는지 테스트용 -->
+      <div id="testA">
+        <image id="testB" />
+      </div>
     </template>
   </imoji-editor-canvas>
 </template>
@@ -166,16 +166,9 @@ export default {
     'imoji-editor-canvas': ImojiEditorCanvas
   },
   props: {
+    //To Do
     defaultImage: {
-      type: Image,
-      require: false
-    },
-    stickerImages: {
-      require: false,
-      type: Array,
-      default: function() {
-        return;
-      }
+      type: [Image, undefined]
     }
   },
   data() {
@@ -186,11 +179,12 @@ export default {
   },
   methods: {
     done() {
-      this.$emit('done');
-    },
-    toggleButton() {
-      this.isActiveRatioCrop = !this.isActiveRatioCrop;
-      this.isActiveMove = !this.isActiveMove;
+      //이미지 잘 저장되는지 테스트용
+      const result = this.$refs.test.getResultImage();
+      const d = document.getElementById('testB');
+      d.outerHTML = result.outerHTML;
+
+      this.$emit('done', result);
     }
   }
 };
