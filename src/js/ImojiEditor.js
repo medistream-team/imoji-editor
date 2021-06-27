@@ -18,9 +18,6 @@ export class PhotoEditor {
       autoCrop: false,
       dragMode: 'none',
       zoomOnWheel: false,
-      //To Do : user가 입력한 값으로 재설정
-      minContainerHeight: document.documentElement.clientHeight,
-      minContainerWidth: document.documentElement.clientWidth,
       ...options
     });
   }
@@ -168,7 +165,6 @@ export class StickerEditor {
     this.stickerCanvas = new fabric.Canvas(canvasID);
 
     if (width && height) {
-      //resize stickerCanvas
       this.resizeStickerCanvas(width, height);
     }
 
@@ -205,12 +201,16 @@ export class StickerEditor {
    */
   setBackground(src) {
     fabric.Image.fromURL(src, img => {
+      console.log(
+        '캔버스: ',
+        this.stickerCanvas.getWidth(),
+        '사진 :',
+        img.width
+      );
       img.set({
-        width: this.stickerCanvas.getWidth(),
-        height: this.stickerCanvas.getHeight(),
-        originX: 'left',
         scaleX: this.stickerCanvas.getWidth() / img.width,
         scaleY: this.stickerCanvas.getHeight() / img.height,
+        originX: 'left',
         originY: 'top'
       });
 

@@ -55,7 +55,9 @@ export default {
   props: {
     defaultImage: {
       type: [Image, undefined]
-    }
+    },
+    width: { type: Number, require: false },
+    height: { type: Number, require: false }
   },
   data() {
     return {
@@ -180,7 +182,10 @@ export default {
       this.layout = 'tool-bar';
 
       if (!this.photoCanvas) {
-        this.photoCanvas = new PhotoEditor('user-photo');
+        this.photoCanvas = new PhotoEditor('user-photo', {
+          minContainerHeight: this.height,
+          minContainerWidth: this.width
+        });
       }
 
       this.setPhotoCanvasSize();

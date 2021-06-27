@@ -1,5 +1,10 @@
 <template>
-  <imoji-editor-canvas ref="test" :default-image="defaultImage">
+  <imoji-editor-canvas
+    ref="test"
+    :default-image="defaultImage"
+    :width="width"
+    :height="height"
+  >
     <template
       #controllerBar="{reset, stickerCanvas, changePhoto, crop, layout, photoCanvas}"
     >
@@ -166,14 +171,51 @@ export default {
     'imoji-editor-canvas': ImojiEditorCanvas
   },
   props: {
+    width: {
+      type: Number,
+      required: false,
+      default: document.documentElement.clientWidth
+    },
+    height: {
+      type: Number,
+      required: false,
+      default: document.documentElement.clientHeight
+    },
+    // eslint-disable-next-line vue/require-default-prop
     defaultImage: {
-      type: [Image, undefined]
+      type: [Image, undefined],
+      required: false
     },
     stickerImages: {
-      require: false,
       type: Array,
+      required: false,
       default: function() {
-        return;
+        return [
+          {
+            name: 'surprised',
+            svg: '',
+            jpg: '',
+            png: 'test.svg'
+          },
+          {
+            name: 'happy',
+            svg: '',
+            jpg: '',
+            png: 'medi-01.svg'
+          },
+          {
+            name: 'sad',
+            svg: '',
+            jpg: '',
+            png: '03.png'
+          },
+          {
+            name: 'cry',
+            svg: '',
+            jpg: '',
+            png: '04.png'
+          }
+        ];
       }
     }
   },

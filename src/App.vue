@@ -1,5 +1,5 @@
 <template>
-  <imoji-editor :sticker-images="stickerImages" @done="done" />
+  <imoji-editor @done="done" />
 </template>
 
 <script>
@@ -11,32 +11,8 @@ export default {
   },
   data() {
     return {
-      stickerImages: [
-        {
-          name: 'surprised',
-          svg: '',
-          jpg: '',
-          png: 'test.svg'
-        },
-        {
-          name: 'happy',
-          svg: '',
-          jpg: '',
-          png: 'medi-01.svg'
-        },
-        {
-          name: 'sad',
-          svg: '',
-          jpg: '',
-          png: '03.png'
-        },
-        {
-          name: 'cry',
-          svg: '',
-          jpg: '',
-          png: '04.png'
-        }
-      ],
+      width: 640,
+      height: 480,
       result: undefined
     };
   },
