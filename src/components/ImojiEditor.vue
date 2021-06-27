@@ -272,13 +272,13 @@ export default {
 
 .tool-bar {
   position: absolute;
-  bottom: 3rem;
+  bottom: 2.4rem;
   display: flex;
   justify-content: space-around;
   align-items: center;
   width: 100vw;
   margin: 2px auto;
-  padding-top: 8px;
+  padding: 4px 0;
   background: rgba(0, 0, 0, 0.1);
   size: 1.938rem;
   z-index: 2;
@@ -322,21 +322,21 @@ export default {
 
 .sticker-tool-bar {
   position: absolute;
-  bottom: 3rem;
+  bottom: 2.4rem;
   display: grid;
   grid-auto-flow: column;
   justify-content: space-around;
   width: 100vw;
   height: 3rem;
   margin: 2px auto;
-  padding-top: 8px;
+  padding: 8px 0;
   background: rgba(0, 0, 0, 0.1);
   z-index: 2;
 }
 
 .ratio-crop-tool-bar {
   position: absolute;
-  bottom: 2.43rem;
+  bottom: 1.93rem;
   display: flex;
   justify-content: space-around;
   width: 100%;
