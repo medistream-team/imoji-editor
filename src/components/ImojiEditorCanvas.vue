@@ -53,11 +53,21 @@ let isCropped = false;
 
 export default {
   props: {
-    defaultImage: {
-      type: [Image, undefined]
+    width: {
+      type: Number,
+      required: false,
+      default: document.documentElement.clientWidth
     },
-    width: { type: Number, require: false },
-    height: { type: Number, require: false }
+    height: {
+      type: Number,
+      required: false,
+      default: document.documentElement.clientHeight
+    },
+    // eslint-disable-next-line vue/require-default-prop
+    defaultImage: {
+      type: [Image, undefined],
+      required: false
+    }
   },
   data() {
     return {
