@@ -50,8 +50,6 @@
 <script>
 import { PhotoEditor, StickerEditor } from '@/js/ImojiEditor.js';
 
-let isInitZoom = true;
-
 export default {
   props: {
     isActiveRatioCrop: {
@@ -253,15 +251,13 @@ export default {
       }
 
       if (this.photoCanvas) {
-        if (!isCropped) {
-          if (this.zoomCount !== 0 && this.zoomCount > 0) {
-            this.photoCanvas.zoom(-1 * this.zoomCount);
-            this.zoomCount = 0;
-          }
-          if (this.zoomCount !== 0 && this.zoomCount < 0) {
-            this.photoCanvas.zoom(Math.abs(this.zoomCount));
-            this.zoomCount = 0;
-          }
+        if (this.zoomCount !== 0 && this.zoomCount > 0) {
+          this.photoCanvas.zoom(-1 * this.zoomCount);
+          this.zoomCount = 0;
+        }
+        if (this.zoomCount !== 0 && this.zoomCount < 0) {
+          this.photoCanvas.zoom(Math.abs(this.zoomCount));
+          this.zoomCount = 0;
         }
         this.photoCanvas.clear();
       }
