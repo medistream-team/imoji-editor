@@ -240,11 +240,15 @@ export default {
         alert(this.errorMessage);
         throw new Error('Please pick photo.');
       }
+
       this.$parent.$data.isActiveRatioCrop = false;
       this.$parent.$data.isActiveMove = false;
       this.hide = false;
       this.layout = 'sticker-tool-bar';
+
+      this.crop();
       this.photoCanvas.setDragMode('none');
+
       if (!this.stickerCanvas) {
         this.setPhotoCanvasSize();
         const [width, height] = this.photoCanvasSize;
