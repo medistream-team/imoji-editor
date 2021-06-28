@@ -50,7 +50,7 @@
 <script>
 import { PhotoEditor, StickerEditor } from '@/js/ImojiEditor.js';
 
-let isCropped = false;
+let isInitZoom = true;
 
 export default {
   props: {
@@ -169,8 +169,6 @@ export default {
     },
     //사진과 스티커를 초기 상태로 되돌리는 함수
     reset() {
-      isCropped = false;
-
       if (this.photoCanvas) {
         this.photoCanvas.changePhoto(this.initImageSrc);
 
@@ -195,7 +193,6 @@ export default {
     //크롭 함수
     crop() {
       this.photoCanvas.finishCrop();
-      isCropped = true;
       this.setPhotoCanvasSize();
     },
     //최종 저장(완료)
