@@ -5,6 +5,8 @@
     :error-message="errorMessage"
     :width="width"
     :height="height"
+    :is-active-ratio-crop="isActiveRatioCrop"
+    :is-active-move="isActiveMove"
   >
     <template
       #controllerBar="{reset, stickerCanvas, changePhoto, crop, layout, photoCanvas}"
@@ -99,6 +101,7 @@
         </div>
 
         <div class="tool-bar-wrapper">
+          <!-- To Do : crop버튼 토글시 auto crop 영역 사라지기 -->
           <button
             class="tool-bar-button"
             @click="toggleCropModeButton(), photoCanvas.setFreeCrop()"
@@ -178,14 +181,9 @@ export default {
   },
   props: {
     errorMessage: {
-      type: Array,
+      type: String,
       required: false,
-      default: () => {
-        return [
-          '편집할 사진을 선택해주세요',
-          '스티커를 붙일 사진을 선택해주세요'
-        ];
-      }
+      default: '편집할 사진을 선택해주세요'
     },
     width: {
       type: Number,

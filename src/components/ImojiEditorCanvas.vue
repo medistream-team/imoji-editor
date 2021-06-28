@@ -54,15 +54,18 @@ let isCropped = false;
 
 export default {
   props: {
+    isActiveRatioCrop: {
+      type: Boolean,
+      required: true
+    },
+    isActiveMove: {
+      type: Boolean,
+      required: true
+    },
     errorMessage: {
-      type: Array,
+      type: String,
       required: false,
-      default: () => {
-        return [
-          '편집할 사진을 선택해주세요',
-          '스티커를 붙일 사진을 선택해주세요'
-        ];
-      }
+      default: '편집할 사진을 선택해주세요'
     },
     width: {
       type: Number,
@@ -191,7 +194,6 @@ export default {
     },
     //크롭 함수
     crop() {
-      // To Do : crop 버튼 누르면 기본적으로 auto crop세팅
       this.photoCanvas.finishCrop();
       isCropped = true;
       this.setPhotoCanvasSize();
@@ -223,7 +225,7 @@ export default {
     //사진 편집 모드로 진입할 때의 동작
     openPhotoEditor() {
       if (!this.uploadedPhotoSrc) {
-        alert(this.errorMessage[0]);
+        alert(this.errorMessage);
         throw new Error('Please pick photo.');
       }
 
@@ -234,13 +236,12 @@ export default {
     },
     //스티커 편집 모드로 진입할 때의 동작
     openStickerEditor() {
-      //To Do : crop 바가 열려있다면 닫기
-      //To Do : 모바일 모드에서 move, zoom 안되게 하기
       if (!this.uploadedPhotoSrc) {
-        alert(this.errorMessage[1]);
+        alert(this.errorMessage);
         throw new Error('Please pick photo.');
       }
-
+      this.$parent.$data.isActiveRatioCrop = false;
+      this.$parent.$data.isActiveMove = false;
       this.hide = false;
       this.layout = 'sticker-tool-bar';
       this.photoCanvas.setDragMode('none');
