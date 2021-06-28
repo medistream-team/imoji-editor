@@ -50,11 +50,20 @@
 <script>
 import { PhotoEditor, StickerEditor } from '@/js/ImojiEditor.js';
 
-let isInitZoom = true;
 let isCropped = false;
 
 export default {
   props: {
+    errorMessage: {
+      type: Array,
+      required: false,
+      default: () => {
+        return [
+          '편집할 사진을 선택해주세요',
+          '스티커를 붙일 사진을 선택해주세요'
+        ];
+      }
+    },
     width: {
       type: Number,
       required: false,
@@ -80,8 +89,8 @@ export default {
       uploadedPhotoSrc: '',
       initImageSrc: '',
       previousImageSrc: '',
-      initZoomLevel: 0,
-      hide: true
+      hide: true,
+      zoomCount: 0
     };
   },
   watch: {
@@ -124,18 +133,11 @@ export default {
         this.photoCanvas.changePhoto(this.uploadedPhotoSrc);
       }
 
-      this.$refs.uploadedPhoto.addEventListener(
-        'load',
-        () => {
-          this.setPhotoCanvasSize();
-          this.resizeStickerCanvas();
-        },
-        { once: true }
-      );
+      this.setPhotoCanvasSize();
     },
     //# Match sticker canvas - photo canvas dimensions
     //사진 편집 캔버스 사이즈를 저장한 후 스티커 캔버스 사이즈를 이에 맞춤
-    async setPhotoCanvasSize(isFirstLoading) {
+    async setPhotoCanvasSize(isFirstLoading = true) {
       const res = await this.photoCanvas.getPhotoSize(isFirstLoading);
       this.$set(this.photoCanvasSize, 0, res[0]);
       this.$set(this.photoCanvasSize, 1, res[1]);
@@ -152,13 +154,8 @@ export default {
     //# Features of photo edit
     //확대, 회전 기능 함수
     zoom(x) {
-      if (isInitZoom) {
-        this.initZoomLevel = this.photoCanvas.getInitZoomLevel();
-        isInitZoom = false;
-      }
+      this.zoomCount += x;
       this.photoCanvas.zoom(x);
-      this.setPhotoCanvasSize(false);
-      this.resizeStickerCanvas();
     },
     rotate(sign) {
       this.photoCanvas.rotate(sign);
@@ -198,7 +195,6 @@ export default {
       this.photoCanvas.finishCrop();
       isCropped = true;
       this.setPhotoCanvasSize();
-      isInitZoom = true;
     },
     //최종 저장(완료)
     getResultImage() {
@@ -227,8 +223,7 @@ export default {
     //사진 편집 모드로 진입할 때의 동작
     openPhotoEditor() {
       if (!this.uploadedPhotoSrc) {
-        //To Do : 에러메세지 커스터마이징
-        alert('편집할 사진을 선택해주세요');
+        alert(this.errorMessage[0]);
         throw new Error('Please pick photo.');
       }
 
@@ -240,9 +235,10 @@ export default {
     //스티커 편집 모드로 진입할 때의 동작
     openStickerEditor() {
       //To Do : crop 바가 열려있다면 닫기
+      //To Do : zoom 되돌리기
+      //To Do : 모바일 모드에서 move, zoom 안되게 하기
       if (!this.uploadedPhotoSrc) {
-        //To Do : 에러메세지 커스터마이징
-        alert('스티커를 붙일 사진을 선택해주세요');
+        alert(this.errorMessage[1]);
         throw new Error('Please pick photo.');
       }
 
@@ -258,6 +254,16 @@ export default {
 
       if (this.photoCanvas) {
         console.log('edit누르고 sticker누름');
+        if (!isCropped) {
+          if (this.zoomCount !== 0 && this.zoomCount > 0) {
+            this.photoCanvas.zoom(-1 * this.zoomCount);
+            this.zoomCount = 0;
+          }
+          if (this.zoomCount !== 0 && this.zoomCount < 0) {
+            this.photoCanvas.zoom(Math.abs(this.zoomCount));
+            this.zoomCount = 0;
+          }
+        }
         this.photoCanvas.clear();
       }
 
@@ -295,6 +301,7 @@ export default {
 #user-photo {
   display: block;
   max-width: 100%;
+  max-height: 100vh;
 }
 
 .hide {

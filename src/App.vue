@@ -11,8 +11,6 @@ export default {
   },
   data() {
     return {
-      width: 640,
-      height: 480,
       result: undefined
     };
   },

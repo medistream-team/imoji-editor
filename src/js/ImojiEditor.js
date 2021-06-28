@@ -40,6 +40,7 @@ export class PhotoEditor {
           resolve([parseInt(width), parseInt(height)]);
           return;
         }
+
         this.userImage.addEventListener(
           'ready',
           () => {
@@ -61,7 +62,7 @@ export class PhotoEditor {
 
   getInitZoomLevel() {
     const image = this.cropper.getImageData();
-    const zoomLevel = image.width / image.naturalWidth;
+    const zoomLevel = (image.naturalWidth - image.width) / image.width;
     return zoomLevel;
   }
 
@@ -199,8 +200,6 @@ export class StickerEditor {
    * @param {Object} options - The options of sticker image
    */
   addSticker(src, options) {
-    const canvasWidth = this.stickerCanvas.width;
-    const canvasHeight = this.stickerCanvas.height;
     fabric.Image.fromURL(
       src,
       sticker => {
@@ -209,8 +208,6 @@ export class StickerEditor {
         this.stickerCanvas.add(sticker).renderAll();
       },
       {
-        top: canvasWidth / 2,
-        left: canvasHeight / 2,
         borderColor: '#39f',
         cornerColor: '#39f',
         cornerSize: 5,

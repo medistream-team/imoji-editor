@@ -2,6 +2,7 @@
   <imoji-editor-canvas
     ref="test"
     :default-image="defaultImage"
+    :error-message="errorMessage"
     :width="width"
     :height="height"
   >
@@ -173,6 +174,16 @@ export default {
     'imoji-editor-canvas': ImojiEditorCanvas
   },
   props: {
+    errorMessage: {
+      type: Array,
+      required: false,
+      default: () => {
+        return [
+          '편집할 사진을 선택해주세요',
+          '스티커를 붙일 사진을 선택해주세요'
+        ];
+      }
+    },
     width: {
       type: Number,
       required: false,
@@ -191,7 +202,7 @@ export default {
     stickerImages: {
       type: Array,
       required: false,
-      default: function() {
+      default: () => {
         return [
           {
             name: 'medi-01',
@@ -296,8 +307,7 @@ export default {
   justify-content: space-around;
   align-items: center;
   width: 100vw;
-  margin: 2px auto;
-  padding: 4px 0;
+  padding: 4px;
   size: 1.938rem;
   z-index: 2;
 }
