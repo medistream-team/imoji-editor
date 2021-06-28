@@ -57,23 +57,13 @@ export class PhotoEditor {
     });
   }
 
+  /**
+   * Return Canvas area dimensions
+   * @returns Canvas's width, height (Number)
+   */
   getRotatedCanvasSize() {
     const { width, height } = this.cropper.getCanvasData();
     return [width, height];
-  }
-
-  getInitZoomLevel() {
-    const image = this.cropper.getImageData();
-    const zoomLevel = (image.naturalWidth - image.width) / image.width;
-    return zoomLevel;
-  }
-
-  /**
-   * Reset zoom to init state
-   * @param {number} initZoomLevel
-   */
-  resetZoomLevel(initZoomLevel) {
-    this.cropper.zoomTo(initZoomLevel);
   }
 
   reset() {
@@ -85,8 +75,7 @@ export class PhotoEditor {
   }
 
   disable() {
-    const stickerCanvas = document.querySelector('.canvas-container');
-    stickerCanvas && this.cropper.disable();
+    this.cropper.disable();
   }
 
   destroy() {
@@ -95,7 +84,7 @@ export class PhotoEditor {
 
   finishCrop() {
     const canvas = this.cropper.getCroppedCanvas();
-    const croppedImgSrc = canvas.toDataURL();
+    const croppedImgSrc = canvas.toDataURL('image/png');
     this.cropper.replace(croppedImgSrc);
   }
 
