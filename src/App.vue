@@ -15,8 +15,8 @@ export default {
     };
   },
   methods: {
-    done(a) {
-      this.result = a;
+    done(resultImage) {
+      this.result = resultImage;
     }
   }
 };

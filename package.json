@@ -6,6 +6,22 @@
     "build": "vue-cli-service build ./src/index.js --target lib",
     "lint": "vue-cli-service lint"
   },
+  "description": "JavaScript image editor with sticker feature",
+  "keywords": [
+    "vuejs",
+    "vue",
+    "javascript",
+    "component",
+    "image-editor",
+    "editor",
+    "image",
+    "crop",
+    "move",
+    "zoom",
+    "rotate",
+    "sticker",
+    "front-end"
+  ],
   "files": [
     "dist/imoji-editor.umd.min.js"
   ],

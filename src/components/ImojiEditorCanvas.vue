@@ -251,11 +251,11 @@ export default {
       }
 
       if (this.photoCanvas) {
-        if (this.zoomCount !== 0 && this.zoomCount > 0) {
+        if (this.zoomCount > 0) {
           this.photoCanvas.zoom(-1 * this.zoomCount);
           this.zoomCount = 0;
         }
-        if (this.zoomCount !== 0 && this.zoomCount < 0) {
+        if (this.zoomCount < 0) {
           this.photoCanvas.zoom(Math.abs(this.zoomCount));
           this.zoomCount = 0;
         }
