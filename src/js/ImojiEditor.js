@@ -201,12 +201,6 @@ export class StickerEditor {
    */
   setBackground(src) {
     fabric.Image.fromURL(src, img => {
-      console.log(
-        '캔버스: ',
-        this.stickerCanvas.getWidth(),
-        '사진 :',
-        img.width
-      );
       img.set({
         scaleX: this.stickerCanvas.getWidth() / img.width,
         scaleY: this.stickerCanvas.getHeight() / img.height,

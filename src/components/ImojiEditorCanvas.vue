@@ -15,7 +15,7 @@
         <div id="sticker-wrapper" :class="[hide ? 'hide' : '']">
           <canvas id="sticker-canvas"></canvas>
         </div>
-        <div class="uploaded-photo-wrapper">
+        <div id="uploaded-photo-wrapper">
           <img id="user-photo" ref="uploadedPhoto" :src="uploadedPhotoSrc" />
         </div>
       </div>
@@ -174,8 +174,7 @@ export default {
       }
     },
     crop() {
-      // To Do : crop시에만 move 버튼 활성화
-      // crop 버튼 누르면 기본적으로 auto crop세팅
+      // To Do : crop 버튼 누르면 기본적으로 auto crop세팅
       this.photoCanvas.finishCrop();
       isCropped = true;
       this.setPhotoCanvasSize();
@@ -296,7 +295,7 @@ export default {
   display: none;
 }
 
-.uploaded-photo-wrapper {
+#uploaded-photo-wrapper {
   display: flex;
   flex-direction: column;
   justify-content: center;
