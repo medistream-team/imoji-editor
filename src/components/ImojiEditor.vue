@@ -99,7 +99,10 @@
         </div>
 
         <div class="tool-bar-wrapper">
-          <button class="tool-bar-button" @click="toggleButton()">
+          <button
+            class="tool-bar-button"
+            @click="toggleCropModeButton(), photoCanvas.setFreeCrop()"
+          >
             <i class="mdi mdi-crop"> </i>
           </button>
 
@@ -257,18 +260,18 @@ export default {
     };
   },
   methods: {
-    toggleButton() {
+    toggleCropModeButton() {
       this.isActiveRatioCrop = !this.isActiveRatioCrop;
       this.isActiveMove = !this.isActiveMove;
     },
     done() {
       //이미지 잘 저장되는지 테스트용
-      const result = this.$refs.test.getResultImage();
+      const resultImage = this.$refs.test.getResultImage();
       const d = document.getElementById('testA');
-      d.appendChild(result);
-      // d.outerHTML = result.outerHTML;
+      d.appendChild(resultImage);
+      // d.outerHTML = resultImage.outerHTML;
 
-      this.$emit('done', result);
+      this.$emit('done', resultImage);
     }
   }
 };

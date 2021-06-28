@@ -16,8 +16,10 @@ export class PhotoEditor {
       viewMode: 1,
       background: false,
       autoCrop: false,
+      autoCropArea: 0.5,
       dragMode: 'none',
       zoomOnWheel: false,
+      zoomOnTouch: false,
       ...options
     });
   }

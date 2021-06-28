@@ -235,7 +235,6 @@ export default {
     //스티커 편집 모드로 진입할 때의 동작
     openStickerEditor() {
       //To Do : crop 바가 열려있다면 닫기
-      //To Do : zoom 되돌리기
       //To Do : 모바일 모드에서 move, zoom 안되게 하기
       if (!this.uploadedPhotoSrc) {
         alert(this.errorMessage[1]);
@@ -244,16 +243,14 @@ export default {
 
       this.hide = false;
       this.layout = 'sticker-tool-bar';
-
+      this.photoCanvas.setDragMode('none');
       if (!this.stickerCanvas) {
-        console.log('첫 생성');
         this.setPhotoCanvasSize();
         const [width, height] = this.photoCanvasSize;
         this.stickerCanvas = new StickerEditor('sticker-canvas', width, height);
       }
 
       if (this.photoCanvas) {
-        console.log('edit누르고 sticker누름');
         if (!isCropped) {
           if (this.zoomCount !== 0 && this.zoomCount > 0) {
             this.photoCanvas.zoom(-1 * this.zoomCount);
@@ -268,7 +265,6 @@ export default {
       }
 
       if (!this.photoCanvas) {
-        console.log('edit 안 누름');
         this.setPhotoCanvasSize();
       }
     }
