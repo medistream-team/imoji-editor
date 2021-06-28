@@ -1,7 +1,7 @@
 import Cropper from 'cropperjs';
 import { fabric } from 'fabric';
-import 'cropperjs/dist/cropper.css';
 import { Promise } from 'core-js';
+import 'cropperjs/dist/cropper.css';
 
 export class PhotoEditor {
   constructor(selector, options) {
@@ -30,9 +30,16 @@ export class PhotoEditor {
     this.cropper.setDragMode(mode);
   }
 
-  getPhotoSize() {
+  getPhotoSize(isFirstLoading = true) {
     return new Promise((resolve, reject) => {
       try {
+        if (!isFirstLoading) {
+          const target = document.getElementsByClassName('cropper-canvas');
+          const width = target[0].style.width;
+          const height = target[0].style.height;
+          resolve([parseInt(width), parseInt(height)]);
+          return;
+        }
         this.userImage.addEventListener(
           'ready',
           () => {
@@ -143,12 +150,25 @@ export class PhotoEditor {
    * Edited Photo Image Object without sticker
    * @returns Image Object
    */
-  saveEditedPhoto() {
+  saveEditedPhoto(stickerImage) {
     const canvas = this.cropper.getCroppedCanvas();
     const editedPhotoSrc = canvas.toDataURL('image/png');
     const editedPhoto = new Image();
     editedPhoto.src = editedPhotoSrc;
-    return [editedPhoto, editedPhotoSrc];
+    if (!stickerImage) return [editedPhoto, editedPhotoSrc];
+
+    //스티커 이미지 올리기
+    const context = canvas.getContext('2d');
+    stickerImage.onload = () => {
+      context.drawImage(stickerImage, 0, 0);
+    };
+
+    return canvas;
+  }
+
+  getNatureSize() {
+    const canvas = this.cropper.getCroppedCanvas();
+    return [canvas.width, canvas.height];
   }
 }
 
@@ -174,10 +194,13 @@ export class StickerEditor {
   }
 
   /**
+   * Add sticker image on canvas
    * @param {string} src - The src of sticker image
    * @param {Object} options - The options of sticker image
    */
   addSticker(src, options) {
+    const canvasWidth = this.stickerCanvas.width;
+    const canvasHeight = this.stickerCanvas.height;
     fabric.Image.fromURL(
       src,
       sticker => {
@@ -186,6 +209,8 @@ export class StickerEditor {
         this.stickerCanvas.add(sticker).renderAll();
       },
       {
+        top: canvasWidth / 2,
+        left: canvasHeight / 2,
         borderColor: '#39f',
         cornerColor: '#39f',
         cornerSize: 5,
@@ -196,33 +221,45 @@ export class StickerEditor {
   }
 
   /**
-   * Set edited photo to background of sticker canvas at all the time when user open sticker editor
-   * @param {string} editedPhoto - src of photo
+   * Resize sticker canvas's width to natural width of the original image
+   * @param {number} naturalWidth
    */
-  setBackground(src) {
-    fabric.Image.fromURL(src, img => {
-      img.set({
-        scaleX: this.stickerCanvas.getWidth() / img.width,
-        scaleY: this.stickerCanvas.getHeight() / img.height,
-        originX: 'left',
-        originY: 'top'
-      });
+  resizeStickerToNatural(naturalWidth) {
+    if (this.stickerCanvas.width != naturalWidth) {
+      const scaleMultiplier = naturalWidth / this.stickerCanvas.width;
+      const objects = this.stickerCanvas.getObjects();
+      for (const i in objects) {
+        objects[i].scaleX = objects[i].scaleX * scaleMultiplier;
+        objects[i].scaleY = objects[i].scaleY * scaleMultiplier;
+        objects[i].left = objects[i].left * scaleMultiplier;
+        objects[i].top = objects[i].top * scaleMultiplier;
+        objects[i].setCoords();
+      }
 
-      this.stickerCanvas.setBackgroundImage(
-        img,
-        this.stickerCanvas.renderAll.bind(this.stickerCanvas)
+      this.stickerCanvas.discardActiveObject();
+      this.stickerCanvas.setWidth(
+        this.stickerCanvas.getWidth() * scaleMultiplier
       );
-    });
+      this.stickerCanvas.setHeight(
+        this.stickerCanvas.getHeight() * scaleMultiplier
+      );
+      this.stickerCanvas.renderAll();
+      this.stickerCanvas.calcOffset();
+    }
   }
 
   /**
-   * Return result image with sticker by Image Object
-   * @returns Image Object
+   * Return result sticker image
+   * @param {number} naturalWidth
+   * @returns Image Object png
    */
-  getToImg() {
-    const resultImg = new Image();
-    resultImg.src = this.stickerCanvas.toDataURL('image/png');
-    return resultImg;
+  saveStickerImage(naturalWidth) {
+    //편집된 이미지 크기에 맞게 스티커를 재조정 후
+    this.resizeStickerToNatural(naturalWidth);
+    //이미지로 내보내서 cropper js canvas에 올릴 것임
+    const stickerImage = new Image();
+    stickerImage.src = this.stickerCanvas.toDataURL('image/png');
+    return stickerImage;
   }
 
   /**

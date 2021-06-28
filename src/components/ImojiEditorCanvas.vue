@@ -94,13 +94,29 @@ export default {
     }
   },
   methods: {
+    //# Handling target photo
+    //라이브러리 외부에서 import하는 이미지가 있을 경우
     importPhoto() {
       this.uploadedPhotoSrc = this.defaultImage.src;
       this.initImageSrc = this.defaultImage.src;
+      if (!this.photoCanvas) {
+        this.photoCanvas = new PhotoEditor('user-photo', {
+          minContainerHeight: this.height,
+          minContainerWidth: this.width
+        });
+      }
     },
+    //라이브러리 내부에서 사진을 교체하는 경우
     changePhoto(e) {
       this.uploadedPhotoSrc = URL.createObjectURL(e.target.files[0]);
       this.initImageSrc = URL.createObjectURL(e.target.files[0]);
+
+      if (!this.photoCanvas) {
+        this.photoCanvas = new PhotoEditor('user-photo', {
+          minContainerHeight: this.height,
+          minContainerWidth: this.width
+        });
+      }
 
       if (this.photoCanvas) {
         this.photoCanvas.changePhoto(this.uploadedPhotoSrc);
@@ -115,19 +131,15 @@ export default {
         { once: true }
       );
     },
-    async setPhotoCanvasSize() {
-      if (!this.photoCanvas) {
-        const { uploadedPhoto } = this.$refs;
-        this.$set(this.photoCanvasSize, 0, uploadedPhoto.width);
-        this.$set(this.photoCanvasSize, 1, uploadedPhoto.height);
-        return;
-      }
-
-      const res = await this.photoCanvas.getPhotoSize();
+    //# Match sticker canvas - photo canvas dimensions
+    //사진 편집 캔버스 사이즈를 저장한 후 스티커 캔버스 사이즈를 이에 맞춤
+    async setPhotoCanvasSize(isFirstLoading) {
+      const res = await this.photoCanvas.getPhotoSize(isFirstLoading);
       this.$set(this.photoCanvasSize, 0, res[0]);
       this.$set(this.photoCanvasSize, 1, res[1]);
       this.resizeStickerCanvas();
     },
+    //스티커 캔버스 사이즈를 저장된 사진 편집 캔버스에 맞추는 함수
     resizeStickerCanvas() {
       const [width, height] = this.photoCanvasSize;
 
@@ -135,12 +147,16 @@ export default {
         this.stickerCanvas.resizeStickerCanvas(width, height);
       }
     },
+    //# Features of photo edit
+    //확대, 회전 기능 함수
     zoom(x) {
       if (isInitZoom) {
         this.initZoomLevel = this.photoCanvas.getInitZoomLevel();
         isInitZoom = false;
       }
       this.photoCanvas.zoom(x);
+      this.setPhotoCanvasSize(false);
+      this.resizeStickerCanvas();
     },
     rotate(sign) {
       this.photoCanvas.rotate(sign);
@@ -149,6 +165,7 @@ export default {
       this.$set(this.photoCanvasSize, 1, height);
       this.resizeStickerCanvas();
     },
+    //사진과 스티커를 초기 상태로 되돌리는 함수
     reset() {
       isCropped = false;
 
@@ -173,6 +190,7 @@ export default {
         this.stickerCanvas.removeAllSticker();
       }
     },
+    //크롭 함수
     crop() {
       // To Do : crop 버튼 누르면 기본적으로 auto crop세팅
       this.photoCanvas.finishCrop();
@@ -180,6 +198,31 @@ export default {
       this.setPhotoCanvasSize();
       isInitZoom = true;
     },
+    //최종 저장(완료)
+    getResultImage() {
+      // case 1. 스티커 없이 편집만 해서 저장 => 잘됨 / canvas 상으로는 확대되어 보이는데 저장은 실제 크기로 저장됨
+      if (!this.stickerCanvas && this.photoCanvas) {
+        return this.photoCanvas.saveEditedPhoto()[0];
+      }
+
+      // case 2. 스티커만 붙여서 저장 => 잘 됨
+      if (!this.photoCanvas && this.stickerCanvas) {
+        const width = this.photoCanvas.getNatureSize()[0];
+        return this.photoCanvas.saveEditedPhoto(
+          this.stickerCanvas.saveStickerImage(width)
+        );
+      }
+
+      // case 3. 편집, 스티커 둘 다 했을 때 저장 => 잘 됨
+      if (this.photoCanvas && this.stickerCanvas) {
+        const width = this.photoCanvas.getNatureSize()[0];
+        return this.photoCanvas.saveEditedPhoto(
+          this.stickerCanvas.saveStickerImage(width)
+        );
+      }
+    },
+    //# Handling edit mode
+    //사진 편집 모드로 진입할 때의 동작
     openPhotoEditor() {
       if (!this.uploadedPhotoSrc) {
         //To Do : 에러메세지 커스터마이징
@@ -190,16 +233,11 @@ export default {
       this.hide = true;
       this.layout = 'tool-bar';
 
-      if (!this.photoCanvas) {
-        this.photoCanvas = new PhotoEditor('user-photo', {
-          minContainerHeight: this.height,
-          minContainerWidth: this.width
-        });
-      }
-
       this.setPhotoCanvasSize();
     },
+    //스티커 편집 모드로 진입할 때의 동작
     openStickerEditor() {
+      //To Do : crop 바가 열려있다면 닫기
       if (!this.uploadedPhotoSrc) {
         //To Do : 에러메세지 커스터마이징
         alert('스티커를 붙일 사진을 선택해주세요');
@@ -209,7 +247,6 @@ export default {
       this.hide = false;
       this.layout = 'sticker-tool-bar';
 
-      // 스티커 캔버스 첫 생성
       if (!this.stickerCanvas) {
         console.log('첫 생성');
         this.setPhotoCanvasSize();
@@ -217,47 +254,14 @@ export default {
         this.stickerCanvas = new StickerEditor('sticker-canvas', width, height);
       }
 
-      // edit 눌렀다
       if (this.photoCanvas) {
         console.log('edit누르고 sticker누름');
-        const croppedUrl = this.photoCanvas.saveEditedPhoto()[1];
-        this.stickerCanvas.setBackground(croppedUrl);
         this.photoCanvas.clear();
-        if (!isCropped) {
-          console.log('크롭하지 않음');
-          // To Do : edit 버튼을 누르고 sticker 버튼을 누르면 width height가 0으로 설정 - 원인은 아래 코드 때문임
-          // this.photoCanvas.resetZoomLevel(this.initZoomLevel);
-        }
       }
 
-      // eidt 안 눌렀다
       if (!this.photoCanvas) {
         console.log('edit 안 누름');
         this.setPhotoCanvasSize();
-        this.stickerCanvas.setBackground(this.$refs.uploadedPhoto.src);
-      }
-    },
-    turnToRatioCrop() {
-      this.layout = 'aspect-ratio';
-    },
-    turnToFreeCrop() {
-      this.layout = 'image-detail-editor';
-    },
-    getResultImage() {
-      // case 1. 스티커 없이 편집만 해서 저장 => 잘됨 / canvas 상으로는 확대되어 보이는데 저장은 실제 크기로 저장됨
-      if (!this.stickerCanvas && this.photoCanvas) {
-        // return image
-        return this.photoCanvas.saveEditedPhoto()[0];
-      }
-
-      // case 2. 스티커만 붙여서 저장 => 잘 됨
-      if (!this.photoCanvas && this.stickerCanvas) {
-        return this.stickerCanvas.getToImg();
-      }
-
-      // case 3. 편집, 스티커 둘 다 했을 때 저장 => 잘 됨
-      if (this.photoCanvas && this.stickerCanvas) {
-        return this.stickerCanvas.getToImg();
       }
     }
   }
