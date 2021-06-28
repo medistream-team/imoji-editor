@@ -20,28 +20,30 @@
         </div>
       </div>
     </div>
-    <slot
-      name="toolBar"
-      :photoCanvas="photoCanvas"
-      :layout="layout"
-      :zoom="zoom"
-      :rotate="rotate"
-    ></slot>
-    <slot
-      name="stickerToolBar"
-      :stickerCanvas="stickerCanvas"
-      :layout="layout"
-    ></slot>
-    <slot
-      name="ratioCropToolBar"
-      :photoCanvas="photoCanvas"
-      :layout="layout"
-    ></slot>
-    <slot
-      name="toolNavigation"
-      :openPhotoEditor="openPhotoEditor"
-      :openStickerEditor="openStickerEditor"
-    ></slot>
+    <div class="allToolBarWrapper">
+      <slot
+        name="toolBar"
+        :photoCanvas="photoCanvas"
+        :layout="layout"
+        :zoom="zoom"
+        :rotate="rotate"
+      ></slot>
+      <slot
+        name="stickerToolBar"
+        :stickerCanvas="stickerCanvas"
+        :layout="layout"
+      ></slot>
+      <slot
+        name="ratioCropToolBar"
+        :photoCanvas="photoCanvas"
+        :layout="layout"
+      ></slot>
+      <slot
+        name="toolNavigation"
+        :openPhotoEditor="openPhotoEditor"
+        :openStickerEditor="openStickerEditor"
+      ></slot>
+    </div>
   </section>
 </template>
 
@@ -237,9 +239,7 @@ export default {
         this.stickerCanvas.setBackground(this.$refs.uploadedPhoto.src);
       }
     },
-    turnToRatioCrop() {
-      this.layout = 'aspect-ratio';
-    },
+
     turnToFreeCrop() {
       this.layout = 'image-detail-editor';
     },
@@ -300,5 +300,12 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+}
+
+.allToolBarWrapper {
+  position: absolute;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.1);
+  z-index: 2;
 }
 </style>

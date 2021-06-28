@@ -97,41 +97,43 @@
           </button>
         </div>
 
-        <button class="tool-bar-button" @click="toggleButton()">
-          <i class="mdi mdi-crop"> </i>
-        </button>
+        <div class="tool-bar-wrapper">
+          <button class="tool-bar-button" @click="toggleButton()">
+            <i class="mdi mdi-crop"> </i>
+          </button>
 
-        <button class="tool-bar-button" @click="zoom(0.1)">
-          <i class="mdi mdi-magnify-plus"></i>
-        </button>
+          <button class="tool-bar-button" @click="zoom(0.1)">
+            <i class="mdi mdi-magnify-plus"></i>
+          </button>
 
-        <button class="tool-bar-button" @click="zoom(-0.1)">
-          <i class="mdi mdi-magnify-minus"></i>
-        </button>
+          <button class="tool-bar-button" @click="zoom(-0.1)">
+            <i class="mdi mdi-magnify-minus"></i>
+          </button>
 
-        <button class="tool-bar-button" @click="rotate('+')">
-          <i class="mdi mdi-rotate-right"></i>
-        </button>
+          <button class="tool-bar-button" @click="rotate('+')">
+            <i class="mdi mdi-rotate-right"></i>
+          </button>
 
-        <button class="tool-bar-button" @click="rotate('-')">
-          <i class="mdi mdi-rotate-left"></i>
-        </button>
+          <button class="tool-bar-button" @click="rotate('-')">
+            <i class="mdi mdi-rotate-left"></i>
+          </button>
 
-        <button class="tool-bar-button" @click="photoCanvas.flip('X')">
-          <i class="mdi mdi-flip-horizontal"></i>
-        </button>
+          <button class="tool-bar-button" @click="photoCanvas.flip('X')">
+            <i class="mdi mdi-flip-horizontal"></i>
+          </button>
 
-        <button class="tool-bar-button" @click="photoCanvas.flip('Y')">
-          <i class="mdi mdi-flip-vertical"></i>
-        </button>
+          <button class="tool-bar-button" @click="photoCanvas.flip('Y')">
+            <i class="mdi mdi-flip-vertical"></i>
+          </button>
+        </div>
       </div>
     </template>
     <template #stickerToolBar="{stickerCanvas , layout}">
       <div v-if="layout === 'sticker-tool-bar'" class="sticker-tool-bar">
         <img
           v-for="stickerImage in stickerImages"
-          :key="stickerImage.id"
-          :src="stickerImage.png"
+          :key="stickerImage.name"
+          :src="stickerImage.svg"
           class="image-sticker"
           @click="e => stickerCanvas.addSticker(e.target.src)"
         />
@@ -192,28 +194,46 @@ export default {
       default: function() {
         return [
           {
-            name: 'surprised',
-            svg: '',
+            name: 'medi-01',
+            svg: 'medi-01.svg',
             jpg: '',
-            png: 'test.svg'
+            png: ''
           },
           {
-            name: 'happy',
-            svg: '',
+            name: 'medi-02',
+            svg: 'medi-02.svg',
             jpg: '',
-            png: 'medi-01.svg'
+            png: ''
           },
           {
-            name: 'sad',
-            svg: '',
+            name: 'medi-03',
+            svg: 'medi-03.svg',
             jpg: '',
-            png: '03.png'
+            png: ''
           },
           {
-            name: 'cry',
-            svg: '',
+            name: 'medi-04',
+            svg: 'medi-04.svg',
             jpg: '',
-            png: '04.png'
+            png: ''
+          },
+          {
+            name: 'medi-05',
+            svg: 'medi-05.svg',
+            jpg: '',
+            png: ''
+          },
+          {
+            name: 'medi-06',
+            svg: 'medi-06.svg',
+            jpg: '',
+            png: ''
+          },
+          {
+            name: 'medi-07',
+            svg: 'medi-07.svg',
+            jpg: '',
+            png: ''
           }
         ];
       }
@@ -249,6 +269,7 @@ export default {
 
 .controller-bar-wrapper {
   position: absolute;
+  top: 0;
   display: flex;
   justify-content: space-around;
   align-items: center;
@@ -271,17 +292,18 @@ export default {
 }
 
 .tool-bar {
-  position: absolute;
-  bottom: 2.4rem;
-  display: flex;
   justify-content: space-around;
   align-items: center;
   width: 100vw;
   margin: 2px auto;
   padding: 4px 0;
-  background: rgba(0, 0, 0, 0.1);
   size: 1.938rem;
   z-index: 2;
+}
+
+.tool-bar-wrapper {
+  display: flex;
+  justify-content: space-between;
 }
 
 .tool-bar-button {
@@ -292,15 +314,12 @@ export default {
 }
 
 .tool-navigation-wrapper {
-  position: absolute;
-  bottom: 0;
   display: flex;
   justify-content: space-around;
   align-items: center;
   width: 100vw;
   height: 50px;
   color: #152447;
-  background: rgba(0, 0, 0, 0.1);
   z-index: 2;
 }
 
@@ -321,8 +340,6 @@ export default {
 }
 
 .sticker-tool-bar {
-  position: absolute;
-  bottom: 2.4rem;
   display: grid;
   grid-auto-flow: column;
   justify-content: space-around;
@@ -330,19 +347,15 @@ export default {
   height: 3rem;
   margin: 2px auto;
   padding: 8px 0;
-  background: rgba(0, 0, 0, 0.1);
   z-index: 2;
 }
 
 .ratio-crop-tool-bar {
-  position: absolute;
-  bottom: 1.93rem;
   display: flex;
   justify-content: space-around;
   width: 100%;
   padding: 10px;
   border-style: none;
-  background: rgba(0, 0, 0, 0.1);
   z-index: 2;
 }
 
