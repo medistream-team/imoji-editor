@@ -5,7 +5,6 @@ module.exports = {
   devServer: {
     overlay: false
   },
-  lintOnSave: false,
   css: {
     extract: false
   },
