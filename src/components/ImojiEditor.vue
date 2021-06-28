@@ -253,8 +253,9 @@ export default {
     done() {
       //이미지 잘 저장되는지 테스트용
       const result = this.$refs.test.getResultImage();
-      const d = document.getElementById('testB');
-      d.outerHTML = result.outerHTML;
+      const d = document.getElementById('testA');
+      d.appendChild(result);
+      // d.outerHTML = result.outerHTML;
 
       this.$emit('done', result);
     }
