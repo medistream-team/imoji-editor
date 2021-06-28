@@ -18,7 +18,7 @@
           accept="image/*"
         >
           <label>
-            <i class="mdi mdi-file-image"></i>
+            <file-image />
             <input type="file" class="file" @change="changePhoto" />
           </label>
         </button>
@@ -29,11 +29,11 @@
           title="move"
           @click="photoCanvas.setDragMode('move')"
         >
-          <i class="mdi mdi-cursor-move"></i>
+          <cursor-move />
         </button>
 
         <button class="controller-bar-button" title="reset" @click="reset">
-          <i class="mdi mdi-restore"></i>
+          <restore-icon />
         </button>
 
         <div v-if="layout === 'sticker-tool-bar'" class="delete-sticker">
@@ -42,7 +42,7 @@
             title="delete sticker"
             @click="stickerCanvas.removeSticker()"
           >
-            <i class="mdi mdi-delete"></i>
+            <delete-icon />
           </button>
         </div>
 
@@ -52,12 +52,12 @@
             title="complete crop"
             @click="crop"
           >
-            <i class="mdi mdi-check"></i>
+            <check-icon />
           </button>
         </div>
 
         <button class="controller-bar-button" title="done" @click="done">
-          <i class="mdi mdi-download"></i>
+          <download-icon />
         </button>
       </div>
     </template>
@@ -101,36 +101,35 @@
         </div>
 
         <div class="tool-bar-wrapper">
-          <!-- To Do : crop버튼 토글시 auto crop 영역 사라지기 -->
           <button
             class="tool-bar-button"
             @click="toggleCropModeButton(), photoCanvas.setFreeCrop()"
           >
-            <i class="mdi mdi-crop"> </i>
+            <crop-icon />
           </button>
 
           <button class="tool-bar-button" @click="zoom(0.1)">
-            <i class="mdi mdi-magnify-plus"></i>
+            <magnify-plus />
           </button>
 
           <button class="tool-bar-button" @click="zoom(-0.1)">
-            <i class="mdi mdi-magnify-minus"></i>
+            <magnify-minus />
           </button>
 
           <button class="tool-bar-button" @click="rotate('+')">
-            <i class="mdi mdi-rotate-right"></i>
+            <rotate-right />
           </button>
 
           <button class="tool-bar-button" @click="rotate('-')">
-            <i class="mdi mdi-rotate-left"></i>
+            <rotate-left />
           </button>
 
           <button class="tool-bar-button" @click="photoCanvas.flip('X')">
-            <i class="mdi mdi-flip-horizontal"></i>
+            <flip-horizontal />
           </button>
 
           <button class="tool-bar-button" @click="photoCanvas.flip('Y')">
-            <i class="mdi mdi-flip-vertical"></i>
+            <flip-vertical />
           </button>
         </div>
       </div>
@@ -174,10 +173,37 @@
 
 <script>
 import ImojiEditorCanvas from '@/components/ImojiEditorCanvas.vue';
+// icons
+import FileImage from 'icons/FileImage';
+import CursorMove from 'icons/CursorMove';
+import RestoreIcon from 'icons/Restore';
+import DeleteIcon from 'icons/Delete';
+import CheckIcon from 'icons/Check';
+import DownloadIcon from 'icons/Download';
+import CropIcon from 'icons/Crop';
+import MagnifyPlus from 'icons/MagnifyPlus';
+import MagnifyMinus from 'icons/MagnifyMinus';
+import RotateRight from 'icons/RotateRight';
+import RotateLeft from 'icons/RotateLeft';
+import FlipHorizontal from 'icons/FlipHorizontal';
+import FlipVertical from 'icons/FlipVertical';
 
 export default {
   components: {
-    'imoji-editor-canvas': ImojiEditorCanvas
+    'imoji-editor-canvas': ImojiEditorCanvas,
+    FileImage,
+    CursorMove,
+    RestoreIcon,
+    DeleteIcon,
+    CheckIcon,
+    DownloadIcon,
+    CropIcon,
+    MagnifyPlus,
+    MagnifyMinus,
+    RotateRight,
+    RotateLeft,
+    FlipHorizontal,
+    FlipVertical
   },
   props: {
     errorMessage: {
