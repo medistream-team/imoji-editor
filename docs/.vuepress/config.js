@@ -4,14 +4,14 @@ module.exports = {
   themeConfig: {
     nav: [
       { text: 'Home', link: '/' },
-      { text: 'Example', link: '/example/' },
       { text: 'Options', link: '/options/' },
+      { text: 'Example', link: '/example/' },
       { text: 'Features', link: '/features/' },
       {
         text: 'Github',
         link: 'https://github.com/medistream-team/imoji-editor'
       }
     ],
-    sidebar: ['/', '/example/', '/options/', '/features/']
+    sidebar: ['/', '/options/', '/example/', '/features/']
   }
 };
