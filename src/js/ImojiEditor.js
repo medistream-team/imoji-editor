@@ -151,7 +151,7 @@ export class PhotoEditor {
     //add sticker image on photo canvas
     const context = canvas.getContext('2d');
 
-    let promise = new Promise(resolve => {
+    let loadResultPhoto = new Promise(resolve => {
       stickerImage.onload = () => {
         context.drawImage(stickerImage, 0, 0);
         resolve(canvas);
@@ -159,7 +159,7 @@ export class PhotoEditor {
     });
 
     //return promise
-    return promise.then(res => {
+    return loadResultPhoto.then(res => {
       const withStickerImage = new Image();
       withStickerImage.src = res.toDataURL('image/png');
       return withStickerImage;
