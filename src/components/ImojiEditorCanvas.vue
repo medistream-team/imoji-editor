@@ -9,12 +9,12 @@
     <slot
       name="controllerBar"
       :reset="reset"
-      :stickerCanvas="stickerCanvas"
-      :changePhoto="changePhoto"
+      :sticker-canvas="stickerCanvas"
+      :change-photo="changePhoto"
       :crop="crop"
       :layout="layout"
-      :photoCanvas="photoCanvas"
-      :getResultImage="getResultImage"
+      :photo-canvas="photoCanvas"
+      :export-result-photo="exportResultPhoto"
     >
     </slot>
     <div class="imoji-editor-wrapper">
@@ -30,25 +30,26 @@
     <div class="all-tool-bar-wrapper">
       <slot
         name="toolBar"
-        :photoCanvas="photoCanvas"
+        :photo-canvas="photoCanvas"
         :layout="layout"
         :zoom="zoom"
         :rotate="rotate"
+        :clear-crop="clearCrop"
       ></slot>
       <slot
         name="stickerToolBar"
-        :stickerCanvas="stickerCanvas"
+        :sticker-canvas="stickerCanvas"
         :layout="layout"
       ></slot>
       <slot
         name="ratioCropToolBar"
-        :photoCanvas="photoCanvas"
+        :photo-canvas="photoCanvas"
         :layout="layout"
       ></slot>
       <slot
         name="toolNavigation"
-        :openPhotoEditor="openPhotoEditor"
-        :openStickerEditor="openStickerEditor"
+        :open-photo-editor="openPhotoEditor"
+        :open-sticker-editor="openStickerEditor"
       ></slot>
     </div>
   </section>
@@ -59,11 +60,7 @@ import { PhotoEditor, StickerEditor } from '@/js/ImojiEditor.js';
 
 export default {
   props: {
-    isActiveRatioCrop: {
-      type: Boolean,
-      required: true
-    },
-    isActiveMove: {
+    isCropMode: {
       type: Boolean,
       required: true
     },
@@ -90,15 +87,14 @@ export default {
   },
   data() {
     return {
-      layout: '',
       stickerCanvas: undefined,
       photoCanvas: undefined,
       photoCanvasSize: [0, 0],
       uploadedPhotoSrc: '',
       initImageSrc: '',
-      previousImageSrc: '',
-      hide: true,
-      zoomCount: 0
+      zoomCount: 0,
+      layout: '',
+      hide: true
     };
   },
   watch: {
@@ -113,11 +109,11 @@ export default {
     }
   },
   methods: {
-    //# Handling target photo
-    //라이브러리 외부에서 import하는 이미지가 있을 경우
+    //Settings
     importPhoto() {
       this.uploadedPhotoSrc = this.defaultImage.src;
       this.initImageSrc = this.defaultImage.src;
+
       if (!this.photoCanvas) {
         this.photoCanvas = new PhotoEditor('user-photo', {
           minContainerHeight: this.height,
@@ -125,7 +121,6 @@ export default {
         });
       }
     },
-    //라이브러리 내부에서 사진을 교체하는 경우
     changePhoto(e) {
       this.uploadedPhotoSrc = URL.createObjectURL(e.target.files[0]);
       this.initImageSrc = URL.createObjectURL(e.target.files[0]);
@@ -143,15 +138,15 @@ export default {
 
       this.setPhotoCanvasSize();
     },
-    //# Match sticker canvas - photo canvas dimensions
-    //사진 편집 캔버스 사이즈를 저장한 후 스티커 캔버스 사이즈를 이에 맞춤
     async setPhotoCanvasSize(isFirstLoading = true) {
-      const res = await this.photoCanvas.getPhotoSize(isFirstLoading);
-      this.$set(this.photoCanvasSize, 0, res[0]);
-      this.$set(this.photoCanvasSize, 1, res[1]);
+      const [width, height] = await this.photoCanvas.getPhotoCanvasSize(
+        isFirstLoading
+      );
+
+      this.$set(this.photoCanvasSize, 0, width);
+      this.$set(this.photoCanvasSize, 1, height);
       this.resizeStickerCanvas();
     },
-    //스티커 캔버스 사이즈를 저장된 사진 편집 캔버스에 맞추는 함수
     resizeStickerCanvas() {
       const [width, height] = this.photoCanvasSize;
 
@@ -159,8 +154,11 @@ export default {
         this.stickerCanvas.resizeStickerCanvas(width, height);
       }
     },
-    //# Features of photo edit
-    //확대, 회전 기능 함수
+    clearCrop() {
+      this.photoCanvas.clear();
+      this.$emit('off-croppable', false);
+    },
+    //Tool Features
     zoom(x) {
       this.zoomCount += x;
       this.photoCanvas.zoom(x);
@@ -171,14 +169,14 @@ export default {
       this.$set(this.photoCanvasSize, 0, width);
       this.$set(this.photoCanvasSize, 1, height);
       this.resizeStickerCanvas();
+      this.clearCrop();
     },
-    //사진과 스티커를 초기 상태로 되돌리는 함수
     reset() {
       if (this.photoCanvas) {
         this.photoCanvas.changePhoto(this.initImageSrc);
 
         if (this.photoCanvas) {
-          this.photoCanvas.clear();
+          this.clearCrop();
         }
 
         this.$refs.uploadedPhoto.addEventListener(
@@ -195,36 +193,33 @@ export default {
         this.stickerCanvas.removeAllSticker();
       }
     },
-    //크롭 함수
     crop() {
       this.photoCanvas.finishCrop();
       this.setPhotoCanvasSize();
     },
-    //최종 저장(완료)
-    async getResultImage() {
-      // case 1. 스티커 없이 편집만 해서 저장 => 잘됨 / canvas 상으로는 확대되어 보이는데 저장은 실제 크기로 저장됨
+    async exportResultPhoto() {
+      // case 1. only Edit
       if (!this.stickerCanvas && this.photoCanvas) {
         return this.photoCanvas.exportResultPhoto();
       }
 
-      // case 2. 스티커만 붙여서 저장 => 잘 됨
+      // case 2. only Sticker
       if (!this.photoCanvas && this.stickerCanvas) {
-        const width = this.photoCanvas.getNatureSize()[0];
+        const width = this.photoCanvas.getNaturalSize()[0];
         return await this.photoCanvas.exportResultPhoto(
           this.stickerCanvas.saveStickerImage(width)
         );
       }
 
-      // case 3. 편집, 스티커 둘 다 했을 때 저장 => 잘 됨
+      // case 3. Edit & Sticker
       if (this.photoCanvas && this.stickerCanvas) {
-        const width = this.photoCanvas.getNatureSize()[0];
+        const width = this.photoCanvas.getNaturalSize()[0];
         return await this.photoCanvas.exportResultPhoto(
           this.stickerCanvas.saveStickerImage(width)
         );
       }
     },
-    //# Handling edit mode
-    //사진 편집 모드로 진입할 때의 동작
+    // Tool navigation (set mode)
     openPhotoEditor() {
       if (!this.uploadedPhotoSrc) {
         alert(this.errorMessage);
@@ -236,15 +231,13 @@ export default {
 
       this.setPhotoCanvasSize();
     },
-    //스티커 편집 모드로 진입할 때의 동작
     openStickerEditor() {
       if (!this.uploadedPhotoSrc) {
         alert(this.errorMessage);
         throw new Error('Please pick photo.');
       }
 
-      this.$parent.$data.isActiveRatioCrop = false;
-      this.$parent.$data.isActiveMove = false;
+      this.$parent.$data.isCropMode = false;
       this.hide = false;
       this.layout = 'sticker-tool-bar';
 
@@ -260,13 +253,12 @@ export default {
       if (this.photoCanvas) {
         if (this.zoomCount > 0) {
           this.photoCanvas.zoom(-1 * this.zoomCount);
-          this.zoomCount = 0;
         }
         if (this.zoomCount < 0) {
           this.photoCanvas.zoom(Math.abs(this.zoomCount));
-          this.zoomCount = 0;
         }
-        this.photoCanvas.clear();
+        this.zoomCount = 0;
+        this.clearCrop();
       }
 
       if (!this.photoCanvas) {

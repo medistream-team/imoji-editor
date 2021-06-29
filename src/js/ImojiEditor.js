@@ -32,7 +32,7 @@ export class PhotoEditor {
     this.cropper.setDragMode(mode);
   }
 
-  getPhotoSize(isFirstLoading = true) {
+  getPhotoCanvasSize(isFirstLoading = true) {
     return new Promise((resolve, reject) => {
       try {
         if (!isFirstLoading) {
@@ -107,11 +107,10 @@ export class PhotoEditor {
   }
 
   /**
-   * Set sign of rotate direction
+   * Set sign of 90 degree rotate
    * @param {string} sign - '+' or '-'
    */
   rotate(sign) {
-    this.cropper.clear();
     if (sign === '+') this.cropper.rotate(90);
     if (sign === '-') this.cropper.rotate(-90);
   }
@@ -121,7 +120,6 @@ export class PhotoEditor {
    * @param {string} direction - 'X' or 'Y'
    */
   flip(direction) {
-    this.cropper.clear();
     if (direction === direction.toLowerCase())
       direction = direction.toUpperCase();
     if (direction === 'X')
@@ -139,16 +137,18 @@ export class PhotoEditor {
   }
 
   /**
-   * Edited Photo Image Object without sticker
-   * @returns Image Object
+   * Export result photo image object
+   * @param {Image} stickerImage - Image Object of sticker canvas result
+   * @returns Image Object \\ Promise (Image Object)
    */
   exportResultPhoto(stickerImage) {
     const canvas = this.cropper.getCroppedCanvas();
     const editedPhoto = new Image();
     editedPhoto.src = canvas.toDataURL('image/png');
+    //return Image Object
     if (!stickerImage) return editedPhoto;
 
-    //스티커 이미지 올리기
+    //add sticker image on photo canvas
     const context = canvas.getContext('2d');
 
     let promise = new Promise(resolve => {
@@ -158,7 +158,7 @@ export class PhotoEditor {
       };
     });
 
-    //To Do : 비동기 문제 해결하기
+    //return promise
     return promise.then(res => {
       const withStickerImage = new Image();
       withStickerImage.src = res.toDataURL('image/png');
@@ -166,7 +166,11 @@ export class PhotoEditor {
     });
   }
 
-  getNatureSize() {
+  /**
+   * Get natural size about original image
+   * @returns natural size about original image
+   */
+  getNaturalSize() {
     const canvas = this.cropper.getCroppedCanvas();
     return [canvas.width, canvas.height];
   }
@@ -217,14 +221,14 @@ export class StickerEditor {
   }
 
   /**
-   * Resize sticker canvas's width to natural width of the original image
+   * Resize sticker canvas's width => natural width of the original image
    * @param {number} naturalWidth
    */
   resizeStickerToNatural(naturalWidth) {
     if (this.stickerCanvas.width != naturalWidth) {
       const scaleMultiplier = naturalWidth / this.stickerCanvas.width;
       const objects = this.stickerCanvas.getObjects();
-      for (const i in objects) {
+      for (let i in objects) {
         objects[i].scaleX = objects[i].scaleX * scaleMultiplier;
         objects[i].scaleY = objects[i].scaleY * scaleMultiplier;
         objects[i].left = objects[i].left * scaleMultiplier;
@@ -245,21 +249,20 @@ export class StickerEditor {
   }
 
   /**
-   * Return result sticker image
+   * Return result sticker image object
    * @param {number} naturalWidth
-   * @returns Image Object png
+   * @returns Image Object (png)
    */
   saveStickerImage(naturalWidth) {
-    //편집된 이미지 크기에 맞게 스티커를 재조정 후
     this.resizeStickerToNatural(naturalWidth);
-    //이미지로 내보내서 cropper js canvas에 올릴 것임
+    //export sticker image
     const stickerImage = new Image();
     stickerImage.src = this.stickerCanvas.toDataURL('image/png');
     return stickerImage;
   }
 
   /**
-   * Resize Sticker Canvas (ex. after crop)
+   * Resize Sticker Canvas (ex. after crop, rotate)
    * @param {number | string} width
    * @param {number | string} height
    */
