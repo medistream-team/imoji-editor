@@ -12,6 +12,11 @@ module.exports = {
         link: 'https://github.com/medistream-team/imoji-editor'
       }
     ],
-    sidebar: ['/', '/options/', '/example/', '/features/']
+    sidebar: [
+      ['/', '✨ Imoji Editor'],
+      ['/options/', 'Options'],
+      ['/example/', 'Examples'],
+      ['/features/', 'Features']
+    ]
   }
 };
