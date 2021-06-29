@@ -1,12 +1,12 @@
 <template>
   <imoji-editor-canvas
-    ref="test"
+    ref="Imoji"
     :default-image="defaultImage"
     :error-message="errorMessage"
     :width="width"
     :height="height"
-    :is-active-ratio-crop="isRatioCropActive"
-    :is-active-move="movable"
+    :is-crop-mode="isCropMode"
+    @off-croppable="offCroppable"
   >
     <template
       #controllerBar="{reset, stickerCanvas, changePhoto, crop, layout, photoCanvas}"
@@ -24,7 +24,7 @@
         </button>
 
         <button
-          v-show="movable"
+          v-show="isCropMode"
           class="controller-bar-button"
           title="move"
           @click="photoCanvas.setDragMode('move')"
@@ -61,9 +61,9 @@
         </button>
       </div>
     </template>
-    <template #toolBar="{photoCanvas, layout, zoom, rotate}">
+    <template #toolBar="{photoCanvas, layout, zoom, rotate, clearCrop}">
       <div v-if="layout === 'tool-bar'" class="tool-bar">
-        <div v-show="isRatioCropActive" class="ratio-crop-tool-bar">
+        <div v-show="isCropMode" class="ratio-crop-tool-bar">
           <button
             class="ratio-crop-tool-bar-button"
             @click="photoCanvas.setFreeCrop()"
@@ -104,7 +104,7 @@
           <button
             class="tool-bar-button"
             @click="
-              [croppable ? photoCanvas.clear() : photoCanvas.setFreeCrop()],
+              [isCropMode ? photoCanvas.clear() : photoCanvas.setFreeCrop()], // eslint-disable-next-line vue/html-indent
                 toggleCropModeButton()
             "
           >
@@ -127,11 +127,17 @@
             <rotate-left />
           </button>
 
-          <button class="tool-bar-button" @click="photoCanvas.flip('X')">
+          <button
+            class="tool-bar-button"
+            @click="photoCanvas.flip('X'), clearCrop()"
+          >
             <flip-horizontal />
           </button>
 
-          <button class="tool-bar-button" @click="photoCanvas.flip('Y')">
+          <button
+            class="tool-bar-button"
+            @click="photoCanvas.flip('Y'), clearCrop()"
+          >
             <flip-vertical />
           </button>
         </div>
@@ -167,9 +173,7 @@
         </button>
       </div>
       <!-- 이미지 잘 저장되는지 테스트용 -->
-      <div id="testA">
-        <image id="testB" />
-      </div>
+      <div id="testA"></div>
     </template>
   </imoji-editor-canvas>
 </template>
@@ -282,23 +286,23 @@ export default {
   },
   data() {
     return {
-      isRatioCropActive: false,
-      movable: false,
-      croppable: false
+      isCropMode: false
     };
   },
   methods: {
     toggleCropModeButton() {
-      this.isRatioCropActive = !this.isRatioCropActive;
-      this.movable = !this.movable;
-      this.croppable = !this.croppable;
+      this.isCropMode = !this.isCropMode;
     },
-    done() {
+    offCroppable(test) {
+      this.isCropMode = test;
+    },
+    async done() {
       //이미지 잘 저장되는지 테스트용
-      const resultImage = this.$refs.test.getResultImage();
+      //To Do : return 값이 promise인거 문서화하기
+      const resultImage = await this.$refs.Imoji.exportResultPhoto();
+      console.log(resultImage);
       const d = document.getElementById('testA');
       d.appendChild(resultImage);
-      // d.outerHTML = resultImage.outerHTML;
 
       this.$emit('done', resultImage);
     }
@@ -338,7 +342,7 @@ export default {
 .tool-bar {
   justify-content: space-around;
   align-items: center;
-  width: 100vw;
+  width: 100%;
   padding: 4px;
   size: 1.938rem;
   z-index: 2;
