@@ -13,7 +13,9 @@ npm install imoji-editor
 <!-- To Do -->
 
 ```jsx
-Vue.use();
+import ImojiEditor from 'imoji-editor';
+
+Vue.use(ImojiEditor);
 ```
 
 ## ✨ Sticker canvas Methods
