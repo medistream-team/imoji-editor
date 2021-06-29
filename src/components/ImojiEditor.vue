@@ -5,8 +5,8 @@
     :error-message="errorMessage"
     :width="width"
     :height="height"
-    :is-active-ratio-crop="isActiveRatioCrop"
-    :is-active-move="isActiveMove"
+    :is-active-ratio-crop="isRatioCropActive"
+    :is-active-move="movable"
   >
     <template
       #controllerBar="{reset, stickerCanvas, changePhoto, crop, layout, photoCanvas}"
@@ -24,7 +24,7 @@
         </button>
 
         <button
-          v-show="isActiveMove"
+          v-show="movable"
           class="controller-bar-button"
           title="move"
           @click="photoCanvas.setDragMode('move')"
@@ -63,7 +63,7 @@
     </template>
     <template #toolBar="{photoCanvas, layout, zoom, rotate}">
       <div v-if="layout === 'tool-bar'" class="tool-bar">
-        <div v-show="isActiveRatioCrop" class="ratio-crop-tool-bar">
+        <div v-show="isRatioCropActive" class="ratio-crop-tool-bar">
           <button
             class="ratio-crop-tool-bar-button"
             @click="photoCanvas.setFreeCrop()"
@@ -103,7 +103,10 @@
         <div class="tool-bar-wrapper">
           <button
             class="tool-bar-button"
-            @click="toggleCropModeButton(), photoCanvas.setFreeCrop()"
+            @click="
+              [croppable ? photoCanvas.clear() : photoCanvas.setFreeCrop()],
+                toggleCropModeButton()
+            "
           >
             <crop-icon />
           </button>
@@ -277,14 +280,16 @@ export default {
   },
   data() {
     return {
-      isActiveRatioCrop: false,
-      isActiveMove: false
+      isRatioCropActive: false,
+      movable: false,
+      croppable: false
     };
   },
   methods: {
     toggleCropModeButton() {
-      this.isActiveRatioCrop = !this.isActiveRatioCrop;
-      this.isActiveMove = !this.isActiveMove;
+      this.isRatioCropActive = !this.isRatioCropActive;
+      this.movable = !this.movable;
+      this.croppable = !this.croppable;
     },
     async done() {
       //이미지 잘 저장되는지 테스트용
