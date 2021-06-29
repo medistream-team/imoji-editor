@@ -11,6 +11,7 @@ module.exports = {
         text: 'Github',
         link: 'https://github.com/medistream-team/imoji-editor'
       }
-    ]
+    ],
+    sidebar: ['/', '/example/', '/options/', '/features/']
   }
 };
