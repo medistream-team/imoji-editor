@@ -164,9 +164,7 @@
         </button>
       </div>
       <!-- 이미지 잘 저장되는지 테스트용 -->
-      <div id="testA">
-        <image id="testB" />
-      </div>
+      <div id="testA"></div>
     </template>
   </imoji-editor-canvas>
 </template>
@@ -288,14 +286,17 @@ export default {
       this.isActiveRatioCrop = !this.isActiveRatioCrop;
       this.isActiveMove = !this.isActiveMove;
     },
-    done() {
+    async done() {
       //이미지 잘 저장되는지 테스트용
-      const resultImage = this.$refs.test.getResultImage();
+      // this.$refs.test.getResultImage();
+      //async, await 안 해주면 promise 객체가 그냥 넘어오는데 이거 전처리해줄 수는 없는지
+      const resultImage = await this.$refs.test.getResultImage();
+      console.log(resultImage);
       const d = document.getElementById('testA');
       d.appendChild(resultImage);
-      // d.outerHTML = resultImage.outerHTML;
 
       this.$emit('done', resultImage);
+      // this.$emit('done');
     }
   }
 };

@@ -142,20 +142,28 @@ export class PhotoEditor {
    * Edited Photo Image Object without sticker
    * @returns Image Object
    */
-  saveEditedPhoto(stickerImage) {
+  exportResultPhoto(stickerImage) {
     const canvas = this.cropper.getCroppedCanvas();
-    const editedPhotoSrc = canvas.toDataURL('image/png');
     const editedPhoto = new Image();
-    editedPhoto.src = editedPhotoSrc;
-    if (!stickerImage) return [editedPhoto, editedPhotoSrc];
+    editedPhoto.src = canvas.toDataURL('image/png');
+    if (!stickerImage) return editedPhoto;
 
     //스티커 이미지 올리기
     const context = canvas.getContext('2d');
-    stickerImage.onload = () => {
-      context.drawImage(stickerImage, 0, 0);
-    };
 
-    return canvas;
+    let promise = new Promise(resolve => {
+      stickerImage.onload = () => {
+        context.drawImage(stickerImage, 0, 0);
+        resolve(canvas);
+      };
+    });
+
+    //To Do : 비동기 문제 해결하기
+    return promise.then(res => {
+      const withStickerImage = new Image();
+      withStickerImage.src = res.toDataURL('image/png');
+      return withStickerImage;
+    });
   }
 
   getNatureSize() {

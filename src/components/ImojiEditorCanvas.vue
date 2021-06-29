@@ -194,16 +194,16 @@ export default {
       this.setPhotoCanvasSize();
     },
     //최종 저장(완료)
-    getResultImage() {
+    async getResultImage() {
       // case 1. 스티커 없이 편집만 해서 저장 => 잘됨 / canvas 상으로는 확대되어 보이는데 저장은 실제 크기로 저장됨
       if (!this.stickerCanvas && this.photoCanvas) {
-        return this.photoCanvas.saveEditedPhoto()[0];
+        return this.photoCanvas.exportResultPhoto();
       }
 
       // case 2. 스티커만 붙여서 저장 => 잘 됨
       if (!this.photoCanvas && this.stickerCanvas) {
         const width = this.photoCanvas.getNatureSize()[0];
-        return this.photoCanvas.saveEditedPhoto(
+        return await this.photoCanvas.exportResultPhoto(
           this.stickerCanvas.saveStickerImage(width)
         );
       }
@@ -211,7 +211,7 @@ export default {
       // case 3. 편집, 스티커 둘 다 했을 때 저장 => 잘 됨
       if (this.photoCanvas && this.stickerCanvas) {
         const width = this.photoCanvas.getNatureSize()[0];
-        return this.photoCanvas.saveEditedPhoto(
+        return await this.photoCanvas.exportResultPhoto(
           this.stickerCanvas.saveStickerImage(width)
         );
       }
