@@ -312,7 +312,7 @@ export default {
   display: flex;
   justify-content: space-around;
   align-items: center;
-  width: 100vw;
+  width: 100%;
   padding: 10px;
   border: none;
   background: rgba(0, 0, 0, 0.1);
@@ -342,6 +342,7 @@ export default {
 .tool-bar-wrapper {
   display: flex;
   justify-content: space-between;
+  width: 100%;
 }
 
 .tool-bar-button {
@@ -355,7 +356,7 @@ export default {
   display: flex;
   justify-content: space-around;
   align-items: center;
-  width: 100vw;
+  width: 100%;
   height: 50px;
   color: #152447;
   z-index: 2;
@@ -381,7 +382,7 @@ export default {
   display: grid;
   grid-auto-flow: column;
   justify-content: space-around;
-  width: 100vw;
+  width: 100%;
   height: 3rem;
   margin: 2px auto;
   padding: 8px 0;
