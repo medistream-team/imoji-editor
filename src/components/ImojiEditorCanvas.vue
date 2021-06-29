@@ -1,5 +1,11 @@
 <template>
-  <section>
+  <section
+    :style="{
+      width: `${width}px`,
+      height: `${height}px`,
+      position: 'relative'
+    }"
+  >
     <slot
       name="controllerBar"
       :reset="reset"
@@ -9,7 +15,8 @@
       :layout="layout"
       :photoCanvas="photoCanvas"
       :getResultImage="getResultImage"
-    ></slot>
+    >
+    </slot>
     <div class="imoji-editor-wrapper">
       <div class="imoji-editor-container">
         <div id="sticker-wrapper" :class="[hide ? 'hide' : '']">
@@ -20,7 +27,7 @@
         </div>
       </div>
     </div>
-    <div class="allToolBarWrapper">
+    <div class="all-tool-bar-wrapper">
       <slot
         name="toolBar"
         :photoCanvas="photoCanvas"
@@ -308,9 +315,10 @@ export default {
   align-items: center;
 }
 
-.allToolBarWrapper {
+.all-tool-bar-wrapper {
   position: absolute;
   bottom: 0;
+  width: 100%;
   background: rgba(0, 0, 0, 0.1);
   z-index: 2;
 }
