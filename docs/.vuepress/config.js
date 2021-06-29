@@ -6,7 +6,11 @@ module.exports = {
       { text: 'Home', link: '/' },
       { text: 'Example', link: '/example/' },
       { text: 'Options', link: '/options/' },
-      { text: 'Features', link: '/features/' }
+      { text: 'Features', link: '/features/' },
+      {
+        text: 'Github',
+        link: 'https://github.com/medistream-team/imoji-editor'
+      }
     ]
   }
 };
