@@ -1,6 +1,4 @@
-## ✨ Example
-
-### Using in Full Page
+## Using in Full Page
 
 - Recommend : Mobile
 
@@ -8,7 +6,7 @@
 <imoji-editor @done="done"></imoji-editor>
 ```
 
-### Using in Modal
+## Using in Modal
 
 - Recommend : Desktop
 

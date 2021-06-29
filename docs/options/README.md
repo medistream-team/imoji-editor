@@ -1,5 +1,3 @@
-## ✨ Options
-
 ### Example
 
 ```jsx
@@ -12,14 +10,14 @@
   />
 ```
 
-### default-image
+## default-image
 
 Use this props to put image from outside of editor. `Vue watch` will detect it.
 
 - Default : undefined
 - Type : Image Object (`new Image()`)
 
-### sticker-images
+## sticker-images
 
 Use this props to enroll sticker images what you want.  
 ⚠ In version 1.0, we only support 1 set. So If you pass this props, default Medigi set will be gone.
@@ -35,7 +33,7 @@ Use this props to enroll sticker images what you want.
 
 - Type : Array, svg, jpg, png
 
-### width, height
+## width, height
 
 The size of photo editor. You should set this option when using in modal. The more information about usage in modal is [here](###Using-in-Modal).
 
@@ -44,7 +42,7 @@ Imoji-editor's size always same as photo editor canvas's size. Also, sticker-can
 - Default : document clientHeight
 - Type : number
 
-### done
+## done
 
 You can customize action of output button. This custom event will return result image object (`new Image()`) by done event's argument. You can handle this object like download, enroll, or post to server whatever you want.
 
@@ -53,7 +51,7 @@ You can customize action of output button. This custom event will return result 
 - Type : event
 - Argument : result image object (`new Image()`) by data64 png
 
-### error-message
+## error-message
 
 You can set error message that come with alert when user click `edit` button or `sticker` button although image not exists
 
