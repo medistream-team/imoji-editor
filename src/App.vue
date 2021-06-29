@@ -1,5 +1,5 @@
 <template>
-  <imoji-editor :width="width" :height="height" @done="done" />
+  <imoji-editor @done="done" />
 </template>
 
 <script>
@@ -11,9 +11,7 @@ export default {
   },
   data() {
     return {
-      result: undefined,
-      width: 400,
-      height: 600
+      result: undefined
     };
   },
   methods: {
