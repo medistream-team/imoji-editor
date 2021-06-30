@@ -10,7 +10,7 @@
       name="controllerBar"
       :reset="reset"
       :sticker-canvas="stickerCanvas"
-      :change-photo="changePhoto"
+      :get-input-image="getInputImage"
       :crop="crop"
       :layout="layout"
       :photo-canvas="photoCanvas"
@@ -22,8 +22,19 @@
         <div id="sticker-wrapper" :class="[hide ? 'hide' : '']">
           <canvas id="sticker-canvas"></canvas>
         </div>
-        <div id="uploaded-photo-wrapper">
-          <img id="user-photo" ref="uploadedPhoto" :src="uploadedPhotoSrc" />
+        <div
+          id="uploaded-photo-wrapper"
+          :style="{
+            width: `${width}px`,
+            height: `${height}px`
+          }"
+        >
+          <img
+            id="user-photo"
+            ref="uploadedPhoto"
+            :src="uploadedPhotoSrc"
+            @load="test"
+          />
         </div>
       </div>
     </div>
@@ -101,30 +112,57 @@ export default {
     defaultImage: {
       deep: true,
       immediate: true,
-      handler() {
-        if (this.defaultImage) {
-          this.importPhoto();
+      handler(newValue, oldValue) {
+        console.log('watch', newValue, oldValue);
+        if (!this.defaultImage) return;
+        if (newValue !== oldValue) {
+          debugger;
+          this.getImportImage();
         }
       }
     }
   },
   methods: {
-    //Settings
-    importPhoto() {
-      this.uploadedPhotoSrc = this.defaultImage.src;
-      this.initImageSrc = this.defaultImage.src;
-
+    test(e) {
       if (!this.photoCanvas) {
-        this.photoCanvas = new PhotoEditor('user-photo', {
+        // console.log(res);
+        this.photoCanvas = new PhotoEditor(e.target, {
           minContainerHeight: this.height,
           minContainerWidth: this.width
         });
       }
     },
-    changePhoto(e) {
+    //Settings
+    getImportImage() {
+      this.uploadedPhotoSrc = this.defaultImage.src;
+      this.initImageSrc = this.defaultImage.src;
+
+      // let promise = new Promise(resolve => {
+      //   this.defaultImage.addEventListener(
+      //     'load',
+      //     () => {
+      //       resolve(this.$refs.uploadedPhoto);
+      //     },
+      //     { once: true }
+      //   );
+      // });
+      // promise.then(res => {
+      //   if (!this.photoCanvas) {
+      //     // console.log(res);
+      //     this.photoCanvas = new PhotoEditor(res, {
+      //       minContainerHeight: this.height,
+      //       minContainerWidth: this.width
+      //     });
+      //   }
+      // });
+    },
+    getInputImage(e) {
       this.uploadedPhotoSrc = URL.createObjectURL(e.target.files[0]);
       this.initImageSrc = URL.createObjectURL(e.target.files[0]);
 
+      this.changePhoto();
+    },
+    changePhoto() {
       if (!this.photoCanvas) {
         this.photoCanvas = new PhotoEditor('user-photo', {
           minContainerHeight: this.height,
@@ -229,6 +267,13 @@ export default {
       this.hide = true;
       this.layout = 'tool-bar';
 
+      // if (!this.photoCanvas) {
+      //   this.photoCanvas = new PhotoEditor('user-photo', {
+      //     minContainerHeight: this.height,
+      //     minContainerWidth: this.width
+      //   });
+      // }
+
       this.setPhotoCanvasSize();
     },
     openStickerEditor() {
@@ -290,21 +335,17 @@ export default {
   z-index: 1;
 }
 
-#user-photo {
-  display: block;
-  max-width: 100%;
-  max-height: 100vh;
-}
-
-.hide {
-  display: none;
-}
-
 #uploaded-photo-wrapper {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+}
+
+#user-photo {
+  display: block;
+  max-width: 100%;
+  max-height: 100vh;
 }
 
 .all-tool-bar-wrapper {
@@ -313,5 +354,9 @@ export default {
   width: 100%;
   background: rgba(0, 0, 0, 0.1);
   z-index: 2;
+}
+
+.hide {
+  display: none;
 }
 </style>

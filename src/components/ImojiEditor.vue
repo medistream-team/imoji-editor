@@ -9,7 +9,7 @@
     @off-croppable="offCroppable"
   >
     <template
-      #controllerBar="{reset, stickerCanvas, changePhoto, crop, layout, photoCanvas}"
+      #controllerBar="{reset, stickerCanvas, getInputImage, crop, layout, photoCanvas}"
     >
       <div class="controller-bar-wrapper">
         <button
@@ -19,7 +19,7 @@
         >
           <label>
             <file-image />
-            <input type="file" class="file" @change="changePhoto" />
+            <input type="file" class="file" @change="getInputImage" />
           </label>
         </button>
 
