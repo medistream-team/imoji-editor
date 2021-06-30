@@ -1,5 +1,5 @@
 <template>
-  <imoji-editor @done="done" />
+  <imoji-editor />
 </template>
 
 <script>
@@ -8,17 +8,6 @@ import ImojiEditor from '@/components/ImojiEditor.vue';
 export default {
   components: {
     'imoji-editor': ImojiEditor
-  },
-  data() {
-    return {
-      result: undefined
-    };
-  },
-  methods: {
-    done(resultImage) {
-      this.result = resultImage;
-      console.log(resultImage);
-    }
   }
 };
 </script>
