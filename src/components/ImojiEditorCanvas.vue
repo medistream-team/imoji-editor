@@ -29,12 +29,7 @@
             height: `${height}px`
           }"
         >
-          <img
-            id="user-photo"
-            ref="uploadedPhoto"
-            :src="uploadedPhotoSrc"
-            @load="test"
-          />
+          <img id="user-photo" ref="uploadedPhoto" :src="uploadedPhotoSrc" />
         </div>
       </div>
     </div>
@@ -116,45 +111,44 @@ export default {
         console.log('watch', newValue, oldValue);
         if (!this.defaultImage) return;
         if (newValue !== oldValue) {
-          debugger;
           this.getImportImage();
         }
       }
     }
   },
   methods: {
-    test(e) {
-      if (!this.photoCanvas) {
-        // console.log(res);
-        this.photoCanvas = new PhotoEditor(e.target, {
-          minContainerHeight: this.height,
-          minContainerWidth: this.width
-        });
-      }
-    },
+    // test(e) {
+    //   if (!this.photoCanvas) {
+    //     // console.log(res);
+    //     this.photoCanvas = new PhotoEditor(e.target, {
+    //       minContainerHeight: this.height,
+    //       minContainerWidth: this.width
+    //     });
+    //   }
+    // },
     //Settings
     getImportImage() {
       this.uploadedPhotoSrc = this.defaultImage.src;
       this.initImageSrc = this.defaultImage.src;
 
-      // let promise = new Promise(resolve => {
-      //   this.defaultImage.addEventListener(
-      //     'load',
-      //     () => {
-      //       resolve(this.$refs.uploadedPhoto);
-      //     },
-      //     { once: true }
-      //   );
-      // });
-      // promise.then(res => {
-      //   if (!this.photoCanvas) {
-      //     // console.log(res);
-      //     this.photoCanvas = new PhotoEditor(res, {
-      //       minContainerHeight: this.height,
-      //       minContainerWidth: this.width
-      //     });
-      //   }
-      // });
+      let promise = new Promise(resolve => {
+        this.defaultImage.addEventListener(
+          'load',
+          () => {
+            resolve(this.$refs.uploadedPhoto);
+          },
+          { once: true }
+        );
+      });
+      promise.then(res => {
+        if (!this.photoCanvas) {
+          console.log(res);
+          this.photoCanvas = new PhotoEditor('user-photo', {
+            minContainerHeight: this.height,
+            minContainerWidth: this.width
+          });
+        }
+      });
     },
     getInputImage(e) {
       this.uploadedPhotoSrc = URL.createObjectURL(e.target.files[0]);
@@ -266,13 +260,6 @@ export default {
 
       this.hide = true;
       this.layout = 'tool-bar';
-
-      // if (!this.photoCanvas) {
-      //   this.photoCanvas = new PhotoEditor('user-photo', {
-      //     minContainerHeight: this.height,
-      //     minContainerWidth: this.width
-      //   });
-      // }
 
       this.setPhotoCanvasSize();
     },
