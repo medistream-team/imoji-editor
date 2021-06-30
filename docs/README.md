@@ -10,7 +10,7 @@ The image editor with a feature that you can add stickers to images!
 <img src="https://img.shields.io/static/v1?label=license&message=MIT,CC&color=blue">
 </p>
 <p align="center">
-<img width="250px" src="public/editor2.gif">
+<img width="250px" src="/editor2.gif">
 </p>
 
 ## Installation
