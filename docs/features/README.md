@@ -3,7 +3,7 @@
 If you want to change the target image to another image, just click image icon button and select new image.
 
 <p align="center">
-<img width="250px" src="/change.gif">
+<img width="250px" src="https://github.com/medistream-team/imoji-editor/raw/master/public/change.gif">
 </p>
 
 ## Free Crop
@@ -66,7 +66,7 @@ this.photoCanvas.zoom(-0.1); // zoom out 10%
 User can move image to crop more easily by drag or touch (mobile) ONLY when move button is clicked. Move icon button is ONLY supported during crop mode.
 
 <p align="center">
-<img width="250px" src="/move.gif">
+<img width="250px" src="https://github.com/medistream-team/imoji-editor/raw/master/public/move.gif">
 </p>
 
 ```jsx
@@ -102,7 +102,7 @@ this.stickerCanvas.addSticker(src, [options]);
 User can delete sticker by clicking trash can icon button. It will delete activate(=clicked by user) sticker one by one.
 
 <p align="center">
-<img width="250px" src="/removeone.gif">
+<img width="250px" src="https://github.com/medistream-team/imoji-editor/raw/master/public/removeone.gif">
 </p>
 
 ```jsx
