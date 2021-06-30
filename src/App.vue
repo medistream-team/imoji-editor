@@ -1,18 +1,25 @@
 <template>
-  <div id="app">
-    {{ message }}
-  </div>
+  <imoji-editor @done="done" />
 </template>
 
 <script>
+import ImojiEditor from '@/components/ImojiEditor.vue';
+
 export default {
-  name: 'App',
-  data: () => {
+  components: {
+    'imoji-editor': ImojiEditor
+  },
+  data() {
     return {
-      message: 'hi'
+      result: undefined
     };
+  },
+  methods: {
+    done(resultImage) {
+      this.result = resultImage;
+    }
   }
 };
 </script>
 
-<style></style>
+<style scoped></style>
