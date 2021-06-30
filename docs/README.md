@@ -1,6 +1,17 @@
-# ✨ Imoji Editor - compact photo editor with sticker
+# ✨ Imoji Editor
 
-`Javascript` `Vue.js`
+<p align="center">
+The image editor with a feature that you can add stickers to images!
+</p>
+<p align="center">
+<img src="https://img.shields.io/static/v1?label=version&message=0.1.0&color=red">
+<img src="https://img.shields.io/static/v1?label=javascript&message=ES6&color=yellow">
+<img src="https://img.shields.io/static/v1?label=vue&message=2.x&color=green">
+<img src="https://img.shields.io/static/v1?label=license&message=MIT,CC&color=blue">
+</p>
+<p align="center">
+<img width="250px" src="public/editor2.gif">
+</p>
 
 ## Installation
 
@@ -10,30 +21,19 @@ npm install imoji-editor
 
 ## Usage
 
-<!-- To Do -->
-
 ```jsx
 import ImojiEditor from 'imoji-editor';
 
 Vue.use(ImojiEditor);
 ```
 
-## ✨ Sticker canvas Methods
-
-⚠ Sticker canvas's width and height always follow photo canvas's width and heigth
-
-## ✨ Photo canvas Methods
-
-## ✨ Photo canvas Options
-
-You can use all of Cropper JS's options, But in this editor debugging not support perfectly
-
-## ✨ Contributors
+## Contributors
 
 - [medistream](https://github.com/medistream-team)
 - [emewjin](https://github.com/emewjin)
 - [junchi211](https://github.com/junchi211)
 
-## 🙏🏻 Bugs
+## 🙏🏻 Bug Report
 
-Please write [Issues](https://github.com/medistream-team/imoji-editor/issues) on our github repository
+[👉🏻 Issues](https://github.com/medistream-team/imoji-editor/issues)
+: Please give us feedback on our github repository if there are any issues!
