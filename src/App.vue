@@ -17,6 +17,7 @@ export default {
   methods: {
     done(resultImage) {
       this.result = resultImage;
+      console.log(resultImage);
     }
   }
 };

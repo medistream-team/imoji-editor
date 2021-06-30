@@ -300,9 +300,9 @@ export default {
       //이미지 잘 저장되는지 테스트용
       //To Do : return 값이 promise인거 문서화하기
       const resultImage = await this.$refs.Imoji.exportResultPhoto();
-      console.log(resultImage);
-      const d = document.getElementById('testA');
-      d.appendChild(resultImage);
+      // const d = document.getElementById('testA');
+      // d.appendChild(resultImage);
+      // console.log(resultImage);
 
       this.$emit('done', resultImage);
     }

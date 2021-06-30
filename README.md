@@ -1,19 +1,20 @@
-# Imoji
-
-The compact image editor with add sticker feature !
+# ✨ Imoji
 
 <p align="center">
-<div>
+The compact image editor with adding sticker feature !
+</p>
+<p align="center">
 <img src="https://img.shields.io/static/v1?label=version&message=0.1.0&color=red">
 <img src="https://img.shields.io/static/v1?label=javascript&message=ES6&color=yellow">
 <img src="https://img.shields.io/static/v1?label=vue&message=2.x&color=green">
-</div>
+</p>
+<p align="center">
 <img width="250px" src="public/editor2.gif">
 </p>
 
 ## Documentation
 
-[👉🏻 **Documentation**](https://medistream-team.github.io/imoji-editor/)
+[👉🏻 **Checkout here!**](https://medistream-team.github.io/imoji-editor/)
 
 ## Installation
 
@@ -33,14 +34,16 @@ Vue.use(ImojiEditor);
 
 ### Example
 
-```jsx
+```js
 <imoji-editor
     :default-image="importedImage"
     :sticker-images="stickerImages"
-    :error-message="errorMessage"
-    :width="width"
-    :height="height"
-    @done="done"
+    :error-message="'please choose image first'"
+    :width="600"
+    :height="480"
+    @done="image => {
+      // Do what you want
+    }"
   />
 ```
 
@@ -61,145 +64,195 @@ Use this props to use sticker images what you want.
 - Default : Medigi character set
 - Type : Array, svg, jpg, png
 
-  > ### ⚠ Checkout Medigi chracter License
+  > ### ⚠ Checkout Medigi character License
+  >
+  > Although Imoji is open source, the Medigi character's copyright is subject to the following:
   >
   > ![](public/by-nc-nd.svg)  
   > ©Medistream 2021. All right reserved.
 
+### error-message
+
+Use this props to write an error message to show if the user click `edit` or `sticker` button even though there is no image to edit
+
+- Default : korean
+- Type : string
+
 ### width, height
 
-The size of photo editor. You should set this option when using in modal. Checkout more information about using in modal [here](###using-in-modal).
+Set size of photo editor. You should set this option when using in modal. Checkout more information about using in modal [here](###using-in-modal).
 
-Imoji's size always same as photo editor canvas's size. Also, sticker-canvas's size will be automatically fit with photo editor.
+Imoji's size always same as photo editor canvas's size. Also, sticker canvas's size will be automatically fit with photo editor.
 
 - Default : document clientHeight
 - Type : number
 
 ### done
 
-You can customize action of output button. This custom event will return result image object (`new Image()`) by done event's argument. You can handle this object like download, enroll, or post to server whatever you want.
+You can customize action of output button whatever you want. This custom event will return result Image Object (`new Image()`) as argument of the event.
 
-- Recommend : please destroy editor after user click done button.
+- Recommend : Please **destroy editor** after user click done button.
 - Default : null
 - Type : event
-- Argument : result image object (`new Image()`) by data64 png
-
-### error-message
-
-You can set error message that come with alert when user click `edit` button or `sticker` button although image not exists
-
-- Default : korean
-- Type : string
+- Argument : result Image Object (`new Image()`) by data64 PNG
 
 ## Example
 
 ### Using in Full Page
 
-- Recommend : Mobile
+- Recommend : In Mobile
 
 ```js
-<imoji-editor @done="done"></imoji-editor>
+<imoji-editor></imoji-editor>
 ```
 
 ### Using in Modal
 
-- Recommend : Desktop
+- Recommend : In Desktop
 
 Please set width, height that fit with Modal's like this.
 
 ```js
-<imoji-editor :width="640" :height="800" @done="done"></imoji-editor>
+<imoji-editor :width="640" :height="800"></imoji-editor>
 ```
 
-**⚠ You should check [Cropper JS's documentation](https://github.com/fengyuanchen/cropperjs)🔻 first.**
+**⚠ You should check [Cropper JS's documentation](https://github.com/fengyuanchen/cropperjs) first 🔻**
 
 > If you are using in a modal, you should initialize the editor after the modal is shown completely. Otherwise, you will not get the correct crop.
 
 ## Features
 
+### Change Image
+
+If you want to change the target image to another image, just click image icon button to select new image.
+
+<p align="center">
+<img width="250px" src="public/change.gif">
+</p>
+
 ### Free Crop
 
+User can set crop area by drag or touch(mobile).
+
+When user click crop button, Free Crop will set automatically. If click crop button again, crop area will be clear.
+
+Please click ✅ button to complete crop. Also, If the crop area is active and you switch to sticker mode, crop will be done automatically.
+
 ```js
+// ImojiEditor.js
 this.photoCanvas.setFreeCrop();
 ```
 
-When user click crop button, Free Crop will set automatically.
-
 ### Ratio Crop
 
+- default : 16:9, 4:3, 2:3, 1:1
+
 ```js
+// ImojiEditor.js
 this.photoCanvas.setCropRatio(x, y);
 this.photoCanvas.setCropRatio(16, 9); // set crop ratio to 16:9
 ```
 
-- default : 16:9, 4:3, 2:3, 1:1
-
 ### Flip
+
+- default : Y flip, X flip
 
 ```js
 this.photoCanvas.flip(direction);
 this.photoCanvas.flip('X'); // flip x-axis
 ```
 
-- default : Y flip, X flip
-
 ### Rotate
 
+- default : +90 degree, -90 degree
+
 ```js
+// ImojiEditor.js
 this.photoCanvas.rotate(sign);
 this.photoCanvas.rotate('+'); // rotate 90 degree
 ```
 
-- default : +90 degree, -90 degree
-
 ### Zoom
 
+- default : + 0.1 , - 0.1
+
+When user click sticker mode, zoom will be initialized. If you want to save zoom state, you should finish crop before switch to sticker mode.
+
 ```js
+// ImojiEditor.js
 this.photoCanvas.zoom(ratio);
 this.photoCanvas.zoom(-0.1); // zoom out 10%
 ```
 
-- default : + 0.1 , - 0.1
+### Move
 
-When user click sticker mode, zoom will be initialized. If you want save zoom state, you should crop it before open sticker mode by using crop tool.
+User can move image to crop more easily by drag or touch (mobile) ONLY when move button clicked.
+Move icon button ONLY supported on crop mode.
+
+<p align="center">
+<img width="250px" src="public/move.gif">
+</p>
+
+```js
+// ImojiEditor.js
+this.photoCanvas.setDragMode('move');
+```
+
+### Reset
+
+User can reset photo to init state by click reset icon button.
+
+- default : reset to initial photo state.
+
+```js
+// ImojiEditor.js
+this.photoCanvas.reset();
+```
 
 ### Add Sticker
 
-```js
-this.stickerCanvas.addSticker(src, [options]);
-```
-
-You need sticker images's url. Options are optional, and you can check in fabric.js
+User can add sticker by click each sticker. We support rotate, flip, resize sticker by drag or touch.
 
 - Recommend : SVG files
 - Default : medigi character set
-- Delete : delete button just delete activate sticker one by one
-- Reset : delete all sticker, but photo edit will be reset too.
+
+```js
+// ImojiEditor.js
+this.stickerCanvas.addSticker(src, [options]);
+```
 
 ### Remove Sticker
 
+User can delete sticker by click trash can icon button. It will delete activate(=clicked by user) sticker one by one.
+
+<p align="center">
+<img width="250px" src="public/removeone.gif">
+</p>
+
 ```js
+// ImojiEditor.js
 this.stickerCanvas.removeSticker(src, [options]);
 ```
 
-Delete activate(=clicked by user) sticker
-
 ### Reset Sticker
 
+User can delete all sticker by click reset icon button. But photo edit will be reset too.
+
 ```js
+// ImojiEditor.js
 this.stickerCanvas.removeAllSticker(src, [options]);
 ```
 
-Delete all sticker
+### Export Result Image
 
-## How To Save Result Image
+Click download icon button to export result image. Image size based on natural size of original image.
 
-## Mobile Touch
+- Type : Image Object(`new Image()`), data 64 PNG
+
+### Mobile Touch
 
 - Support touch move only in crop mode.
-- We didn't support touch zoom because of stability. Instead of it, you can use zoom buttons
-
-You can use all of Cropper JS's options, But in this editor debugging not support perfectly
+- We didn't support touch zoom because of stability. Instead of it, you can use zoom buttons.
 
 ## Contributors
 
@@ -207,6 +260,6 @@ You can use all of Cropper JS's options, But in this editor debugging not suppor
 - [emewjin](https://github.com/emewjin)
 - [junchi211](https://github.com/junchi211)
 
-## 🙏🏻 Bugs
+## 🙏🏻 Bug Report
 
 Please write [Issues](https://github.com/medistream-team/imoji-editor/issues) on our github repository
