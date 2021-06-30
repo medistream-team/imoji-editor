@@ -1,6 +1,19 @@
-# ✨ Imoji Editor - compact photo editor with sticker
+# Imoji
 
-`Javascript` `Vue.js`
+The compact image editor with add sticker feature !
+
+<p align="center">
+<div>
+<img src="https://img.shields.io/static/v1?label=version&message=0.1.0&color=red">
+<img src="https://img.shields.io/static/v1?label=javascript&message=ES6&color=yellow">
+<img src="https://img.shields.io/static/v1?label=vue&message=2.x&color=green">
+</div>
+<img width="250px" src="public/editor2.gif">
+</p>
+
+## Documentation
+
+[👉🏻 **Documentation**](https://medistream-team.github.io/imoji-editor/)
 
 ## Installation
 
@@ -10,18 +23,19 @@ npm install imoji-editor
 
 ## Usage
 
-<!-- To Do -->
-
 ```jsx
-Vue.use();
+import ImojiEditor from 'imoji-editor';
+
+Vue.use(ImojiEditor);
 ```
 
-## ✨ Options
+## Options
 
 ### Example
 
 ```jsx
 <imoji-editor
+    :default-image="importedImage"
     :sticker-images="stickerImages"
     :error-message="errorMessage"
     :width="width"
@@ -39,25 +53,24 @@ Use this props to put image from outside of editor. `Vue watch` will detect it.
 
 ### sticker-images
 
-Use this props to enroll sticker images what you want.  
-⚠ In version 1.0, we only support 1 set. So If you pass this props, default Medigi set will be gone.
+Use this props to use sticker images what you want.
 
-- Recommend : We recommend svg files, because png/jpg will have law quality when user import big size photo.
+⚠ In version 1.0, we only support 1 set. So If you pass this props, default (Medigi Set) will be gone.
+
+- Recommend : SVG files, because **png/jpg will show law quality** when user import big size photo.
 - Default : Medigi character set
-
-  > Medigi chracter is copyright of Medistream - ©Medistream 2021. All right reserved. Any redistribution or reproduction of part or all of contents in any forms is prohibited other than the following :
-  >
-  > - You may print or download to a local hard disk extracts for your personal and non-commerial use only
-  >
-  > You may not, except with our express written permission, distribute or commercially exploit the content. Nor may you transmiit it or store it in any other website or other form of electronic retrieval system.)
-
 - Type : Array, svg, jpg, png
+
+  > ### ⚠ Checkout Medigi chracter License
+  >
+  > ![](public/by-nc-nd.svg)  
+  > ©Medistream 2021. All right reserved.
 
 ### width, height
 
-The size of photo editor. You should set this option when using in modal. The more information about usage in modal is [here](###Using-in-Modal).
+The size of photo editor. You should set this option when using in modal. Checkout more information about using in modal [here](###using-in-modal).
 
-Imoji-editor's size always same as photo editor canvas's size. Also, sticker-canvas's size will be automatically fit with photo editor.
+Imoji's size always same as photo editor canvas's size. Also, sticker-canvas's size will be automatically fit with photo editor.
 
 - Default : document clientHeight
 - Type : number
@@ -78,7 +91,7 @@ You can set error message that come with alert when user click `edit` button or 
 - Default : korean
 - Type : string
 
-## ✨ Example
+## Example
 
 ### Using in Full Page
 
@@ -102,7 +115,7 @@ Please set width, height that fit with Modal's like this.
 
 > If you are using in a modal, you should initialize the editor after the modal is shown completely. Otherwise, you will not get the correct crop.
 
-## ✨ Features
+## Features
 
 ### Free Crop
 
@@ -188,7 +201,7 @@ Delete all sticker
 
 You can use all of Cropper JS's options, But in this editor debugging not support perfectly
 
-## ✨ Contributors
+## Contributors
 
 - [medistream](https://github.com/medistream-team)
 - [emewjin](https://github.com/emewjin)
