@@ -34,7 +34,8 @@ Use this prop to use sticker images what you want.
   >
   > Although Imoji is open source, the Medigi character's copyright is subject to the following:
   >
-  > ![](/by-nc-nd.svg)  
+  > <img src="https://github.com/medistream-team/imoji-editor/raw/master/public/by-nc-nd.svg">
+  >
   > ©Medistream 2021. All right reserved.
 
 ## error-message

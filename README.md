@@ -1,4 +1,4 @@
-# ✨ Imoji
+# ✨ Imoji Editor
 
 <p align="center">
 The image editor with a feature that you can add stickers to images!
