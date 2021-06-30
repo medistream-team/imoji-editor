@@ -1,7 +1,7 @@
 # ✨ Imoji
 
 <p align="center">
-The compact image editor with adding sticker feature !
+The image editor with a feature that you can add stickers to images!
 </p>
 <p align="center">
 <img src="https://img.shields.io/static/v1?label=version&message=0.1.0&color=red">
@@ -35,7 +35,7 @@ Vue.use(ImojiEditor);
 
 ### Example
 
-```js
+```jsx
 <imoji-editor
     :default-image="importedImage"
     :sticker-images="stickerImages"
@@ -50,16 +50,16 @@ Vue.use(ImojiEditor);
 
 ### default-image
 
-Use this props to put image from outside of editor. `Vue watch` will detect it.
+Use this prop to put image from outside of editor. `Vue watch` will detect it.
 
 - Default : undefined
 - Type : Image Object (`new Image()`)
 
 ### sticker-images
 
-Use this props to use sticker images what you want.
+Use this prop to use sticker images what you want.
 
-⚠ In version 1.0, we only support 1 set. So If you pass this props, default (Medigi Set) will be gone.
+⚠ In version 1.0, we are supporting only 1 set. So, if you pass this prop, default (Medigi Set) will disappear.
 
 - Recommend : SVG files, because **png/jpg will show law quality** when user import big size photo.
 - Default : Medigi character set
@@ -74,23 +74,23 @@ Use this props to use sticker images what you want.
 
 ### error-message
 
-Use this props to write an error message to show if the user click `edit` or `sticker` button even though there is no image to edit
+Use this prop to write an error message to show if the user clicks `edit` or `sticker` button even if there is no image to edit.
 
 - Default : korean
 - Type : string
 
 ### width, height
 
-Set size of photo editor. You should set this option when using in modal. Checkout more information about using in modal [here](###using-in-modal).
+Set size of the photo editor. You should set this option when using in modal. Checkout more information about using in modal [here](###using-in-modal).
 
-Imoji's size always same as photo editor canvas's size. Also, sticker canvas's size will be automatically fit with photo editor.
+Imoji’s size is always same as the photo editor canvas’s size. Also, the sticker canvas’s size will automatically fit with photo editor.
 
 - Default : document clientHeight
 - Type : number
 
 ### done
 
-You can customize action of output button whatever you want. This custom event will return result Image Object (`new Image()`) as argument of the event.
+You can customize outcome when you click the button however you want. This custom event will return result Image Object (`new Image()`) as argument of the event.
 
 - Recommend : Please **destroy editor** after user click done button.
 - Default : null
@@ -103,7 +103,7 @@ You can customize action of output button whatever you want. This custom event w
 
 - Recommend : In Mobile
 
-```js
+```jsx
 <imoji-editor></imoji-editor>
 ```
 
@@ -113,7 +113,7 @@ You can customize action of output button whatever you want. This custom event w
 
 Please set width, height that fit with Modal's like this.
 
-```js
+```jsx
 <imoji-editor :width="640" :height="800"></imoji-editor>
 ```
 
@@ -125,7 +125,7 @@ Please set width, height that fit with Modal's like this.
 
 ### Change Image
 
-If you want to change the target image to another image, just click image icon button to select new image.
+If you want to change the target image to another image, just click image icon button and select new image.
 
 <p align="center">
 <img width="250px" src="public/change.gif">
@@ -135,11 +135,11 @@ If you want to change the target image to another image, just click image icon b
 
 User can set crop area by drag or touch(mobile).
 
-When user click crop button, Free Crop will set automatically. If click crop button again, crop area will be clear.
+When user clicks crop button, Free Crop will set automatically. If you click crop button again, crop area will be cleared.
 
-Please click ✅ button to complete crop. Also, If the crop area is active and you switch to sticker mode, crop will be done automatically.
+Please click ✅ button to complete the crop. Also, if you switch to sticker mode while the crop area is active, crop will be done automatically.
 
-```js
+```jsx
 // ImojiEditor.js
 this.photoCanvas.setFreeCrop();
 ```
@@ -148,7 +148,7 @@ this.photoCanvas.setFreeCrop();
 
 - default : 16:9, 4:3, 2:3, 1:1
 
-```js
+```jsx
 // ImojiEditor.js
 this.photoCanvas.setCropRatio(x, y);
 this.photoCanvas.setCropRatio(16, 9); // set crop ratio to 16:9
@@ -158,7 +158,8 @@ this.photoCanvas.setCropRatio(16, 9); // set crop ratio to 16:9
 
 - default : Y flip, X flip
 
-```js
+```jsx
+// ImojiEditor.js
 this.photoCanvas.flip(direction);
 this.photoCanvas.flip('X'); // flip x-axis
 ```
@@ -167,7 +168,7 @@ this.photoCanvas.flip('X'); // flip x-axis
 
 - default : +90 degree, -90 degree
 
-```js
+```jsx
 // ImojiEditor.js
 this.photoCanvas.rotate(sign);
 this.photoCanvas.rotate('+'); // rotate 90 degree
@@ -177,9 +178,9 @@ this.photoCanvas.rotate('+'); // rotate 90 degree
 
 - default : + 0.1 , - 0.1
 
-When user click sticker mode, zoom will be initialized. If you want to save zoom state, you should finish crop before switch to sticker mode.
+When user clicks sticker mode, zoom will be initialized. If you want to save zoom state, you should finish crop before switching to sticker mode.
 
-```js
+```jsx
 // ImojiEditor.js
 this.photoCanvas.zoom(ratio);
 this.photoCanvas.zoom(-0.1); // zoom out 10%
@@ -187,14 +188,13 @@ this.photoCanvas.zoom(-0.1); // zoom out 10%
 
 ### Move
 
-User can move image to crop more easily by drag or touch (mobile) ONLY when move button clicked.
-Move icon button ONLY supported on crop mode.
+User can move image to crop more easily by drag or touch (mobile) ONLY when move button is clicked. Move icon button is ONLY supported during crop mode.
 
 <p align="center">
 <img width="250px" src="public/move.gif">
 </p>
 
-```js
+```jsx
 // ImojiEditor.js
 this.photoCanvas.setDragMode('move');
 ```
@@ -205,48 +205,48 @@ User can reset photo to init state by click reset icon button.
 
 - default : reset to initial photo state.
 
-```js
+```jsx
 // ImojiEditor.js
 this.photoCanvas.reset();
 ```
 
 ### Add Sticker
 
-User can add sticker by click each sticker. We support rotate, flip, resize sticker by drag or touch.
+User can add sticker by clicking each sticker. We support rotate, flip, and resizing of sticker by drag or touch.
 
 - Recommend : SVG files
 - Default : medigi character set
 
-```js
+```jsx
 // ImojiEditor.js
 this.stickerCanvas.addSticker(src, [options]);
 ```
 
 ### Remove Sticker
 
-User can delete sticker by click trash can icon button. It will delete activate(=clicked by user) sticker one by one.
+User can delete sticker by clicking trash can icon button. It will delete activate(=clicked by user) sticker one by one.
 
 <p align="center">
 <img width="250px" src="public/removeone.gif">
 </p>
 
-```js
+```jsx
 // ImojiEditor.js
 this.stickerCanvas.removeSticker(src, [options]);
 ```
 
 ### Reset Sticker
 
-User can delete all sticker by click reset icon button. But photo edit will be reset too.
+User can delete all stickers by clicking reset icon button, but photo edit will also reset.
 
-```js
+```jsx
 // ImojiEditor.js
 this.stickerCanvas.removeAllSticker(src, [options]);
 ```
 
 ### Export Result Image
 
-Click download icon button to export result image. Image size based on natural size of original image.
+Click download icon button to export result image. Image size will be based on the natural size of the original image.
 
 - Type : Image Object(`new Image()`), data 64 PNG
 
@@ -263,4 +263,5 @@ Click download icon button to export result image. Image size based on natural s
 
 ## 🙏🏻 Bug Report
 
-Please write [Issues](https://github.com/medistream-team/imoji-editor/issues) on our github repository
+[👉🏻 Issues](https://github.com/medistream-team/imoji-editor/issues)
+: Please give us feedback on our github repository if there are any issues!
