@@ -131,7 +131,7 @@ export default {
       });
       loadImportedImage.then(() => {
         if (!this.photoCanvas) {
-          this.photoCanvas = new PhotoEditor('user-photo', {
+          this.photoCanvas = new PhotoEditor('#user-photo', {
             minContainerHeight: this.height,
             minContainerWidth: this.width
           });
@@ -151,7 +151,7 @@ export default {
     },
     changeImage() {
       if (!this.photoCanvas) {
-        this.photoCanvas = new PhotoEditor('user-photo', {
+        this.photoCanvas = new PhotoEditor('#user-photo', {
           minContainerHeight: this.height,
           minContainerWidth: this.width
         });
