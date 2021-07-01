@@ -239,49 +239,49 @@ export default {
           {
             name: 'medi-01',
             // eslint-disable-next-line no-undef
-            svg: require('../static/medi-01.svg'),
+            svg: require('@/static/medi-01.svg'),
             jpg: '',
             png: ''
           },
           {
             name: 'medi-02',
             // eslint-disable-next-line no-undef
-            svg: require('../static/medi-02.svg'),
+            svg: require('@/static/medi-02.svg'),
             jpg: '',
             png: ''
           },
           {
             name: 'medi-03',
             // eslint-disable-next-line no-undef
-            svg: require('../static/medi-03.svg'),
+            svg: require('@/static/medi-03.svg'),
             jpg: '',
             png: ''
           },
           {
             name: 'medi-04',
             // eslint-disable-next-line no-undef
-            svg: require('../static/medi-04.svg'),
+            svg: require('@/static/medi-04.svg'),
             jpg: '',
             png: ''
           },
           {
             name: 'medi-05',
             // eslint-disable-next-line no-undef
-            svg: require('../static/medi-05.svg'),
+            svg: require('@/static/medi-05.svg'),
             jpg: '',
             png: ''
           },
           {
             name: 'medi-06',
             // eslint-disable-next-line no-undef
-            svg: require('../static/medi-06.svg'),
+            svg: require('@/static/medi-06.svg'),
             jpg: '',
             png: ''
           },
           {
             name: 'medi-07',
             // eslint-disable-next-line no-undef
-            svg: require('../static/medi-07.svg'),
+            svg: require('@/static/medi-07.svg'),
             jpg: '',
             png: ''
           }
