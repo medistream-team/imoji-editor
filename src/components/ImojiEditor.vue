@@ -9,7 +9,7 @@
     @off-croppable="offCroppable"
   >
     <template
-      #controllerBar="{reset, stickerCanvas, changePhoto, crop, layout, photoCanvas}"
+      #controllerBar="{reset, stickerCanvas, onInputImage, crop, layout, photoCanvas}"
     >
       <div class="controller-bar-wrapper">
         <button
@@ -19,7 +19,7 @@
         >
           <label>
             <file-image />
-            <input type="file" class="file" @change="changePhoto" />
+            <input type="file" class="file" @change="onInputImage" />
           </label>
         </button>
 
@@ -154,12 +154,12 @@
         />
       </div>
     </template>
-    <template #toolNavigation="{openPhotoEditor, openStickerEditor}">
+    <template #toolNavigation="{openImageEditor, openStickerEditor}">
       <div class="tool-navigation-wrapper">
         <button
           class="tool-navigation-button"
           title="edit"
-          @click="openPhotoEditor"
+          @click="openImageEditor"
         >
           Edit
         </button>

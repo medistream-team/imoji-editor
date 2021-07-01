@@ -24,7 +24,7 @@ export class PhotoEditor {
     });
   }
 
-  changePhoto(src) {
+  changeImage(src) {
     this.cropper.replace(src);
   }
 
