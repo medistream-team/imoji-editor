@@ -15,5 +15,20 @@ module.exports = {
       },
       extensions: ['.vue']
     }
+  },
+  chainWebpack: config => {
+    const svgRule = config.module.rule('svg');
+    // clear all existing loaders.
+    // if you don't do this, the loader below will be appended to
+    // existing loaders of the rule.
+    svgRule.uses.clear();
+    svgRule
+      .use('url-loader')
+      .loader('url-loader')
+      .tap(() => {
+        return {
+          limit: 102400 // 100kb
+        };
+      });
   }
 };
