@@ -1,12 +1,11 @@
-*,
+/* *,
 ::before,
 ::after {
   box-sizing: border-box;
-}
+} */
 
-body {
+/* body {
   background-color: black;
-  color: #212529;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
     'Helvetica Neue', Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
     'Segoe UI Symbol';
@@ -14,4 +13,4 @@ body {
   font-weight: 400;
   line-height: 1.5;
   margin: 0;
-}
+} */

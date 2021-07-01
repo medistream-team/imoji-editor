@@ -314,7 +314,8 @@ export default {
   justify-content: space-around;
   align-items: center;
   width: 100%;
-  padding: 10px;
+  padding-top: 10px;
+  padding-bottom: 10px;
   border: none;
   background: rgba(0, 0, 0, 0.1);
   z-index: 2;
@@ -335,14 +336,15 @@ export default {
   justify-content: space-around;
   align-items: center;
   width: 100%;
-  padding: 4px;
+  padding-top: 4px;
+  padding-bottom: 4px;
   size: 1.938rem;
   z-index: 2;
 }
 
 .tool-bar-wrapper {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
   width: 100%;
 }
 
@@ -384,9 +386,10 @@ export default {
   grid-auto-flow: column;
   justify-content: space-around;
   width: 100%;
-  height: 3rem;
-  margin: 2px auto;
-  padding: 8px 0;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  size: 1.938rem;
+  z-index: 2;
   z-index: 2;
 }
 
@@ -394,7 +397,8 @@ export default {
   display: flex;
   justify-content: space-around;
   width: 100%;
-  padding: 10px;
+  padding-top: 10px;
+  padding-bottom: 10px;
   border-style: none;
   z-index: 2;
 }
