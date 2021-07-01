@@ -10,7 +10,7 @@
       name="controllerBar"
       :reset="reset"
       :sticker-canvas="stickerCanvas"
-      :change-photo="changePhoto"
+      :on-input-image="onInputImage"
       :crop="crop"
       :layout="layout"
       :photo-canvas="photoCanvas"
@@ -22,8 +22,14 @@
         <div id="sticker-wrapper" :class="[hide ? 'hide' : '']">
           <canvas id="sticker-canvas"></canvas>
         </div>
-        <div id="uploaded-photo-wrapper">
-          <img id="user-photo" ref="uploadedPhoto" :src="uploadedPhotoSrc" />
+        <div
+          id="uploaded-photo-wrapper"
+          :style="{
+            width: `${width}px`,
+            height: `${height}px`
+          }"
+        >
+          <img id="user-photo" ref="uploadedPhoto" :src="uploadedImageSrc" />
         </div>
       </div>
     </div>
@@ -48,7 +54,7 @@
       ></slot>
       <slot
         name="toolNavigation"
-        :open-photo-editor="openPhotoEditor"
+        :open-image-editor="openImageEditor"
         :open-sticker-editor="openStickerEditor"
       ></slot>
     </div>
@@ -90,7 +96,7 @@ export default {
       stickerCanvas: undefined,
       photoCanvas: undefined,
       photoCanvasSize: [0, 0],
-      uploadedPhotoSrc: '',
+      uploadedImageSrc: '',
       initImageSrc: '',
       zoomCount: 0,
       layout: '',
@@ -101,30 +107,49 @@ export default {
     defaultImage: {
       deep: true,
       immediate: true,
-      handler() {
-        if (this.defaultImage) {
-          this.importPhoto();
+      handler(newImg, preImg) {
+        if (!this.defaultImage) return;
+        if (newImg !== preImg) {
+          this.uploadedImageSrc = newImg.src;
+          this.initImageSrc = newImg.src;
+          this.onImportImage();
         }
       }
     }
   },
   methods: {
-    //Settings
-    importPhoto() {
-      this.uploadedPhotoSrc = this.defaultImage.src;
-      this.initImageSrc = this.defaultImage.src;
+    // Settings
+    onImportImage() {
+      let loadImportedImage = new Promise(resolve => {
+        this.defaultImage.addEventListener(
+          'load',
+          () => {
+            resolve(this.$refs.uploadedPhoto);
+          },
+          { once: true }
+        );
+      });
+      loadImportedImage.then(() => {
+        if (!this.photoCanvas) {
+          this.photoCanvas = new PhotoEditor('user-photo', {
+            minContainerHeight: this.height,
+            minContainerWidth: this.width
+          });
+        }
 
-      if (!this.photoCanvas) {
-        this.photoCanvas = new PhotoEditor('user-photo', {
-          minContainerHeight: this.height,
-          minContainerWidth: this.width
-        });
-      }
+        if (this.photoCanvas) {
+          this.photoCanvas.changeImage(this.uploadedImageSrc);
+          this.setPhotoCanvasSize();
+        }
+      });
     },
-    changePhoto(e) {
-      this.uploadedPhotoSrc = URL.createObjectURL(e.target.files[0]);
+    onInputImage(e) {
+      this.uploadedImageSrc = URL.createObjectURL(e.target.files[0]);
       this.initImageSrc = URL.createObjectURL(e.target.files[0]);
 
+      this.changeImage();
+    },
+    changeImage() {
       if (!this.photoCanvas) {
         this.photoCanvas = new PhotoEditor('user-photo', {
           minContainerHeight: this.height,
@@ -133,10 +158,9 @@ export default {
       }
 
       if (this.photoCanvas) {
-        this.photoCanvas.changePhoto(this.uploadedPhotoSrc);
+        this.photoCanvas.changeImage(this.uploadedImageSrc);
+        this.setPhotoCanvasSize();
       }
-
-      this.setPhotoCanvasSize();
     },
     async setPhotoCanvasSize(isFirstLoading = true) {
       const [width, height] = await this.photoCanvas.getPhotoCanvasSize(
@@ -173,12 +197,8 @@ export default {
     },
     reset() {
       if (this.photoCanvas) {
-        this.photoCanvas.changePhoto(this.initImageSrc);
-
-        if (this.photoCanvas) {
-          this.clearCrop();
-        }
-
+        this.photoCanvas.changeImage(this.initImageSrc);
+        this.clearCrop();
         this.$refs.uploadedPhoto.addEventListener(
           'load',
           () => {
@@ -220,8 +240,8 @@ export default {
       }
     },
     // Tool navigation (set mode)
-    openPhotoEditor() {
-      if (!this.uploadedPhotoSrc) {
+    openImageEditor() {
+      if (!this.uploadedImageSrc) {
         alert(this.errorMessage);
         throw new Error('Please pick photo.');
       }
@@ -232,7 +252,7 @@ export default {
       this.setPhotoCanvasSize();
     },
     openStickerEditor() {
-      if (!this.uploadedPhotoSrc) {
+      if (!this.uploadedImageSrc) {
         alert(this.errorMessage);
         throw new Error('Please pick photo.');
       }
@@ -258,6 +278,7 @@ export default {
           this.photoCanvas.zoom(Math.abs(this.zoomCount));
         }
         this.zoomCount = 0;
+        //To Do : offCroppable emit이 두 번씩 발생 중인 현상 고치기
         this.clearCrop();
       }
 
