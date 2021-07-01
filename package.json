@@ -25,7 +25,8 @@
     "front-end"
   ],
   "files": [
-    "dist/imoji-editor.umd.min.js"
+    "dist/imoji-editor.umd.min.js",
+    "dist/img/*.*"
   ],
   "main": "dist/imoji-editor.umd.min.js",
   "dependencies": {
