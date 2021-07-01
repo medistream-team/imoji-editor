@@ -19,9 +19,6 @@
     </slot>
 
     <div class="imoji-editor-wrapper">
-      <div v-show="loading" class="loader">
-        <img clsss="loader-img" src="200.gif" alt="Loading..." />
-      </div>
       <div class="imoji-editor-container">
         <div id="sticker-wrapper" :class="[hide ? 'hide' : '']">
           <canvas id="sticker-canvas"></canvas>
@@ -104,8 +101,7 @@ export default {
       initImageSrc: '',
       zoomCount: 0,
       layout: '',
-      hide: true,
-      loading: false
+      hide: true
     };
   },
   watch: {
@@ -151,7 +147,6 @@ export default {
     onInputImage(e) {
       this.uploadedImageSrc = URL.createObjectURL(e.target.files[0]);
       this.initImageSrc = URL.createObjectURL(e.target.files[0]);
-      this.onLoading();
 
       this.changeImage();
     },
@@ -291,57 +286,12 @@ export default {
       if (!this.photoCanvas) {
         this.setPhotoCanvasSize();
       }
-    },
-    onLoading() {
-      // this.$refs.uploadedPhoto.addEventListener('loadstart', () => {
-      //   console.log('loadstart : ', this.loading);
-      //   this.loading = true;
-      //   console.log('loadstart : ', this.loading);
-      // });
-      // function something() {
-      //   console.log('hi');
-      //   this.loading = true;
-      // }
-      this.$refs.uploadedPhoto.addEventListener('loadstart', () => {
-        this.loading = true;
-      });
-      this.$refs.uploadedPhoto.addEventListener('load', () => {
-        this.loading = false;
-      });
     }
   }
 };
 </script>
 
 <style scoped>
-.loader {
-  position: fixed;
-  z-index: 99;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(247, 245, 245, 0.918);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.loader-img {
-  width: 100px;
-}
-
-.loader.hidden {
-  animation: fadeOut 1s;
-  animation-fill-mode: forwards;
-}
-
-@keyframes fadeOut {
-  100% {
-    opacity: 0;
-    visibility: hidden;
-  }
-}
-
 .imoji-editor-wrapper {
   position: relative;
   display: flex;
