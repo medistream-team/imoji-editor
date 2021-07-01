@@ -1,3 +1,4 @@
+<div align="center"><img width="250px" src="https://github.com/medistream-team/imoji-editor/raw/develop/public/imoji-editor-symbol.svg"></div>
 <h1 align="center">✨ imoji Editor</h1>
 <p align="center">
 The image editor with a feature that you can add stickers to images!
