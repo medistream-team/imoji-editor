@@ -136,6 +136,11 @@ export default {
             minContainerWidth: this.width
           });
         }
+
+        if (this.photoCanvas) {
+          this.photoCanvas.changeImage(this.uploadedImageSrc);
+          this.setPhotoCanvasSize();
+        }
       });
     },
     onInputImage(e) {
@@ -154,9 +159,8 @@ export default {
 
       if (this.photoCanvas) {
         this.photoCanvas.changeImage(this.uploadedImageSrc);
+        this.setPhotoCanvasSize();
       }
-
-      this.setPhotoCanvasSize();
     },
     async setPhotoCanvasSize(isFirstLoading = true) {
       const [width, height] = await this.photoCanvas.getPhotoCanvasSize(
