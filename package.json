@@ -1,6 +1,6 @@
 {
   "name": "imoji-editor",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build ./src/index.js --target lib",
@@ -25,7 +25,8 @@
     "front-end"
   ],
   "files": [
-    "dist/imoji-editor.umd.min.js"
+    "dist/imoji-editor.umd.min.js",
+    "dist/img/*.*"
   ],
   "main": "dist/imoji-editor.umd.min.js",
   "dependencies": {
