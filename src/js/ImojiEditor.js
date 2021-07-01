@@ -7,11 +7,11 @@ export class PhotoEditor {
   constructor(selector, options) {
     /**
      * Create a new Cropper for edit Photo
-     * @param {string} selector - Id of img or canvas element(The target element for cropping.)
+     * @param {string} selector - img or canvas element (The target element for cropping.)
      * @param {Object} options - The configuration options.
      */
     if (!selector) throw new Error('Please provide a selector.');
-    this.userImage = document.getElementById(selector);
+    this.userImage = document.querySelector(selector);
     this.cropper = new Cropper(this.userImage, {
       viewMode: 1,
       background: false,
@@ -24,7 +24,7 @@ export class PhotoEditor {
     });
   }
 
-  changePhoto(src) {
+  changeImage(src) {
     this.cropper.replace(src);
   }
 
