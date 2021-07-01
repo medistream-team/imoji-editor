@@ -129,7 +129,7 @@ export default {
           { once: true }
         );
       });
-      loadImportedImage.then(res => {
+      loadImportedImage.then(() => {
         if (!this.photoCanvas) {
           this.photoCanvas = new PhotoEditor('user-photo', {
             minContainerHeight: this.height,
