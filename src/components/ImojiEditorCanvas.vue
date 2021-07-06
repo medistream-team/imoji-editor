@@ -42,7 +42,6 @@
         :zoom="zoom"
         :rotate="rotate"
         :flip="flip"
-        :clear-crop="clearCrop"
       ></slot>
       <slot
         name="stickerToolBar"

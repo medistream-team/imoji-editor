@@ -61,7 +61,7 @@
         </button>
       </div>
     </template>
-    <template #toolBar="{photoCanvas, layout, zoom, rotate, flip, clearCrop}">
+    <template #toolBar="{photoCanvas, layout, zoom, rotate, flip}">
       <div v-if="layout === 'tool-bar'" class="tool-bar">
         <div v-show="isCropMode" class="ratio-crop-tool-bar">
           <button
