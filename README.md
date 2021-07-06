@@ -1,16 +1,16 @@
-<div align="center"><img width="250px" src="public/imoji-editor-symbol.svg"></div>
+<div align="center"><img width="250px" src="https://github.com/medistream-team/imoji-editor/raw/develop/public/imoji-editor-symbol.svg"></div>
 <h1 align="center">✨ imoji Editor</h1>
 <p align="center">
 The image editor with a feature that you can add stickers to images!
 </p>
 <p align="center">
-<img src="https://img.shields.io/static/v1?label=version&message=0.1.0&color=red">
+<img src="https://img.shields.io/npm/v/imoji-editor?color=red">
 <img src="https://img.shields.io/static/v1?label=javascript&message=ES6&color=yellow">
 <img src="https://img.shields.io/static/v1?label=vue&message=2.x&color=green">
 <img src="https://img.shields.io/static/v1?label=license&message=MIT,CC&color=blue">
 </p>
 <p align="center">
-<img width="250px" src="public/editor2.gif">
+<img width="250px" src="https://github.com/medistream-team/imoji-editor/raw/master/public/editor2.gif">
 </p>
 
 ## Documentation
@@ -69,7 +69,8 @@ Use this prop to use sticker images what you want.
   >
   > Although Imoji is open source, the Medigi character's copyright is subject to the following:
   >
-  > ![](public/by-nc-nd.svg)  
+  > <img src="https://github.com/medistream-team/imoji-editor/raw/master/public/by-nc-nd.svg">
+  >
   > ©Medistream 2021. All right reserved.
 
 ### error-message
@@ -128,7 +129,7 @@ Please set width, height that fit with Modal's like this.
 If you want to change the target image to another image, just click image icon button and select new image.
 
 <p align="center">
-<img width="250px" src="public/change.gif">
+<img width="250px" src="https://github.com/medistream-team/imoji-editor/raw/master/public/change.gif">
 </p>
 
 ### Free Crop
@@ -191,7 +192,7 @@ this.photoCanvas.zoom(-0.1); // zoom out 10%
 User can move image to crop more easily by drag or touch (mobile) ONLY when move button is clicked. Move icon button is ONLY supported during crop mode.
 
 <p align="center">
-<img width="250px" src="public/move.gif">
+<img width="250px" src="https://github.com/medistream-team/imoji-editor/raw/master/public/move.gif">
 </p>
 
 ```jsx
@@ -227,7 +228,7 @@ this.stickerCanvas.addSticker(src, [options]);
 User can delete sticker by clicking trash can icon button. It will delete activate(=clicked by user) sticker one by one.
 
 <p align="center">
-<img width="250px" src="public/removeone.gif">
+<img width="250px" src="https://github.com/medistream-team/imoji-editor/raw/master/public/removeone.gif">
 </p>
 
 ```jsx
