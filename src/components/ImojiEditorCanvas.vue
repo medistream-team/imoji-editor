@@ -41,6 +41,7 @@
         :layout="layout"
         :zoom="zoom"
         :rotate="rotate"
+        :flip="flip"
         :clear-crop="clearCrop"
       ></slot>
       <slot
@@ -161,10 +162,8 @@ export default {
       this.photoCanvas.changeImage(this.uploadedImageSrc);
       this.setPhotoCanvasSize();
     },
-    async setPhotoCanvasSize(isFirstLoading = true) {
-      const [width, height] = await this.photoCanvas.getPhotoCanvasSize(
-        isFirstLoading
-      );
+    async setPhotoCanvasSize() {
+      const [width, height] = await this.photoCanvas.getPhotoCanvasSize();
 
       this.$set(this.photoCanvasSize, 0, width);
       this.$set(this.photoCanvasSize, 1, height);
@@ -187,6 +186,7 @@ export default {
       this.photoCanvas.zoom(x);
     },
     rotate(sign) {
+      this.photoCanvas.setDragMode('none');
       this.photoCanvas.rotate(sign);
       const [width, height] = this.photoCanvas.getRotatedCanvasSize();
       this.$set(this.photoCanvasSize, 0, width);
@@ -194,9 +194,15 @@ export default {
       this.resizeStickerCanvas();
       this.clearCrop();
     },
+    flip(direction) {
+      this.photoCanvas.setDragMode('none');
+      this.photoCanvas.flip(direction);
+      this.clearCrop();
+    },
     reset() {
       if (this.photoCanvas) {
         this.photoCanvas.changeImage(this.initImageSrc);
+        this.photoCanvas.setDragMode('none');
         this.clearCrop();
         this.$refs.uploadedPhoto.addEventListener(
           'load',
