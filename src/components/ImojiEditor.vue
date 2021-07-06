@@ -61,7 +61,7 @@
         </button>
       </div>
     </template>
-    <template #toolBar="{photoCanvas, layout, zoom, rotate, clearCrop}">
+    <template #toolBar="{photoCanvas, layout, zoom, rotate, flip, clearCrop}">
       <div v-if="layout === 'tool-bar'" class="tool-bar">
         <div v-show="isCropMode" class="ratio-crop-tool-bar">
           <button
@@ -127,17 +127,11 @@
             <rotate-left />
           </button>
 
-          <button
-            class="tool-bar-button"
-            @click="photoCanvas.flip('X'), clearCrop()"
-          >
+          <button class="tool-bar-button" @click="flip('X')">
             <flip-horizontal />
           </button>
 
-          <button
-            class="tool-bar-button"
-            @click="photoCanvas.flip('Y'), clearCrop()"
-          >
+          <button class="tool-bar-button" @click="flip('Y')">
             <flip-vertical />
           </button>
         </div>

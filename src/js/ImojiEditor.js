@@ -32,17 +32,9 @@ export class PhotoEditor {
     this.cropper.setDragMode(mode);
   }
 
-  getPhotoCanvasSize(isFirstLoading = true) {
+  getPhotoCanvasSize() {
     return new Promise((resolve, reject) => {
       try {
-        if (!isFirstLoading) {
-          const target = document.getElementsByClassName('cropper-canvas');
-          const width = target[0].style.width;
-          const height = target[0].style.height;
-          resolve([parseInt(width), parseInt(height)]);
-          return;
-        }
-
         this.userImage.addEventListener(
           'ready',
           () => {
