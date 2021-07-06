@@ -277,7 +277,6 @@ export default {
           this.crop();
           this.zoomCount = 0;
         }
-        //To Do : offCroppable emit이 두 번씩 발생 중인 현상 고치기
         this.photoCanvas.setDragMode('none');
         this.clearCrop();
       }
