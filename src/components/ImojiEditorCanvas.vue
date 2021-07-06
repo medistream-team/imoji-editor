@@ -148,9 +148,6 @@ export default {
       this.uploadedImageSrc = URL.createObjectURL(e.target.files[0]);
       this.initImageSrc = URL.createObjectURL(e.target.files[0]);
 
-      this.changeImage();
-    },
-    changeImage() {
       if (!this.photoCanvas) {
         this.photoCanvas = new PhotoEditor('#user-photo', {
           minContainerHeight: this.height,
@@ -158,10 +155,11 @@ export default {
         });
       }
 
-      if (this.photoCanvas) {
-        this.photoCanvas.changeImage(this.uploadedImageSrc);
-        this.setPhotoCanvasSize();
-      }
+      this.changeImage();
+    },
+    changeImage() {
+      this.photoCanvas.changeImage(this.uploadedImageSrc);
+      this.setPhotoCanvasSize();
     },
     async setPhotoCanvasSize(isFirstLoading = true) {
       const [width, height] = await this.photoCanvas.getPhotoCanvasSize(
@@ -262,9 +260,6 @@ export default {
       this.hide = false;
       this.layout = 'sticker-tool-bar';
 
-      this.crop();
-      this.photoCanvas.setDragMode('none');
-
       if (!this.stickerCanvas) {
         this.setPhotoCanvasSize();
         const [width, height] = this.photoCanvasSize;
@@ -272,14 +267,12 @@ export default {
       }
 
       if (this.photoCanvas) {
-        if (this.zoomCount > 0) {
-          this.photoCanvas.zoom(-1 * this.zoomCount);
+        if (this.zoomCount !== 0) {
+          this.crop();
+          this.zoomCount = 0;
         }
-        if (this.zoomCount < 0) {
-          this.photoCanvas.zoom(Math.abs(this.zoomCount));
-        }
-        this.zoomCount = 0;
         //To Do : offCroppable emit이 두 번씩 발생 중인 현상 고치기
+        this.photoCanvas.setDragMode('none');
         this.clearCrop();
       }
 
