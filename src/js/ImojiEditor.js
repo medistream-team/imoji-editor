@@ -74,11 +74,21 @@ export class PhotoEditor {
     this.cropper.destroy();
   }
 
-  finishCrop() {
+  /**
+   *
+   * @param {string} imgType
+   */
+  finishCrop(imgType) {
     const canvas = this.cropper.getCroppedCanvas();
-    const croppedImgSrc = canvas.toDataURL('image/png');
+    const croppedImgSrc = canvas.toDataURL(imgType);
     this.cropper.replace(croppedImgSrc);
   }
+
+  // finishCrop() {
+  //   const canvas = this.cropper.getCroppedCanvas();
+  //   const croppedImgSrc = canvas.toDataURL();
+  //   this.cropper.replace(croppedImgSrc);
+  // }
 
   /**
    * Set two number for calculate ratio (x/y) of crop box
@@ -131,31 +141,37 @@ export class PhotoEditor {
   /**
    * Export result photo image object
    * @param {Image} stickerImage - Image Object of sticker canvas result
-   * @returns Image Object \\ Promise (Image Object)
+   * @param {string} imgType - same as original image type
+   * @returns Promise (for Image Object)
    */
-  exportResultPhoto(stickerImage) {
+  exportWithSticker(stickerImage, imgType) {
     const canvas = this.cropper.getCroppedCanvas();
-    const editedPhoto = new Image();
-    editedPhoto.src = canvas.toDataURL('image/png');
-    //return Image Object
-    if (!stickerImage) return editedPhoto;
-
-    //add sticker image on photo canvas
     const context = canvas.getContext('2d');
 
-    let loadResultPhoto = new Promise(resolve => {
+    let loadResultImage = new Promise(resolve => {
       stickerImage.onload = () => {
         context.drawImage(stickerImage, 0, 0);
         resolve(canvas);
       };
     });
 
-    //return promise
-    return loadResultPhoto.then(res => {
+    return loadResultImage.then(res => {
       const withStickerImage = new Image();
-      withStickerImage.src = res.toDataURL('image/png');
+      withStickerImage.src = res.toDataURL(imgType);
       return withStickerImage;
     });
+  }
+
+  /**
+   *
+   * @param {string} imgType
+   * @returns Image Object
+   */
+  exportOnlyImage(imgType) {
+    const canvas = this.cropper.getCroppedCanvas();
+    const editedPhoto = new Image();
+    editedPhoto.src = canvas.toDataURL(imgType);
+    return editedPhoto;
   }
 
   /**
