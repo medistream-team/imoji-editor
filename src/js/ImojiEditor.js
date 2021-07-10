@@ -75,20 +75,14 @@ export class PhotoEditor {
   }
 
   /**
-   *
-   * @param {string} imgType
+   * Crop Image
+   * @param {string} imgType - same as original image type
    */
   finishCrop(imgType) {
     const canvas = this.cropper.getCroppedCanvas();
     const croppedImgSrc = canvas.toDataURL(imgType);
     this.cropper.replace(croppedImgSrc);
   }
-
-  // finishCrop() {
-  //   const canvas = this.cropper.getCroppedCanvas();
-  //   const croppedImgSrc = canvas.toDataURL();
-  //   this.cropper.replace(croppedImgSrc);
-  // }
 
   /**
    * Set two number for calculate ratio (x/y) of crop box

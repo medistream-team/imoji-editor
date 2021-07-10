@@ -131,6 +131,7 @@ export default {
           { once: true }
         );
       });
+
       loadImportedImage.then(() => {
         if (!this.photoCanvas) {
           this.photoCanvas = new PhotoEditor('#user-photo', {
@@ -147,6 +148,7 @@ export default {
     },
     onInputImage(e) {
       const { files } = e.target;
+
       this.uploadedImageSrc = URL.createObjectURL(files[0]);
       this.initImageSrc = URL.createObjectURL(files[0]);
       this.imgType = files[0].type;

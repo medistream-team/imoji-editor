@@ -19,7 +19,12 @@
         >
           <label>
             <file-image />
-            <input type="file" class="file" @change="onInputImage" />
+            <input
+              type="file"
+              class="file"
+              accept="image/jpeg, image/png"
+              @change="onInputImage"
+            />
           </label>
         </button>
 
