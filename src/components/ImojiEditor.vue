@@ -166,10 +166,6 @@
           Sticker
         </button>
       </div>
-      <!-- 이미지 잘 저장되는지 테스트용 -->
-      <div id="testA">
-        <image id="testB" />
-      </div>
     </template>
   </imoji-editor-canvas>
 </template>
@@ -301,9 +297,6 @@ export default {
     },
     async done() {
       const resultImage = await this.$refs.Imoji.exportResultPhoto();
-      //이미지 잘 저장되는지 테스트용
-      const d = document.getElementById('testA');
-      d.appendChild(resultImage);
       this.$emit('done', resultImage);
     }
   }

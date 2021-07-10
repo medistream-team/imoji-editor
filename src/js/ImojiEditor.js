@@ -169,9 +169,9 @@ export class PhotoEditor {
    */
   exportOnlyImage(imgType) {
     const canvas = this.cropper.getCroppedCanvas();
-    const editedPhoto = new Image();
-    editedPhoto.src = canvas.toDataURL(imgType);
-    return editedPhoto;
+    const editedImage = new Image();
+    editedImage.src = canvas.toDataURL(imgType);
+    return editedImage;
   }
 
   /**
