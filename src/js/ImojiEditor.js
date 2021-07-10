@@ -139,7 +139,7 @@ export class PhotoEditor {
   }
 
   /**
-   * Export result photo image object
+   * Export result photo image object when edited with sticker
    * @param {Image} stickerImage - Image Object of sticker canvas result
    * @param {string} imgType - same as original image type
    * @returns Promise (for Image Object)
@@ -163,7 +163,7 @@ export class PhotoEditor {
   }
 
   /**
-   *
+   * Export result photo image object when only edited
    * @param {string} imgType
    * @returns Image Object
    */
