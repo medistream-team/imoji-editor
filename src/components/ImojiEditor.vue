@@ -152,18 +152,18 @@
       <div class="tool-navigation-wrapper">
         <button
           class="tool-navigation-button"
-          title="edit"
+          title="Photo"
           @click="openImageEditor"
         >
-          Edit
+          Photo
         </button>
 
         <button
           class="tool-navigation-button"
-          title="sticker"
+          title="Emoji Sticker"
           @click="openStickerEditor"
         >
-          Sticker
+          Emoji Sticker
         </button>
       </div>
     </template>
