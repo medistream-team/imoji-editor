@@ -452,6 +452,11 @@ export default {
 img.image-sticker {
   width: 1.938rem;
   cursor: pointer;
+  transition: transform 0.3s ease-in-out;
+}
+
+img.image-sticker:hover {
+  transform: scale(1.3);
 }
 
 i {
