@@ -57,6 +57,7 @@
         name="toolNavigation"
         :open-image-editor="openImageEditor"
         :open-sticker-editor="openStickerEditor"
+        :uploadedImageSrc="uploadedImageSrc"
       ></slot>
     </div>
   </section>
@@ -245,22 +246,12 @@ export default {
     },
     // Tool navigation (set mode)
     openImageEditor() {
-      if (!this.uploadedImageSrc) {
-        alert(this.errorMessage);
-        throw new Error('Please pick photo.');
-      }
-
       this.hide = true;
       this.layout = 'tool-bar';
 
       this.setPhotoCanvasSize();
     },
     openStickerEditor() {
-      if (!this.uploadedImageSrc) {
-        alert(this.errorMessage);
-        throw new Error('Please pick photo.');
-      }
-
       this.$parent.$data.isCropMode = false;
       this.hide = false;
       this.layout = 'sticker-tool-bar';
