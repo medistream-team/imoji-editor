@@ -9,7 +9,7 @@
     @off-croppable="offCroppable"
   >
     <template
-      #controllerBar="{reset, stickerCanvas, onInputImage, crop, layout, photoCanvas}"
+      #controllerBar="{reset, stickerCanvas, onInputImage, crop, layout, photoCanvas, uploadedImageSrc}"
     >
       <div class="controller-bar-wrapper">
         <button
@@ -32,7 +32,12 @@
           <cursor-move />
         </button>
 
-        <button class="controller-bar-button" title="reset" @click="reset">
+        <button
+          class="controller-bar-button"
+          title="reset"
+          :disabled="uploadedImageSrc ? false : true"
+          @click="reset"
+        >
           <restore-icon />
         </button>
 
@@ -56,7 +61,12 @@
           </button>
         </div>
 
-        <button class="controller-bar-button" title="done" @click="done">
+        <button
+          class="controller-bar-button"
+          title="done"
+          :disabled="uploadedImageSrc ? false : true"
+          @click="done"
+        >
           <download-icon />
         </button>
       </div>
@@ -337,6 +347,11 @@ export default {
   cursor: pointer;
 }
 
+.controller-bar-button:disabled {
+  color: grey;
+  cursor: not-allowed;
+}
+
 .controller-bar-button:hover {
   color: grey;
 }
@@ -384,6 +399,11 @@ export default {
   background-color: transparent;
   border-style: none;
   cursor: pointer;
+}
+
+.tool-navigation-button:disabled {
+  color: grey;
+  cursor: not-allowed;
 }
 
 .tool-navigation-button:hover {

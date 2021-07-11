@@ -15,6 +15,7 @@
       :layout="layout"
       :photo-canvas="photoCanvas"
       :export-result-photo="exportResultPhoto"
+      :uploadedImageSrc="uploadedImageSrc"
     >
     </slot>
 
