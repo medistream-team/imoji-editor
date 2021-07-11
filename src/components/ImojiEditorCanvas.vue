@@ -320,9 +320,13 @@ export default {
 
 .all-tool-bar-wrapper {
   position: absolute;
-  bottom: 0;
-  width: 100%;
-  background: rgba(0, 0, 0, 0.1);
   z-index: 2;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  width: 100%;
+  max-width: 800px;
+  background: rgba(0, 0, 0, 0.1);
 }
 </style>

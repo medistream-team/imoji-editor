@@ -324,16 +324,20 @@ export default {
 
 .controller-bar-wrapper {
   position: absolute;
+  z-index: 2;
   top: 0;
+  left: 0;
+  right: 0;
   display: flex;
   justify-content: space-around;
   align-items: center;
+  margin: 0 auto;
   width: 100%;
+  max-width: 800px;
   padding-top: 10px;
   padding-bottom: 10px;
   border: none;
   background: rgba(0, 0, 0, 0.1);
-  z-index: 2;
 }
 
 .controller-bar-button {
