@@ -329,6 +329,10 @@ export default {
   cursor: pointer;
 }
 
+.controller-bar-button label {
+  cursor: pointer;
+}
+
 .controller-bar-button:hover {
   color: grey;
 }
