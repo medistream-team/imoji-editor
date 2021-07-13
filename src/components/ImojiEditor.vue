@@ -357,10 +357,18 @@ export default {
 }
 
 .controller-bar-button {
-  background-color: transparent;
-  color: aliceblue;
+  position: relative;
+  width: 42px;
+  height: 42px;
+  border-radius: 28px;
   border-style: none;
+  background-color: transparent;
   cursor: pointer;
+  transition: background-color 0.2s cubic-bezier(0.4, 0, 0.6, 1);
+}
+
+.controller-bar-button:not(:disabled):hover {
+  background-color: rgba(255, 255, 255, 0.2);
 }
 
 .controller-bar-button label {
@@ -370,10 +378,6 @@ export default {
 .controller-bar-button:disabled {
   color: grey;
   cursor: not-allowed;
-}
-
-.controller-bar-button:hover {
-  color: grey;
 }
 
 .tool-bar {
@@ -393,10 +397,18 @@ export default {
 }
 
 .tool-bar-button {
-  background-color: transparent;
-  color: white;
+  border-radius: 28px;
+  padding: 5px;
   border-style: none;
+  color: white;
+  background-color: transparent;
+  line-height: 0;
   cursor: pointer;
+  transition: background-color 0.2s cubic-bezier(0.4, 0, 0.6, 1);
+}
+
+.tool-bar-button:hover {
+  background-color: rgba(255, 255, 255, 0.2);
 }
 
 .tool-navigation-wrapper {
@@ -428,8 +440,8 @@ export default {
   cursor: not-allowed;
 }
 
-.tool-navigation-button:hover {
-  color: grey;
+.tool-navigation-button:not(:disabled):hover {
+  background-color: rgba(255, 255, 255, 0.2);
 }
 
 .sticker-tool-bar {
@@ -448,7 +460,7 @@ export default {
   display: flex;
   justify-content: space-around;
   width: 100%;
-  padding-top: 10px;
+  padding-top: 5px;
   padding-bottom: 10px;
   border-style: none;
   z-index: 2;
@@ -456,15 +468,18 @@ export default {
 
 .ratio-crop-tool-bar-button {
   height: 1.938rem;
+  padding: 5px;
+  border-radius: 28px;
+  border-style: none;
   color: white;
   background-color: transparent;
   font-size: 1rem;
-  border-style: none;
   cursor: pointer;
+  transition: background-color 0.2s cubic-bezier(0.4, 0, 0.6, 1);
 }
 
 .ratio-crop-tool-bar-button:hover {
-  color: grey;
+  background-color: rgba(255, 255, 255, 0.2);
 }
 
 img.image-sticker {
