@@ -105,7 +105,8 @@ export default {
       initImageSrc: '',
       zoomCount: 0,
       layout: '',
-      hide: true
+      hide: true,
+      imgType: ''
     };
   },
   watch: {
@@ -150,8 +151,11 @@ export default {
       });
     },
     onInputImage(e) {
-      this.uploadedImageSrc = URL.createObjectURL(e.target.files[0]);
-      this.initImageSrc = URL.createObjectURL(e.target.files[0]);
+      const { files } = e.target;
+
+      this.uploadedImageSrc = URL.createObjectURL(files[0]);
+      this.initImageSrc = URL.createObjectURL(files[0]);
+      this.imgType = files[0].type;
 
       if (!this.photoCanvas) {
         this.photoCanvas = new PhotoEditor('#user-photo', {
@@ -223,28 +227,30 @@ export default {
       }
     },
     crop() {
-      this.photoCanvas.finishCrop();
+      this.photoCanvas.finishCrop(this.imgType);
       this.setPhotoCanvasSize();
     },
     async exportResultPhoto() {
       // case 1. only Edit
       if (!this.stickerCanvas && this.photoCanvas) {
-        return this.photoCanvas.exportResultPhoto();
+        return this.photoCanvas.exportOnlyImage(this.imgType);
       }
 
       // case 2. only Sticker
       if (!this.photoCanvas && this.stickerCanvas) {
         const width = this.photoCanvas.getNaturalSize()[0];
-        return await this.photoCanvas.exportResultPhoto(
-          this.stickerCanvas.saveStickerImage(width)
+        return await this.photoCanvas.exportWithSticker(
+          this.stickerCanvas.saveStickerImage(width),
+          this.imgType
         );
       }
 
       // case 3. Edit & Sticker
       if (this.photoCanvas && this.stickerCanvas) {
         const width = this.photoCanvas.getNaturalSize()[0];
-        return await this.photoCanvas.exportResultPhoto(
-          this.stickerCanvas.saveStickerImage(width)
+        return await this.photoCanvas.exportWithSticker(
+          this.stickerCanvas.saveStickerImage(width),
+          this.imgType
         );
       }
     },

@@ -27,8 +27,8 @@
               <file-image />
               <input
                 type="file"
-                accept="image/*"
                 class="file"
+                accept="image/jpeg, image/png"
                 @change="onInputImage"
               />
             </label>

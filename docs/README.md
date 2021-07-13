@@ -4,7 +4,7 @@
 The image editor with a feature that you can add stickers to images!
 </p>
 <p align="center">
-<img src="https://img.shields.io/static/v1?label=version&message=0.1.0&color=red">
+<img src="https://img.shields.io/npm/v/imoji-editor?color=red">
 <img src="https://img.shields.io/static/v1?label=javascript&message=ES6&color=yellow">
 <img src="https://img.shields.io/static/v1?label=vue&message=2.x&color=green">
 <img src="https://img.shields.io/static/v1?label=license&message=MIT,CC&color=blue">
