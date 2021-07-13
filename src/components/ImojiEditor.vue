@@ -12,63 +12,75 @@
       #controllerBar="{reset, stickerCanvas, onInputImage, crop, layout, photoCanvas, uploadedImageSrc}"
     >
       <div class="controller-bar-wrapper">
-        <button
-          class="controller-bar-button"
-          title="image upload"
-          accept="image/*"
-        >
-          <label>
-            <file-image />
-            <input type="file" class="file" @change="onInputImage" />
-          </label>
-        </button>
-
-        <button
-          v-show="isCropMode"
-          class="controller-bar-button"
-          title="move"
-          @click="photoCanvas.setDragMode('move')"
-        >
-          <cursor-move />
-        </button>
-
-        <button
-          class="controller-bar-button"
-          title="reset"
-          :disabled="uploadedImageSrc ? false : true"
-          @click="reset"
-        >
-          <restore-icon />
-        </button>
-
-        <div v-if="layout === 'sticker-tool-bar'" class="delete-sticker">
+        <div class="controller-bar-buttons-wrapper">
           <button
             class="controller-bar-button"
-            title="delete sticker"
-            @click="stickerCanvas.removeSticker()"
+            title="image upload"
+            @click="
+              e => {
+                e.target.querySelector('input[type=\'file\']') &&
+                  e.target.querySelector('input[type=\'file\']').click();
+              }
+            "
           >
-            <delete-icon />
+            <label>
+              <file-image />
+              <input
+                type="file"
+                accept="image/*"
+                class="file"
+                @change="onInputImage"
+              />
+            </label>
           </button>
-        </div>
 
-        <div v-if="layout === 'tool-bar'" class="complete-crop">
+          <button
+            v-show="isCropMode"
+            class="controller-bar-button"
+            title="move"
+            @click="photoCanvas.setDragMode('move')"
+          >
+            <cursor-move />
+          </button>
+
           <button
             class="controller-bar-button"
-            title="complete crop"
-            @click="crop"
+            title="reset"
+            :disabled="uploadedImageSrc ? false : true"
+            @click="reset"
           >
-            <check-icon />
+            <restore-icon />
+          </button>
+
+          <div v-if="layout === 'sticker-tool-bar'" class="delete-sticker">
+            <button
+              class="controller-bar-button"
+              title="delete sticker"
+              @click="stickerCanvas.removeSticker()"
+            >
+              <delete-icon />
+            </button>
+          </div>
+
+          <div v-if="layout === 'tool-bar'" class="complete-crop">
+            <button
+              class="controller-bar-button"
+              title="complete crop"
+              @click="crop"
+            >
+              <check-icon />
+            </button>
+          </div>
+
+          <button
+            class="controller-bar-button"
+            title="done"
+            :disabled="uploadedImageSrc ? false : true"
+            @click="done"
+          >
+            <download-icon />
           </button>
         </div>
-
-        <button
-          class="controller-bar-button"
-          title="done"
-          :disabled="uploadedImageSrc ? false : true"
-          @click="done"
-        >
-          <download-icon />
-        </button>
       </div>
     </template>
     <template #toolBar="{photoCanvas, layout, zoom, rotate, flip}">
@@ -328,16 +340,20 @@ export default {
   top: 0;
   left: 0;
   right: 0;
+  width: 100%;
+  padding: 10px 0px;
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.controller-bar-buttons-wrapper {
+  position: relative;
+  top: 0;
   display: flex;
   justify-content: space-around;
   align-items: center;
   margin: 0 auto;
   width: 100%;
   max-width: 800px;
-  padding-top: 10px;
-  padding-bottom: 10px;
-  border: none;
-  background: rgba(0, 0, 0, 0.1);
 }
 
 .controller-bar-button {
@@ -397,12 +413,14 @@ export default {
   display: flex;
   justify-content: space-around;
   align-items: center;
-  margin: 10px auto;
-  size: 30px;
+  margin: 0 auto;
+  padding: 10px;
+  border-radius: 28px;
+  border-style: none;
   color: white;
   background-color: transparent;
-  border-style: none;
   cursor: pointer;
+  transition: background-color 0.2s cubic-bezier(0.4, 0, 0.6, 1);
 }
 
 .tool-navigation-button:disabled {

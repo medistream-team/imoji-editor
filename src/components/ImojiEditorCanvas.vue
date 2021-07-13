@@ -36,30 +36,32 @@
       </div>
     </div>
     <div class="all-tool-bar-wrapper">
-      <slot
-        name="toolBar"
-        :photo-canvas="photoCanvas"
-        :layout="layout"
-        :zoom="zoom"
-        :rotate="rotate"
-        :flip="flip"
-      ></slot>
-      <slot
-        name="stickerToolBar"
-        :sticker-canvas="stickerCanvas"
-        :layout="layout"
-      ></slot>
-      <slot
-        name="ratioCropToolBar"
-        :photo-canvas="photoCanvas"
-        :layout="layout"
-      ></slot>
-      <slot
-        name="toolNavigation"
-        :open-image-editor="openImageEditor"
-        :open-sticker-editor="openStickerEditor"
-        :uploadedImageSrc="uploadedImageSrc"
-      ></slot>
+      <div class="all-tool-bar-buttons-wrapper">
+        <slot
+          name="toolBar"
+          :photo-canvas="photoCanvas"
+          :layout="layout"
+          :zoom="zoom"
+          :rotate="rotate"
+          :flip="flip"
+        ></slot>
+        <slot
+          name="stickerToolBar"
+          :sticker-canvas="stickerCanvas"
+          :layout="layout"
+        ></slot>
+        <slot
+          name="ratioCropToolBar"
+          :photo-canvas="photoCanvas"
+          :layout="layout"
+        ></slot>
+        <slot
+          name="toolNavigation"
+          :open-image-editor="openImageEditor"
+          :open-sticker-editor="openStickerEditor"
+          :uploadedImageSrc="uploadedImageSrc"
+        ></slot>
+      </div>
     </div>
   </section>
 </template>
@@ -326,7 +328,15 @@ export default {
   right: 0;
   margin: 0 auto;
   width: 100%;
-  max-width: 800px;
   background: rgba(0, 0, 0, 0.1);
+}
+
+.all-tool-bar-buttons-wrapper {
+  position: relative;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  max-width: 800px;
+  margin: 0 auto;
 }
 </style>
