@@ -142,7 +142,7 @@ export class PhotoEditor {
     const canvas = this.cropper.getCroppedCanvas();
     const context = canvas.getContext('2d');
 
-    let loadResultImage = new Promise(resolve => {
+    const loadResultImage = new Promise(resolve => {
       stickerImage.onload = () => {
         context.drawImage(stickerImage, 0, 0);
         resolve(canvas);
