@@ -125,15 +125,16 @@ export default {
   methods: {
     // Settings
     onImportImage() {
-      let loadImportedImage = new Promise(resolve => {
-        this.defaultImage.addEventListener(
-          'load',
-          () => {
-            resolve(this.$refs.uploadedPhoto);
-          },
-          { once: true }
+      let loadImportedImage;
+
+      if (this.defaultImage.complete) {
+        loadImportedImage = new Promise(resolve => resolve());
+      } else {
+        loadImportedImage = new Promise(resolve =>
+          this.defaultImage.addEventListener('load', resolve, { once: true })
         );
-      });
+      }
+
       loadImportedImage.then(() => {
         if (!this.photoCanvas) {
           this.photoCanvas = new PhotoEditor('#user-photo', {
