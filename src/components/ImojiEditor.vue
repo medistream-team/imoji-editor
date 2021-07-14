@@ -74,6 +74,7 @@
           </div>
 
           <button
+            v-if="!isCropMode"
             class="controller-bar-button"
             title="done"
             :disabled="uploadedImageSrc ? false : true"
