@@ -3,6 +3,7 @@
     ref="Imoji"
     :default-image="defaultImage"
     :error-message="errorMessage"
+    :sticker-reset-message="stickerResetMessage"
     :width="width"
     :height="height"
     :is-crop-mode="isCropMode"
@@ -245,6 +246,11 @@ export default {
       type: String,
       required: false,
       default: '편집할 사진을 선택해주세요'
+    },
+    stickerResetMessage: {
+      type: String,
+      required: false,
+      default: '스티커를 초기화 하시겠습니까?'
     },
     choosePhoto: {
       type: Boolean,

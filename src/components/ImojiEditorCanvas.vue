@@ -81,6 +81,10 @@ export default {
       required: false,
       default: '편집할 사진을 선택해주세요'
     },
+    stickerResetMessage: {
+      type: String,
+      required: true
+    },
     width: {
       type: Number,
       required: false,
@@ -257,6 +261,14 @@ export default {
     },
     // Tool navigation (set mode)
     openImageEditor() {
+      if (this.stickerCanvas) {
+        let resetStickerCanvas = confirm(this.stickerResetMessage);
+
+        if (!resetStickerCanvas) return;
+
+        this.stickerCanvas.removeAllSticker();
+      }
+
       this.hide = true;
       this.layout = 'tool-bar';
 
