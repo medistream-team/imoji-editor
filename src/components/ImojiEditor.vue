@@ -392,21 +392,6 @@ export default {
   background-color: transparent;
   color: white;
   line-height: 0;
-  cursor: pointer;
-  transition: background-color 0.2s cubic-bezier(0.4, 0, 0.6, 1);
-}
-
-.controller-bar-button:not(:disabled):hover {
-  background-color: rgba(255, 255, 255, 0.2);
-}
-
-.controller-bar-button label {
-  cursor: pointer;
-}
-
-.controller-bar-button:disabled {
-  color: grey;
-  cursor: not-allowed;
 }
 
 .tool-bar {
@@ -432,12 +417,6 @@ export default {
   color: white;
   background-color: transparent;
   line-height: 0;
-  cursor: pointer;
-  transition: background-color 0.2s cubic-bezier(0.4, 0, 0.6, 1);
-}
-
-.tool-bar-button:hover {
-  background-color: rgba(255, 255, 255, 0.2);
 }
 
 .tool-navigation-wrapper {
@@ -460,16 +439,10 @@ export default {
   border-style: none;
   color: white;
   background-color: transparent;
-  cursor: pointer;
   transition: background-color 0.2s cubic-bezier(0.4, 0, 0.6, 1);
 }
 
-.tool-navigation-button:disabled {
-  color: grey;
-  cursor: not-allowed;
-}
-
-.tool-navigation-button:not(:disabled):hover {
+.tool-navigation-button.activated {
   background-color: rgba(255, 255, 255, 0.2);
 }
 
@@ -503,22 +476,10 @@ export default {
   color: white;
   background-color: transparent;
   font-size: 1rem;
-  cursor: pointer;
-  transition: background-color 0.2s cubic-bezier(0.4, 0, 0.6, 1);
-}
-
-.ratio-crop-tool-bar-button:hover {
-  background-color: rgba(255, 255, 255, 0.2);
 }
 
 img.image-sticker {
   width: 1.938rem;
-  cursor: pointer;
-  transition: transform 0.3s ease-in-out;
-}
-
-img.image-sticker:hover {
-  transform: scale(1.3);
 }
 
 i {
@@ -526,7 +487,68 @@ i {
   font-size: 25px;
 }
 
-i:hover {
-  color: grey;
+/* apply hover effect only on PC */
+@media (hover: hover) {
+  .controller-bar-button {
+    cursor: pointer;
+    transition: background-color 0.2s cubic-bezier(0.4, 0, 0.6, 1);
+  }
+
+  .controller-bar-button label {
+    cursor: pointer;
+  }
+
+  .controller-bar-button:not(:disabled):hover {
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+
+  .controller-bar-button:disabled {
+    color: grey;
+    cursor: not-allowed;
+  }
+
+  .tool-bar-button {
+    cursor: pointer;
+    transition: background-color 0.2s cubic-bezier(0.4, 0, 0.6, 1);
+  }
+
+  .tool-bar-button:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+
+  .tool-navigation-button {
+    cursor: pointer;
+  }
+
+  .tool-navigation-button:disabled {
+    color: grey;
+    cursor: not-allowed;
+  }
+
+  .tool-navigation-button:not(:disabled):hover {
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+
+  .ratio-crop-tool-bar-button {
+    cursor: pointer;
+    transition: background-color 0.2s cubic-bezier(0.4, 0, 0.6, 1);
+  }
+
+  .ratio-crop-tool-bar-button:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+
+  img.image-sticker {
+    cursor: pointer;
+    transition: transform 0.3s ease-in-out;
+  }
+
+  img.image-sticker:hover {
+    transform: scale(1.3);
+  }
+
+  i:hover {
+    color: grey;
+  }
 }
 </style>
