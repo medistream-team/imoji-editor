@@ -386,6 +386,8 @@ export default {
   border-radius: 28px;
   border-style: none;
   background-color: transparent;
+  color: white;
+  line-height: 0;
   cursor: pointer;
   transition: background-color 0.2s cubic-bezier(0.4, 0, 0.6, 1);
 }
