@@ -172,12 +172,13 @@
       </div>
     </template>
     <template
-      #toolNavigation="{openImageEditor, openStickerEditor, uploadedImageSrc}"
+      #toolNavigation="{openImageEditor, openStickerEditor, uploadedImageSrc, layout}"
     >
       <div class="tool-navigation-wrapper">
         <button
           class="tool-navigation-button"
           title="Photo"
+          :class="layout === 'tool-bar' ? 'activated' : undefined"
           :disabled="uploadedImageSrc ? false : true"
           @click="openImageEditor"
         >
@@ -187,6 +188,7 @@
         <button
           class="tool-navigation-button"
           title="Emoji Sticker"
+          :class="layout === 'sticker-tool-bar' ? 'activated' : undefined"
           :disabled="uploadedImageSrc ? false : true"
           @click="openStickerEditor"
         >

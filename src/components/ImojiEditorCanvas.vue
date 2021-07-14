@@ -60,6 +60,7 @@
           :open-image-editor="openImageEditor"
           :open-sticker-editor="openStickerEditor"
           :uploadedImageSrc="uploadedImageSrc"
+          :layout="layout"
         ></slot>
       </div>
     </div>
