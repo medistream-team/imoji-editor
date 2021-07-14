@@ -451,8 +451,8 @@ export default {
   grid-auto-flow: column;
   justify-content: space-around;
   width: 100%;
-  padding-top: 4px;
-  padding-bottom: 4px;
+  padding-top: 5px;
+  padding-bottom: 6px;
   size: 1.938rem;
   z-index: 2;
   z-index: 2;
