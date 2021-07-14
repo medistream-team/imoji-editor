@@ -67,7 +67,12 @@
             <button
               class="controller-bar-button"
               title="complete crop"
-              @click="crop"
+              @click="
+                () => {
+                  crop();
+                  isCropMode = false;
+                }
+              "
             >
               <check-icon />
             </button>
