@@ -85,7 +85,8 @@
             :disabled="uploadedImageSrc ? false : true"
             @click="done"
           >
-            <download-icon />
+            {{ doneLabel }}
+            <download-icon v-if="!doneLabel" />
           </button>
         </div>
       </div>
@@ -188,7 +189,7 @@
           :disabled="uploadedImageSrc ? false : true"
           @click="openImageEditor"
         >
-          Photo
+          {{ photoEditLabel }}
         </button>
 
         <button
@@ -198,7 +199,7 @@
           :disabled="uploadedImageSrc ? false : true"
           @click="openStickerEditor"
         >
-          Emoji Sticker
+          {{ stickerEditLabel }}
         </button>
       </div>
     </template>
@@ -259,6 +260,21 @@ export default {
       type: Number,
       required: false,
       default: document.documentElement.clientHeight
+    },
+    photoEditLabel: {
+      type: String,
+      required: false,
+      default: 'Photo'
+    },
+    stickerEditLabel: {
+      type: String,
+      required: false,
+      default: 'Emoji Sticker'
+    },
+    doneLabel: {
+      type: String,
+      required: false,
+      default: null
     },
     // eslint-disable-next-line vue/require-default-prop
     defaultImage: {
