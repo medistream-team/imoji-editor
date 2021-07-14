@@ -35,21 +35,21 @@
           </button>
 
           <button
-            v-show="isCropMode"
-            class="controller-bar-button"
-            title="move"
-            @click="photoCanvas.setDragMode('move')"
-          >
-            <cursor-move />
-          </button>
-
-          <button
             class="controller-bar-button"
             title="reset"
             :disabled="uploadedImageSrc ? false : true"
             @click="reset"
           >
             <restore-icon />
+          </button>
+
+          <button
+            v-show="isCropMode"
+            class="controller-bar-button"
+            title="move"
+            @click="photoCanvas.setDragMode('move')"
+          >
+            <cursor-move />
           </button>
 
           <div v-if="layout === 'sticker-tool-bar'" class="delete-sticker">
