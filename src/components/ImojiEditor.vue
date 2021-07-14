@@ -365,7 +365,7 @@ export default {
   right: 0;
   width: 100%;
   padding: 10px 0px;
-  background-color: rgba(0, 0, 0, 0.1);
+  background-color: rgba(0, 0, 0, 0.3);
 }
 
 .controller-bar-buttons-wrapper {
