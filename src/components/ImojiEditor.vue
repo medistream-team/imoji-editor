@@ -63,7 +63,7 @@
             </button>
           </div>
 
-          <div v-if="layout === 'tool-bar'" class="complete-crop">
+          <div v-if="layout === 'tool-bar' && isCropMode" class="complete-crop">
             <button
               class="controller-bar-button"
               title="complete crop"
