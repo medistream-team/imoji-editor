@@ -14,6 +14,7 @@
       <div class="controller-bar-wrapper">
         <div class="controller-bar-buttons-wrapper">
           <button
+            v-if="choosePhoto"
             class="controller-bar-button"
             title="image upload"
             @click="
@@ -235,6 +236,11 @@ export default {
       type: String,
       required: false,
       default: '편집할 사진을 선택해주세요'
+    },
+    choosePhoto: {
+      type: Boolean,
+      required: false,
+      default: true
     },
     width: {
       type: Number,
