@@ -2,7 +2,6 @@
   <imoji-editor-canvas
     ref="Imoji"
     :default-image="defaultImage"
-    :error-message="errorMessage"
     :sticker-reset-message="stickerResetMessage"
     :width="width"
     :height="height"
@@ -250,7 +249,7 @@ export default {
     stickerResetMessage: {
       type: String,
       required: false,
-      default: '스티커를 초기화 하시겠습니까?'
+      default: 'All stickers are deleted when you edit the photo'
     },
     choosePhoto: {
       type: Boolean,
