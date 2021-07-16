@@ -357,35 +357,24 @@ export default {
       this.isCropMode = test;
     },
     async done() {
+      let resultImage;
+
       try {
-        const resultImage = await this.$refs.Imoji.exportResultPhoto();
-
-        if (this.$listeners.done) {
-          this.$emit('done', resultImage);
-          return;
-        }
-
-        const d = new Date();
-        const dateString = `${d.getFullYear()}-${`${d.getMonth() + 1}`.padStart(
-          2,
-          '0'
-        )}-${`${d.getDate()}`.padStart(2, '0')}`;
-
-        const timeString = `${`${d.getHours()}`.padStart(
-          2,
-          '0'
-        )}:${`${d.getMinutes()}`.padStart(
-          2,
-          '0'
-        )}:${`${d.getSeconds()}`.padStart(2, '0')}`;
-
-        const anchorEl = document.createElement('a');
-        anchorEl.setAttribute('href', resultImage.src);
-        anchorEl.setAttribute('download', `${dateString} ${timeString}.jpeg`);
-        anchorEl.click();
+        resultImage = await this.$refs.Imoji.exportResultPhoto();
       } catch (error) {
         this.$emit('error', error);
+        return;
       }
+
+      if (this.$listeners.done) {
+        this.$emit('done', resultImage);
+        return;
+      }
+
+      const anchorEl = document.createElement('a');
+      anchorEl.setAttribute('href', resultImage.src);
+      anchorEl.setAttribute('download', `imoji_${new Date().toLocaleString()}`);
+      anchorEl.click();
     }
   }
 };
