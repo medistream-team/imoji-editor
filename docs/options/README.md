@@ -4,7 +4,7 @@
 <imoji-editor
     :default-image="importedImage"
     :sticker-images="stickerImages"
-    :error-message="'please choose image first'"
+    :sticker-reset-message="'All stickers are deleted when you edit the photo'"
     :width="600"
     :height="480"
     @done="image => {
@@ -38,11 +38,11 @@ Use this prop to use sticker images what you want.
   >
   > ©Medistream 2021. All right reserved.
 
-## error-message
+## sticker-reset-message
 
-Use this prop to write an error message to show if the user clicks `edit` or `sticker` button even if there is no image to edit.
+Use this prop to change the warning message that the stickers will be reset when the `Edit` button is clicked.
 
-- Default : korean
+- Default : `All stickers are deleted when you edit the photo`
 - Type : string
 
 ## width, height
