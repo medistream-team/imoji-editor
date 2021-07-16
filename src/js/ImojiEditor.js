@@ -217,6 +217,11 @@ export class StickerEditor {
         cornerColor: '#39f',
         cornerSize: 5,
         transparentCorners: false,
+        //set sticker insdie of center
+        originX: 'center',
+        originY: 'center',
+        left: this.stickerCanvas.width / 2,
+        top: this.stickerCanvas.height / 2,
         ...options
       }
     );
