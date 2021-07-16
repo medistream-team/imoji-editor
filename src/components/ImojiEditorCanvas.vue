@@ -15,6 +15,7 @@
       :layout="layout"
       :photo-canvas="photoCanvas"
       :export-result-photo="exportResultPhoto"
+      :uploadedImageSrc="uploadedImageSrc"
     >
     </slot>
 
@@ -35,29 +36,33 @@
       </div>
     </div>
     <div class="all-tool-bar-wrapper">
-      <slot
-        name="toolBar"
-        :photo-canvas="photoCanvas"
-        :layout="layout"
-        :zoom="zoom"
-        :rotate="rotate"
-        :flip="flip"
-      ></slot>
-      <slot
-        name="stickerToolBar"
-        :sticker-canvas="stickerCanvas"
-        :layout="layout"
-      ></slot>
-      <slot
-        name="ratioCropToolBar"
-        :photo-canvas="photoCanvas"
-        :layout="layout"
-      ></slot>
-      <slot
-        name="toolNavigation"
-        :open-image-editor="openImageEditor"
-        :open-sticker-editor="openStickerEditor"
-      ></slot>
+      <div class="all-tool-bar-buttons-wrapper">
+        <slot
+          name="toolBar"
+          :photo-canvas="photoCanvas"
+          :layout="layout"
+          :zoom="zoom"
+          :rotate="rotate"
+          :flip="flip"
+        ></slot>
+        <slot
+          name="stickerToolBar"
+          :sticker-canvas="stickerCanvas"
+          :layout="layout"
+        ></slot>
+        <slot
+          name="ratioCropToolBar"
+          :photo-canvas="photoCanvas"
+          :layout="layout"
+        ></slot>
+        <slot
+          name="toolNavigation"
+          :open-image-editor="openImageEditor"
+          :open-sticker-editor="openStickerEditor"
+          :uploadedImageSrc="uploadedImageSrc"
+          :layout="layout"
+        ></slot>
+      </div>
     </div>
   </section>
 </template>
@@ -71,10 +76,9 @@ export default {
       type: Boolean,
       required: true
     },
-    errorMessage: {
+    stickerResetMessage: {
       type: String,
-      required: false,
-      default: '편집할 사진을 선택해주세요'
+      required: true
     },
     width: {
       type: Number,
@@ -122,15 +126,15 @@ export default {
   methods: {
     // Settings
     onImportImage() {
-      let loadImportedImage = new Promise(resolve => {
-        this.defaultImage.addEventListener(
-          'load',
-          () => {
-            resolve(this.$refs.uploadedPhoto);
-          },
-          { once: true }
+      let loadImportedImage;
+
+      if (this.defaultImage.complete) {
+        loadImportedImage = new Promise(resolve => resolve());
+      } else {
+        loadImportedImage = new Promise(resolve =>
+          this.defaultImage.addEventListener('load', resolve, { once: true })
         );
-      });
+      }
 
       loadImportedImage.then(() => {
         if (!this.photoCanvas) {
@@ -252,9 +256,12 @@ export default {
     },
     // Tool navigation (set mode)
     openImageEditor() {
-      if (!this.uploadedImageSrc) {
-        alert(this.errorMessage);
-        throw new Error('Please pick photo.');
+      if (this.stickerCanvas) {
+        let resetStickerCanvas = confirm(this.stickerResetMessage);
+
+        if (!resetStickerCanvas) return;
+
+        this.stickerCanvas.removeAllSticker();
       }
 
       this.hide = true;
@@ -263,11 +270,6 @@ export default {
       this.setPhotoCanvasSize();
     },
     openStickerEditor() {
-      if (!this.uploadedImageSrc) {
-        alert(this.errorMessage);
-        throw new Error('Please pick photo.');
-      }
-
       this.$parent.$data.isCropMode = false;
       this.hide = false;
       this.layout = 'sticker-tool-bar';
@@ -335,9 +337,21 @@ export default {
 
 .all-tool-bar-wrapper {
   position: absolute;
-  bottom: 0;
-  width: 100%;
-  background: rgba(0, 0, 0, 0.1);
   z-index: 2;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.all-tool-bar-buttons-wrapper {
+  position: relative;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  max-width: 800px;
+  margin: 0 auto;
 }
 </style>

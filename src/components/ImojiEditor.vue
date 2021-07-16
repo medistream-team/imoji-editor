@@ -2,68 +2,93 @@
   <imoji-editor-canvas
     ref="Imoji"
     :default-image="defaultImage"
-    :error-message="errorMessage"
+    :sticker-reset-message="stickerResetMessage"
     :width="width"
     :height="height"
     :is-crop-mode="isCropMode"
     @off-croppable="offCroppable"
   >
     <template
-      #controllerBar="{reset, stickerCanvas, onInputImage, crop, layout, photoCanvas}"
+      #controllerBar="{reset, stickerCanvas, onInputImage, crop, layout, photoCanvas, uploadedImageSrc}"
     >
       <div class="controller-bar-wrapper">
-        <button
-          class="controller-bar-button"
-          title="image upload"
-          accept="image/*"
-        >
-          <label>
-            <file-image />
-            <input
-              type="file"
-              class="file"
-              accept="image/jpeg, image/png"
-              @change="onInputImage"
-            />
-          </label>
-        </button>
+        <div class="controller-bar-buttons-wrapper">
+          <button
+            v-if="choosePhoto"
+            class="controller-bar-button"
+            title="image upload"
+            @click="
+              e => {
+                e.target.querySelector('input[type=\'file\']') &&
+                  e.target.querySelector('input[type=\'file\']').click();
+              }
+            "
+          >
+            <label>
+              <file-image />
+              <input
+                type="file"
+                class="file"
+                accept="image/jpeg, image/png"
+                @change="onInputImage"
+              />
+            </label>
+          </button>
 
-        <button
-          v-show="isCropMode"
-          class="controller-bar-button"
-          title="move"
-          @click="photoCanvas.setDragMode('move')"
-        >
-          <cursor-move />
-        </button>
-
-        <button class="controller-bar-button" title="reset" @click="reset">
-          <restore-icon />
-        </button>
-
-        <div v-if="layout === 'sticker-tool-bar'" class="delete-sticker">
           <button
             class="controller-bar-button"
-            title="delete sticker"
-            @click="stickerCanvas.removeSticker()"
+            title="reset"
+            :disabled="uploadedImageSrc ? false : true"
+            @click="reset"
           >
-            <delete-icon />
+            <restore-icon />
           </button>
-        </div>
 
-        <div v-if="layout === 'tool-bar'" class="complete-crop">
           <button
+            v-show="isCropMode"
             class="controller-bar-button"
-            title="complete crop"
-            @click="crop"
+            title="move"
+            @click="photoCanvas.setDragMode('move')"
           >
-            <check-icon />
+            <cursor-move />
+          </button>
+
+          <div v-if="layout === 'sticker-tool-bar'" class="delete-sticker">
+            <button
+              class="controller-bar-button"
+              title="delete sticker"
+              @click="stickerCanvas.removeSticker()"
+            >
+              <delete-icon />
+            </button>
+          </div>
+
+          <div v-if="layout === 'tool-bar' && isCropMode" class="complete-crop">
+            <button
+              class="controller-bar-button"
+              title="complete crop"
+              @click="
+                () => {
+                  crop();
+                  isCropMode = false;
+                }
+              "
+            >
+              <check-icon />
+            </button>
+          </div>
+
+          <button
+            v-if="!isCropMode"
+            class="controller-bar-button"
+            title="done"
+            :disabled="uploadedImageSrc ? false : true"
+            @click="done"
+          >
+            {{ doneLabel }}
+            <download-icon v-if="!doneLabel" />
           </button>
         </div>
-
-        <button class="controller-bar-button" title="done" @click="done">
-          <download-icon />
-        </button>
       </div>
     </template>
     <template #toolBar="{photoCanvas, layout, zoom, rotate, flip}">
@@ -153,22 +178,28 @@
         />
       </div>
     </template>
-    <template #toolNavigation="{openImageEditor, openStickerEditor}">
+    <template
+      #toolNavigation="{openImageEditor, openStickerEditor, uploadedImageSrc, layout}"
+    >
       <div class="tool-navigation-wrapper">
         <button
           class="tool-navigation-button"
-          title="edit"
+          title="Photo"
+          :class="layout === 'tool-bar' ? 'activated' : undefined"
+          :disabled="uploadedImageSrc ? false : true"
           @click="openImageEditor"
         >
-          Edit
+          {{ photoEditLabel }}
         </button>
 
         <button
           class="tool-navigation-button"
-          title="sticker"
+          title="Emoji Sticker"
+          :class="layout === 'sticker-tool-bar' ? 'activated' : undefined"
+          :disabled="uploadedImageSrc ? false : true"
           @click="openStickerEditor"
         >
-          Sticker
+          {{ stickerEditLabel }}
         </button>
       </div>
     </template>
@@ -215,6 +246,16 @@ export default {
       required: false,
       default: '편집할 사진을 선택해주세요'
     },
+    stickerResetMessage: {
+      type: String,
+      required: false,
+      default: 'All stickers are deleted when you edit the photo'
+    },
+    choosePhoto: {
+      type: Boolean,
+      required: false,
+      default: true
+    },
     width: {
       type: Number,
       required: false,
@@ -224,6 +265,21 @@ export default {
       type: Number,
       required: false,
       default: document.documentElement.clientHeight
+    },
+    photoEditLabel: {
+      type: String,
+      required: false,
+      default: 'Photo'
+    },
+    stickerEditLabel: {
+      type: String,
+      required: false,
+      default: 'Emoji Sticker'
+    },
+    doneLabel: {
+      type: String,
+      required: false,
+      default: null
     },
     // eslint-disable-next-line vue/require-default-prop
     defaultImage: {
@@ -301,8 +357,24 @@ export default {
       this.isCropMode = test;
     },
     async done() {
-      const resultImage = await this.$refs.Imoji.exportResultPhoto();
-      this.$emit('done', resultImage);
+      let resultImage;
+
+      try {
+        resultImage = await this.$refs.Imoji.exportResultPhoto();
+      } catch (error) {
+        this.$emit('error', error);
+        return;
+      }
+
+      if (this.$listeners.done) {
+        this.$emit('done', resultImage);
+        return;
+      }
+
+      const anchorEl = document.createElement('a');
+      anchorEl.setAttribute('href', resultImage.src);
+      anchorEl.setAttribute('download', `imoji_${new Date().toLocaleString()}`);
+      anchorEl.click();
     }
   }
 };
@@ -315,27 +387,35 @@ export default {
 
 .controller-bar-wrapper {
   position: absolute;
+  z-index: 2;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  padding: 10px 0px;
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+.controller-bar-buttons-wrapper {
+  position: relative;
   top: 0;
   display: flex;
   justify-content: space-around;
   align-items: center;
+  margin: 0 auto;
   width: 100%;
-  padding-top: 10px;
-  padding-bottom: 10px;
-  border: none;
-  background: rgba(0, 0, 0, 0.1);
-  z-index: 2;
+  max-width: 800px;
 }
 
 .controller-bar-button {
-  background-color: transparent;
-  color: aliceblue;
+  position: relative;
+  width: 42px;
+  height: 42px;
+  border-radius: 28px;
   border-style: none;
-  cursor: pointer;
-}
-
-.controller-bar-button:hover {
-  color: grey;
+  background-color: transparent;
+  color: white;
+  line-height: 0;
 }
 
 .tool-bar {
@@ -355,10 +435,12 @@ export default {
 }
 
 .tool-bar-button {
-  background-color: transparent;
-  color: white;
+  border-radius: 28px;
+  padding: 5px;
   border-style: none;
-  cursor: pointer;
+  color: white;
+  background-color: transparent;
+  line-height: 0;
 }
 
 .tool-navigation-wrapper {
@@ -375,16 +457,17 @@ export default {
   display: flex;
   justify-content: space-around;
   align-items: center;
-  margin: 10px auto;
-  size: 30px;
+  margin: 0 auto;
+  padding: 10px;
+  border-radius: 28px;
+  border-style: none;
   color: white;
   background-color: transparent;
-  border-style: none;
-  cursor: pointer;
+  transition: background-color 0.2s cubic-bezier(0.4, 0, 0.6, 1);
 }
 
-.tool-navigation-button:hover {
-  color: grey;
+.tool-navigation-button.activated {
+  background-color: rgba(255, 255, 255, 0.2);
 }
 
 .sticker-tool-bar {
@@ -392,8 +475,8 @@ export default {
   grid-auto-flow: column;
   justify-content: space-around;
   width: 100%;
-  padding-top: 4px;
-  padding-bottom: 4px;
+  padding-top: 5px;
+  padding-bottom: 6px;
   size: 1.938rem;
   z-index: 2;
   z-index: 2;
@@ -403,7 +486,7 @@ export default {
   display: flex;
   justify-content: space-around;
   width: 100%;
-  padding-top: 10px;
+  padding-top: 5px;
   padding-bottom: 10px;
   border-style: none;
   z-index: 2;
@@ -411,20 +494,16 @@ export default {
 
 .ratio-crop-tool-bar-button {
   height: 1.938rem;
+  padding: 5px;
+  border-radius: 28px;
+  border-style: none;
   color: white;
   background-color: transparent;
   font-size: 1rem;
-  border-style: none;
-  cursor: pointer;
-}
-
-.ratio-crop-tool-bar-button:hover {
-  color: grey;
 }
 
 img.image-sticker {
   width: 1.938rem;
-  cursor: pointer;
 }
 
 i {
@@ -432,7 +511,68 @@ i {
   font-size: 25px;
 }
 
-i:hover {
-  color: grey;
+/* apply hover effect only on PC */
+@media (hover: hover) {
+  .controller-bar-button {
+    cursor: pointer;
+    transition: background-color 0.2s cubic-bezier(0.4, 0, 0.6, 1);
+  }
+
+  .controller-bar-button label {
+    cursor: pointer;
+  }
+
+  .controller-bar-button:not(:disabled):hover {
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+
+  .controller-bar-button:disabled {
+    color: grey;
+    cursor: not-allowed;
+  }
+
+  .tool-bar-button {
+    cursor: pointer;
+    transition: background-color 0.2s cubic-bezier(0.4, 0, 0.6, 1);
+  }
+
+  .tool-bar-button:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+
+  .tool-navigation-button {
+    cursor: pointer;
+  }
+
+  .tool-navigation-button:disabled {
+    color: grey;
+    cursor: not-allowed;
+  }
+
+  .tool-navigation-button:not(:disabled):hover {
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+
+  .ratio-crop-tool-bar-button {
+    cursor: pointer;
+    transition: background-color 0.2s cubic-bezier(0.4, 0, 0.6, 1);
+  }
+
+  .ratio-crop-tool-bar-button:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+
+  img.image-sticker {
+    cursor: pointer;
+    transition: transform 0.3s ease-in-out;
+  }
+
+  img.image-sticker:hover {
+    transform: scale(1.3);
+  }
+
+  i:hover {
+    color: grey;
+  }
 }
 </style>
