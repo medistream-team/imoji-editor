@@ -14,7 +14,7 @@
       <div class="controller-bar-wrapper">
         <div class="controller-bar-buttons-wrapper">
           <button
-            v-if="choosePhoto"
+            v-if="!photoSelectionDisabled"
             class="controller-bar-button"
             title="image upload"
             @click="
@@ -251,10 +251,10 @@ export default {
       required: false,
       default: 'All stickers are deleted when you edit the photo'
     },
-    choosePhoto: {
+    photoSelectionDisabled: {
       type: Boolean,
       required: false,
-      default: true
+      default: false
     },
     width: {
       type: Number,
