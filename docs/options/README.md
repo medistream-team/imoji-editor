@@ -56,8 +56,6 @@ You can customize outcome when you click the button however you want. This custo
 - Type : event
 - Argument : result Image Object (`new Image()`) by data64 PNG
 
-> ---
->
 > 🔻 Below are added in version 0.1.6
 
 ## photo-selection-disabled
