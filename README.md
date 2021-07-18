@@ -10,12 +10,22 @@ The image editor with a feature that you can add stickers to images!
 <img src="https://img.shields.io/static/v1?label=license&message=MIT,CC&color=blue">
 </p>
 <p align="center">
-<img width="250px" src="https://user-images.githubusercontent.com/76927618/125900138-03737084-4325-4a5b-b47c-02c97346fdbe.gif">
+<img width="350px" src="https://user-images.githubusercontent.com/76927618/125900138-03737084-4325-4a5b-b47c-02c97346fdbe.gif">
 </p>
 
 ## Documentation
 
 [👉🏻 **Checkout here!**](https://medistream-team.github.io/imoji-editor/)
+
+## Table of contents
+
+- [Installation](##installation)
+- [Usage](##usage)
+- [Options](##options)
+- [Example](##example)
+- [Features](##features)
+- [Contributors](##contributors)
+- [Bug Report](##🙏🏻-bug-report)
 
 ## Installation
 
@@ -39,12 +49,12 @@ Vue.use(ImojiEditor);
 <imoji-editor
     :default-image="importedImage"
     :sticker-images="stickerImages"
-    :sticker-reset-message="'All stickers are deleted when you edit the photo'"
     :width="600"
     :height="480"
     @done="image => {
       // Do what you want
     }"
+    :photo-selection-disabled="true"
   />
 ```
 
@@ -73,13 +83,6 @@ Use this prop to use sticker images what you want.
   >
   > ©Medistream 2021. All right reserved.
 
-### sticker-reset-message
-
-Use this prop to change the warning message that the stickers will be reset when the `Edit` button is clicked.
-
-- Default : `All stickers are deleted when you edit the photo`
-- Type : string
-
 ### width, height
 
 Set size of the photo editor. You should set this option when using in modal. Checkout more information about using in modal [here](###using-in-modal).
@@ -98,7 +101,16 @@ You can customize outcome when you click the button however you want. This custo
 - Type : event
 - Argument : result Image Object (`new Image()`) by data64 PNG
 
-> Below are Added in version 0.1.6
+> ---
+>
+> 🔻 Below are added in version 0.1.6
+
+### photo-selection-disabled
+
+Use this prop to prevent user change/select photo in editor.
+
+- Default : false
+- Type : Boolean
 
 ### error
 
@@ -108,12 +120,12 @@ You can handle error when you use `done` event.
 - Type : event
 - Argument : error about get result image
 
-### choose-photo
+### sticker-reset-message
 
-Please pass `false` by this prop to prevent user change photo in editor.
+Use this prop to change the warning message that the stickers will be reset when the `Edit` button is clicked.
 
-- Default : true
-- Type : Boolean
+- Default : `All stickers are deleted when you edit the photo`
+- Type : string
 
 ### photo-edit-label
 
