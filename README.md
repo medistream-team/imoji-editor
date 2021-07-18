@@ -19,13 +19,13 @@ The image editor with a feature that you can add stickers to images!
 
 ## Table of contents
 
-- [Installation](##installation)
-- [Usage](##usage)
-- [Options](##options)
-- [Example](##example)
-- [Features](##features)
-- [Contributors](##contributors)
-- [Bug Report](##🙏🏻-bug-report)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Options](#options)
+- [Example](#example)
+- [Features](#features)
+- [Contributors](#contributors)
+- [Bug Report](#🙏🏻-bug-report)
 
 ## Installation
 
@@ -85,7 +85,7 @@ Use this prop to use sticker images what you want.
 
 ### width, height
 
-Set size of the photo editor. You should set this option when using in modal. Checkout more information about using in modal [here](###using-in-modal).
+Set size of the photo editor. You should set this option when using in modal. Checkout more information about using in modal [here](#using-in-modal).
 
 Imoji’s size is always same as the photo editor canvas’s size. Also, the sticker canvas’s size will automatically fit with photo editor.
 
