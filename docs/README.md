@@ -10,8 +10,12 @@ The image editor with a feature that you can add stickers to images!
 <img src="https://img.shields.io/static/v1?label=license&message=MIT,CC&color=blue">
 </p>
 <p align="center">
-<img width="250px" src="https://github.com/medistream-team/imoji-editor/raw/master/public/editor2.gif">
+<img width="350px" src="https://user-images.githubusercontent.com/76927618/125900138-03737084-4325-4a5b-b47c-02c97346fdbe.gif">
 </p>
+
+## Documentation
+
+[👉🏻 **Checkout here!**](https://medistream-team.github.io/imoji-editor/)
 
 ## Installation
 
