@@ -464,7 +464,8 @@ export default {
   justify-content: space-around;
   align-items: center;
   margin: 0 auto;
-  padding: 10px;
+  height: 40px;
+  padding: 10px 15px;
   border-radius: 28px;
   border-style: none;
   color: white;
