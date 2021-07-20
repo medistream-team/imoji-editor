@@ -509,12 +509,13 @@ export default {
   padding: 5px;
   border-radius: 28px;
   border-style: none;
-  color: grey;
+  color: rgba(170, 170, 170);
   background-color: transparent;
   font-size: 1rem;
 }
 
 .ratio-crop-tool-bar-button.activated {
+  font-weight: 700;
   color: white;
 }
 
