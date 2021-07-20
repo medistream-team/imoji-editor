@@ -96,37 +96,30 @@
         <div v-show="isCropMode" class="ratio-crop-tool-bar">
           <button
             class="ratio-crop-tool-bar-button"
-            @click="photoCanvas.setFreeCrop()"
+            :class="{ activated: selectedRatio === 'free' }"
+            @click="
+              () => {
+                photoCanvas.setFreeCrop();
+                selectedRatio = 'free';
+              }
+            "
           >
             Free
           </button>
-
           <button
+            v-for="cropRatio in cropRatios"
+            :key="cropRatio"
             class="ratio-crop-tool-bar-button"
-            @click="photoCanvas.setCropRatio(16, 9)"
+            :class="{ activated: selectedRatio === cropRatio }"
+            @click="
+              () => {
+                const numberedArrayRatio = cropRatio.split(':').map(Number);
+                photoCanvas.setCropRatio(...numberedArrayRatio);
+                selectedRatio = cropRatio;
+              }
+            "
           >
-            16:9
-          </button>
-
-          <button
-            class="ratio-crop-tool-bar-button"
-            @click="photoCanvas.setCropRatio(4, 3)"
-          >
-            4:3
-          </button>
-
-          <button
-            class="ratio-crop-tool-bar-button"
-            @click="photoCanvas.setCropRatio(2, 3)"
-          >
-            2:3
-          </button>
-
-          <button
-            class="ratio-crop-tool-bar-button"
-            @click="photoCanvas.setCropRatio(1, 1)"
-          >
-            1:1
+            {{ cropRatio }}
           </button>
         </div>
 
@@ -346,7 +339,9 @@ export default {
   },
   data() {
     return {
-      isCropMode: false
+      isCropMode: false,
+      cropRatios: ['16:9', '4:3', '2:3', '1:1'],
+      selectedRatio: 'free' // 'free', '16:9', '4:3', '2:3', '1:1'
     };
   },
   methods: {
@@ -512,9 +507,13 @@ export default {
   padding: 5px;
   border-radius: 28px;
   border-style: none;
-  color: white;
+  color: grey;
   background-color: transparent;
   font-size: 1rem;
+}
+
+.ratio-crop-tool-bar-button.activated {
+  color: white;
 }
 
 img.image-sticker {
