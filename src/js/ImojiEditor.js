@@ -1,5 +1,5 @@
 import Cropper from 'cropperjs';
-import { fabric } from 'fabric';
+import { fabric } from '../../fabric.min.js';
 import { Promise } from 'core-js';
 import 'cropperjs/dist/cropper.css';
 

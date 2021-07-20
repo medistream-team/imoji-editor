@@ -28,5 +28,6 @@
         "endOfLine": "lf"
       }
     ]
-  }
+  },
+  "ignorePatterns": "fabric.min.js"
 }

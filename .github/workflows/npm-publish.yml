@@ -16,6 +16,12 @@ jobs:
     - name: Install Dependencies
       run: npm install
 
+    - name: fabric custom build
+      run: |
+        npm i -g uglify-js
+        mkdir dist
+        node ./node_modules/fabric/build.js modules=interaction,animation,node
+
     - name: Webpack build
       run: npm run build
 
