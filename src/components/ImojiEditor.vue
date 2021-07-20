@@ -453,6 +453,12 @@ export default {
   z-index: 2;
 }
 
+@media (max-width: 799px) {
+  .tool-navigation-wrapper {
+    padding-bottom: 20px;
+  }
+}
+
 .tool-navigation-button {
   display: flex;
   justify-content: space-around;
