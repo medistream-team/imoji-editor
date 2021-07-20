@@ -343,7 +343,7 @@ export default {
   right: 0;
   margin: 0 auto;
   width: 100%;
-  background: rgba(0, 0, 0, 0.3);
+  background: rgba(0, 0, 0, 0.4);
 }
 
 .all-tool-bar-buttons-wrapper {
