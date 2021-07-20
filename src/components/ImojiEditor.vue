@@ -520,6 +520,16 @@ img.image-sticker {
   width: 1.938rem;
 }
 
+@media (max-width: 799px) {
+  img.image-sticker {
+    transition: transform 0.2s ease-in-out;
+  }
+
+  img.image-sticker:active {
+    transform: scale(1.3);
+  }
+}
+
 i {
   color: #eaecef;
   font-size: 25px;
