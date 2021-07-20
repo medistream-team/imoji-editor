@@ -418,6 +418,10 @@ export default {
   line-height: 0;
 }
 
+.controller-bar-button:disabled {
+  color: grey;
+}
+
 .tool-bar {
   justify-content: space-around;
   align-items: center;
@@ -471,6 +475,10 @@ export default {
   color: white;
   background-color: transparent;
   transition: background-color 0.2s cubic-bezier(0.4, 0, 0.6, 1);
+}
+
+.tool-navigation-button:disabled {
+  color: grey;
 }
 
 .tool-navigation-button.activated {
