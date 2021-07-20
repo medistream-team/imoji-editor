@@ -411,6 +411,8 @@ export default {
   background-color: transparent;
   color: white;
   line-height: 0;
+  font-size: 15px;
+  font-weight: bold;
 }
 
 .controller-bar-button:disabled {
@@ -566,6 +568,8 @@ i {
 
   .tool-navigation-button {
     cursor: pointer;
+    font-size: 15px;
+    font-weight: bold;
   }
 
   .tool-navigation-button:disabled {
