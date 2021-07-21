@@ -172,9 +172,7 @@ export default {
     },
     async setPhotoCanvasSize() {
       const [width, height] = await this.photoCanvas.getPhotoCanvasSize();
-
-      this.$set(this.photoCanvasSize, 0, width);
-      this.$set(this.photoCanvasSize, 1, height);
+      this.photoCanvasSize = [width, height];
       this.resizeStickerCanvas();
     },
     resizeStickerCanvas() {
@@ -197,8 +195,7 @@ export default {
       this.photoCanvas.setDragMode('none');
       this.photoCanvas.rotate(sign);
       const [width, height] = this.photoCanvas.getRotatedCanvasSize();
-      this.$set(this.photoCanvasSize, 0, width);
-      this.$set(this.photoCanvasSize, 1, height);
+      this.photoCanvasSize = [width, height];
       this.resizeStickerCanvas();
       this.clearCrop();
     },
