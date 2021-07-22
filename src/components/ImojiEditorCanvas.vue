@@ -103,7 +103,8 @@ export default {
       photoCanvasSize: [0, 0],
       uploadedImageSrc: '',
       initImageSrc: '',
-      zoomCount: 0,
+      isZoomed: false,
+      isRotated: false,
       layout: '',
       hide: true,
       imgType: ''
@@ -172,9 +173,7 @@ export default {
     },
     async setPhotoCanvasSize() {
       const [width, height] = await this.photoCanvas.getPhotoCanvasSize();
-
-      this.$set(this.photoCanvasSize, 0, width);
-      this.$set(this.photoCanvasSize, 1, height);
+      this.photoCanvasSize = [width, height];
       this.resizeStickerCanvas();
     },
     resizeStickerCanvas() {
@@ -190,16 +189,13 @@ export default {
     },
     //Tool Features
     zoom(x) {
-      this.zoomCount += x;
+      this.isZoomed = true;
       this.photoCanvas.zoom(x);
     },
     rotate(sign) {
       this.photoCanvas.setDragMode('none');
       this.photoCanvas.rotate(sign);
-      const [width, height] = this.photoCanvas.getRotatedCanvasSize();
-      this.$set(this.photoCanvasSize, 0, width);
-      this.$set(this.photoCanvasSize, 1, height);
-      this.resizeStickerCanvas();
+      this.isRotated = true;
       this.clearCrop();
     },
     flip(direction) {
@@ -281,10 +277,12 @@ export default {
       }
 
       if (this.photoCanvas) {
-        if (this.zoomCount !== 0) {
+        if (this.isZoomed || this.isRotated) {
           this.crop();
-          this.zoomCount = 0;
+          this.isZoomed = false;
+          this.isRotated = false;
         }
+
         this.photoCanvas.setDragMode('none');
         this.clearCrop();
       }
