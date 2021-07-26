@@ -1,7 +1,11 @@
-import Cropper from 'cropperjs';
-import { fabric } from 'fabric';
-import { Promise } from 'core-js';
-import 'cropperjs/dist/cropper.css';
+import { loadJs, loadCss } from '@/js/utils.js';
+loadJs(
+  'https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js'
+);
+loadCss(
+  'https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css'
+);
+loadJs('https://cdnjs.cloudflare.com/ajax/libs/fabric.js/451/fabric.min.js');
 
 export class PhotoEditor {
   constructor(selector, options) {
@@ -12,6 +16,7 @@ export class PhotoEditor {
      */
     if (!selector) throw new Error('Please provide a selector.');
     this.userImage = document.querySelector(selector);
+    // eslint-disable-next-line no-undef
     this.cropper = new Cropper(this.userImage, {
       viewMode: 1,
       background: false,
@@ -188,6 +193,7 @@ export class StickerEditor {
     if (!canvasID)
       throw new Error('Please provide a canvas element with id canvas.');
 
+    // eslint-disable-next-line no-undef
     this.stickerCanvas = new fabric.Canvas(canvasID);
 
     if (width && height) {
@@ -205,6 +211,7 @@ export class StickerEditor {
    * @param {Object} options - The options of sticker image
    */
   addSticker(src, options) {
+    // eslint-disable-next-line no-undef
     fabric.Image.fromURL(
       src,
       sticker => {
