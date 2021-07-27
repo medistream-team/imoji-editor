@@ -85,8 +85,14 @@
             :disabled="uploadedImageSrc ? false : true"
             @click="done"
           >
-            {{ doneLabel }}
-            <download-icon v-if="!doneLabel" />
+            <img
+              v-if="doneLoading"
+              :src="require('@/assets/animated-spinner-white.svg')"
+              width="42px"
+              height="42px"
+            />
+            <span v-if="!doneLoading && doneLabel">{{ doneLabel }}</span>
+            <download-icon v-if="!doneLoading && !doneLabel" />
           </button>
         </div>
       </div>
@@ -341,7 +347,8 @@ export default {
     return {
       isCropMode: false,
       cropRatios: ['16:9', '4:3', '2:3', '1:1'],
-      selectedRatio: 'free' // 'free', '16:9', '4:3', '2:3', '1:1'
+      selectedRatio: 'free', // 'free', '16:9', '4:3', '2:3', '1:1'
+      doneLoading: false
     };
   },
   methods: {
@@ -352,23 +359,29 @@ export default {
       this.isCropMode = test;
     },
     async done() {
+      this.doneLoading = true;
       let resultImage;
 
       try {
         resultImage = await this.$refs.Imoji.exportResultPhoto();
       } catch (error) {
         this.$emit('error', error);
+        this.doneLoading = false;
+
         return;
       }
 
       if (this.$listeners.done) {
         this.$emit('done', resultImage);
+        this.doneLoading = false;
+
         return;
       }
 
       const anchorEl = document.createElement('a');
       anchorEl.setAttribute('href', resultImage.src);
       anchorEl.setAttribute('download', `imoji_${new Date().toLocaleString()}`);
+      this.doneLoading = false;
       anchorEl.click();
     }
   }
