@@ -360,10 +360,11 @@ export default {
     },
     async done() {
       this.doneLoading = true;
-      let resultImage;
+      let resultCanvas;
+      let imageType;
 
       try {
-        resultImage = await this.$refs.Imoji.exportResultPhoto();
+        [resultCanvas, imageType] = await this.$refs.Imoji.exportResultPhoto();
       } catch (error) {
         this.$emit('error', error);
         this.doneLoading = false;
@@ -372,14 +373,14 @@ export default {
       }
 
       if (this.$listeners.done) {
-        this.$emit('done', resultImage);
+        this.$emit('done', resultCanvas, imageType);
         this.doneLoading = false;
 
         return;
       }
 
       const anchorEl = document.createElement('a');
-      anchorEl.setAttribute('href', resultImage.src);
+      anchorEl.setAttribute('href', resultCanvas.toDataURL(imageType));
       anchorEl.setAttribute('download', `imoji_${new Date().toLocaleString()}`);
       this.doneLoading = false;
       anchorEl.click();
