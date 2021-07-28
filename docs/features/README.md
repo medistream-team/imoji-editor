@@ -123,7 +123,7 @@ this.stickerCanvas.removeAllSticker(src, [options]);
 
 Click download icon button to export result image. Image size will be based on the natural size of the original image.
 
-- Type : Image Object(`new Image()`), data 64 PNG
+- Type : `HTMLCanvasElement` 
 
 ## Mobile Touch
 
