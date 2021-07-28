@@ -141,7 +141,7 @@ export class PhotoEditor {
    * Export result photo image object when edited with sticker
    * @param {Image} stickerImage - Image Object of sticker canvas result
    * @param {string} imgType - same as original image type
-   * @returns Promise (for Image Object)
+   * @returns Promise (for [HTMLCanvasElement, imgType])
    */
   exportWithSticker(stickerImage, imgType) {
     const canvas = this.cropper.getCroppedCanvas();
@@ -150,27 +150,20 @@ export class PhotoEditor {
     const loadResultImage = new Promise(resolve => {
       stickerImage.onload = () => {
         context.drawImage(stickerImage, 0, 0);
-        resolve(canvas);
+        resolve([canvas, imgType]);
       };
     });
 
-    return loadResultImage.then(res => {
-      const withStickerImage = new Image();
-      withStickerImage.src = res.toDataURL(imgType);
-      return withStickerImage;
-    });
+    return loadResultImage;
   }
 
   /**
    * Export result photo image object when only edited
    * @param {string} imgType
-   * @returns Image Object
+   * @returns [HTMLCanvasElement, imgType]
    */
   exportOnlyImage(imgType) {
-    const canvas = this.cropper.getCroppedCanvas();
-    const editedImage = new Image();
-    editedImage.src = canvas.toDataURL(imgType);
-    return editedImage;
+    return [this.cropper.getCroppedCanvas(), imgType];
   }
 
   /**
