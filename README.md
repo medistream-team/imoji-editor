@@ -94,12 +94,12 @@ Imoji’s size is always same as the photo editor canvas’s size. Also, the sti
 
 ### done
 
-You can customize outcome when you click the button however you want. This custom event will return result Image Object (`new Image()`) as argument of the event.
+You can customize outcome when you click the button however you want. This custom event will return result `HTMLCanvasElement` and `MIME type` as argument of the event.
 
 - Recommend : Please **destroy editor** after user click done button.
 - Default : download result edited image
 - Type : event
-- Argument : result Image Object (`new Image()`) by data64 PNG
+- Argument : result `HTMLCanvasElement`, `MIME type` ( ex) `<canvas .../>`, `"image/png"` )
 
 > 🔻 Below are added in version 0.1.6
 
@@ -297,7 +297,7 @@ this.stickerCanvas.removeAllSticker(src, [options]);
 
 Click download icon button to export result image. Image size will be based on the natural size of the original image.
 
-- Type : Image Object(`new Image()`), data 64 PNG
+- Type : `HTMLCanvasElement` 
 
 ### Mobile Touch
 
